@@ -8,7 +8,7 @@ Feature: Image media assets
     When I visit "/media/add/image"
     And I attach the file "test.jpg" to "Image"
     And I wait for AJAX to finish
-    Then I should see an open "CROP IMAGE" details element
+    Then I should see an open "Crop image" details element
     And I should see a "Freeform" vertical tab
 
   @b23435a5

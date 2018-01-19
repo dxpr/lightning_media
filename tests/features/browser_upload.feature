@@ -25,7 +25,7 @@ Feature: Uploading media assets through the media browser
     Given I am logged in as a user with the media_creator role
     When I visit "/entity-browser/iframe/media_browser"
     And I upload "test.jpg"
-    Then I should see an open "CROP IMAGE" details element
+    Then I should see an open "Crop image" details element
     And I should see a "Freeform" vertical tab
 
   @b34126c1
@@ -40,7 +40,7 @@ Feature: Uploading media assets through the media browser
   Scenario: The upload widget validates file size
     Given I am logged in as a user with the media_creator role
     When I visit "/node/add/page"
-    And I open the "LIGHTWEIGHT IMAGE" image browser
+    And I open the "Lightweight Image" image browser
     And I switch to the "Upload" Entity Browser tab
     And I attach the file "test.jpg" to "input_file"
     And I wait for AJAX to finish

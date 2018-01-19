@@ -169,12 +169,13 @@ function lightning_media_modules_installed(array $modules) {
       'view own unpublished content',
     ]);
 
-    \Drupal::service('theme_installer')->install(['seven']);
+    \Drupal::service('theme_installer')->install(['bartik', 'seven']);
 
     $config_factory = \Drupal::configFactory();
 
     $config_factory->getEditable('system.theme')
-      ->set('default', 'seven')
+      ->set('default', 'bartik')
+      ->set('admin', 'seven')
       ->save();
 
     $config_factory->getEditable('node.settings')
