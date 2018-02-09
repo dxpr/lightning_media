@@ -12,7 +12,7 @@ Feature: Media content list page
     Given I am logged in as a user with the "access media overview" permission
     When I visit "/admin/content/media"
     Then I should see "Published status"
-    And I should see "Source"
+    And I should see "Type"
     And I should see "Media name"
     And I should see "Language"
     And I should see "Action"
@@ -21,7 +21,7 @@ Feature: Media content list page
   Scenario: Media filters are functional
     Given I am logged in as a user with the "access media overview" permission
     When I visit "/admin/content/media"
-    And I select "Tweet" from "Source"
+    And I select "Tweet" from "Type"
     And I apply the exposed filters
     Then I should see "I'm a tweet"
     And I should not see "I'm an instagram"
