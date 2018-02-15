@@ -1,4 +1,4 @@
-@lightning @media @api @javascript @errors
+@lightning @lightning_media @api @javascript @errors
 Feature: An entity browser for media assets
 
   Background:

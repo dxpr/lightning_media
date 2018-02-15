@@ -1,4 +1,4 @@
-@lightning @api @media @javascript
+@lightning @api @lightning_media @javascript
 Feature: Embedding entities in a WYSIWYG editor
 
   Background:

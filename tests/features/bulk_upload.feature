@@ -1,4 +1,4 @@
-@lightning @api @media @javascript
+@lightning @api @lightning_media @javascript
 Feature: Bulk uploading media assets
 
   # We have no idea why, but this test persistently fails on Travis CI, but

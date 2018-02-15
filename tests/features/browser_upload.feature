@@ -1,4 +1,4 @@
-@lightning @media @api @javascript @errors
+@lightning @lightning_media @api @javascript @errors
 Feature: Uploading media assets through the media browser
 
   @image @document @1f81e59b

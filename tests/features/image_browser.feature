@@ -1,4 +1,4 @@
-@lightning @media @image @api @javascript @errors
+@lightning @lightning_media @image @api @javascript @errors
 Feature: An entity browser for image fields
 
   Background:

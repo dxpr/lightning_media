@@ -1,4 +1,4 @@
-@lightning @media @api @javascript @errors
+@lightning @lightning_media @api @javascript @errors
 Feature: Creating media assets from within the media browser using embed codes
 
   @video @twitter @instagram @2c43f38c

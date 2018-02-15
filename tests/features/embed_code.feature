@@ -1,4 +1,4 @@
-@lightning @media @api
+@lightning @lightning_media @api
 Feature: Media assets based on embed codes
 
   @video @javascript @c74eadd0 @with-module:test_c74eadd0
