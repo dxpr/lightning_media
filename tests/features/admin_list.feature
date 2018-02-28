@@ -12,10 +12,10 @@ Feature: Media content list page
     Given I am logged in as a user with the "access media overview" permission
     When I visit "/admin/content/media"
     Then I should see "Published status"
-    And I should see "Type"
-    And I should see "Media name"
-    And I should see "Language"
-    And I should see "Action"
+    And I should see a "Type" field
+    And I should see a "Media name" field
+    And I should see a "Language" field
+    And I should see an "Action" field
 
   @bd2a222b
   Scenario: Media filters are functional
