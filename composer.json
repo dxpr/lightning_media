@@ -84,7 +84,7 @@
                 "2877383 - Add action support to Media module":
                 "https://www.drupal.org/files/issues/2877383-56.patch",
                 "2670730 - Provide a delete action for each content entity type":
-                "https://www.drupal.org/files/issues/2670730-81--8.5.0-rc1.patch"
+                "https://www.drupal.org/files/issues/2670730-81-89-8.5.0-rc1.patch"
             },
             "drupal/entity_embed": {
                 "2832504 - Send the CKEditor instance ID to the embed.preview route":
