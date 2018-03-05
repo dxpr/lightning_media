@@ -96,10 +96,6 @@
                 "2877751 - Inform users how many items they can add to a field that uses an entity browser":
                 "https://www.drupal.org/files/issues/2877751-17.patch"
             },
-            "drupal/media_entity": {
-                "2918172 - Media Entity upgrade -> core fails on absent column revision_uid":
-                "https://www.drupal.org/files/issues/2918172-5.patch"
-            },
             "drupal/media_entity_instagram": {
                 "2917454 - Field formatter test is broken":
                 "https://www.drupal.org/files/issues/2917454-2.patch"
