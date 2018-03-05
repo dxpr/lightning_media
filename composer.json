@@ -37,7 +37,7 @@
         "drupal/video_embed_field": "2.0.0-alpha2",
         "drupal/dropzonejs": "2.0.0-alpha3",
         "bower-asset/dropzone": "^5.1",
-        "drupal/crop": "2.0.0-beta1",
+        "drupal/crop": "^2.0.0-rc1",
         "drupal/image_widget_crop": "^2.1",
         "bower-asset/cropper": "^2.3"
     },
@@ -103,10 +103,6 @@
             "drupal/media_entity_instagram": {
                 "2917454 - Field formatter test is broken":
                 "https://www.drupal.org/files/issues/2917454-2.patch"
-            },
-            "drupal/crop": {
-                "Make Crop API compatible with core Media":
-                "https://www.drupal.org/files/issues/2918441-beta1-packaged-info-file.patch"
             }
         },
         "enable-patching": true
