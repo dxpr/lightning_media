@@ -19,10 +19,8 @@ Feature: An entity browser for media assets
     And I open the media browser
     And I select item 1 in the media browser
     And I complete the media browser selection
-    And I wait 5 seconds
     And I press "Save"
     And I visit the edit form
-    And I wait 10 seconds
     And I open the media browser
     And I wait for AJAX to finish
     Then I should see a "form.entity-browser-form" element
@@ -31,14 +29,15 @@ Feature: An entity browser for media assets
   Scenario: Testing cardinality enforcement in the media browser
     When I visit "/node/add/page"
     And I open the media browser
-    And I wait 5 seconds
     # There was a bug where AJAX requests would completely break the selection
     # behavior. So let's make an otherwise pointless AJAX request here to guard
     # against regressions...
-    And I enter "Pastafazoul!" for "Keywords"
+    And I select "Tweet" from "Type"
     And I apply the exposed filters
-    And I clear "Keywords"
+    And I wait 2 seconds
+    And I select "- Any -" from "Type"
     And I apply the exposed filters
+    # End of regression test.
     And I select item 1 in the media browser
     And I select item 2 in the media browser
     Then I should see a "[data-selectable].selected" element
@@ -55,7 +54,7 @@ Feature: An entity browser for media assets
   Scenario: Entity browser filters work
     When I visit "/node/add/page"
     And I open the media browser
-    And I wait 5 seconds
     And I enter "Code Wisdom 1" for "Keywords"
     And I apply the exposed filters
+    And I wait 1 second
     Then I should see 1 item in the entity browser

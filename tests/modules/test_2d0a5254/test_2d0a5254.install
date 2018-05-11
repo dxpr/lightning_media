@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\entity_browser\Element\EntityBrowserElement;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_install().
@@ -27,6 +28,6 @@ function test_2d0a5254_install() {
  * Implements hook_uninstall().
  */
 function test_2d0a5254_uninstall() {
-  // entity_load('field_config', 'node.page.field_unlimited_images')->delete();
-  // entity_load('field_storage_config', 'node.field_unlimited_images')->delete();
+  FieldConfig::loadByName('node', 'page', 'field_unlimited_images')->delete();
+  field_purge_batch(10);
 }

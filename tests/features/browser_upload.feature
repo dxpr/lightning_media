@@ -44,6 +44,7 @@ Feature: Uploading media assets through the media browser
     And I switch to the "Upload" Entity Browser tab
     And I attach the file "test.jpg" to "input_file"
     And I wait for AJAX to finish
+    And I wait 1 second
     # This is a weak-sauce assertion but I can't tell exactly what the error
     # message will say.
     Then I should see a ".messages [role='alert']" element

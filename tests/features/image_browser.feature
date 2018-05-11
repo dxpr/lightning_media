@@ -12,6 +12,7 @@ Feature: An entity browser for image fields
     And I attach the file "test.jpg" to "File"
     And I wait for AJAX to finish
     # Cropping should be enabled.
+    And I wait 1 second
     Then I should see an open "Crop image" details element
     And I should see a "Freeform" vertical tab
     And I enter "Behold, a generic logo" for "Name"

@@ -7,6 +7,11 @@ use Drupal\DrupalExtension\Context\MinkContext;
 
 /**
  * Contains step definitions for interacting with Lightning's media browser.
+ *
+ * @internal
+ * This class is part of Lightning's internal testing code. It is not an API and
+ * should not be extended. This class will be marked final, and all protected
+ * members will be made private, in Lightning Media 3.x.
  */
 class MediaBrowserContext extends DrupalSubContextBase {
 
@@ -44,12 +49,6 @@ class MediaBrowserContext extends DrupalSubContextBase {
       ->getAttribute('name');
 
     $this->getSession()->switchToIFrame($frame);
-
-    // For whatever reason, the iFrame switch does not appear to take effect
-    // immediately under certain circumstances. I don't know what is going on
-    // here, but this needs to be revisited later. 2 seconds appears to be too
-    // soon, but 3 works consistently for me in my local environment.
-    sleep(3);
   }
 
   /**
@@ -61,7 +60,6 @@ class MediaBrowserContext extends DrupalSubContextBase {
    * @When I select item :n in the media browser
    */
   public function selectN($n) {
-    sleep(5);
     $this->getContext(EntityBrowserContext::class)->select($n, 'media_browser');
   }
 
@@ -71,19 +69,24 @@ class MediaBrowserContext extends DrupalSubContextBase {
    * @When I complete the media browser selection
    */
   public function completeSelection() {
+    $assert = $this->assertSession();
     $session = $this->getSession();
 
-    // The iframe is destroyed after submitting it, so we need to switch back
-    // into the window context in order for the session to stay sane.
-    $session->switchToWindow();
+    $frame = $session->evaluateScript('window.name') ?: $session->evaluateScript('window.active_iframe.name');
+    assert(! empty($frame));
 
-    $frame = 'window.frames.entity_browser_iframe_media_browser';
-    $session->executeScript("$frame.document.forms[0].elements.op.click()");
-    $this->awaitExpression("!$frame");
-    $this->awaitAjax();
+    $button = $assert->elementExists('named', ['button', 'Place'])->getXpath();
+
+    // Switch out of the iFrame, because it will be destroyed as soon as we
+    // press the button.
+    $session->switchToIFrame();
+    $js = <<<END
+document.evaluate('$button', window.$frame.document, null).iterateNext().click();
+END;
+    $session->executeScript($js);
 
     $this->awaitElement('form.entity-embed-dialog');
-    $session->executeScript('document.querySelector("form.entity-embed-dialog").elements.op[1].click()');
+    $assert->elementExists('named', ['button', 'Embed'])->press();
     $this->awaitAjax();
   }
 

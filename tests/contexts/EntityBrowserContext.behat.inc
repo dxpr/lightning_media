@@ -8,6 +8,11 @@ use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 
 /**
  * Contains step definitions for interacting with entity browser instances.
+ *
+ * @internal
+ * This class is part of Lightning's internal testing code. It is not an API and
+ * should not be extended. This class will be marked final, and all protected
+ * members will be made private, in Lightning Media 3.x.
  */
 class EntityBrowserContext extends DrupalSubContextBase {
 
@@ -111,16 +116,23 @@ class EntityBrowserContext extends DrupalSubContextBase {
   public function submit() {
     $session = $this->getSession();
 
-    // The entity browser frame will be destroyed, so we need to switch into
-    // the main window and reach into the frame to submit the form...ugh.
-    $frame = $session->evaluateScript('frameElement.name');
-    $session->switchToWindow();
-
     // @TODO: Make this smarter, because we can't be sure that #edit-submit
     // exists at all, or that it's the correct submit button.
-    $session->executeScript('frames["' . $frame . '"].document.forms[0].querySelector("#edit-submit").click()');
+    $button = $this->assertSession()
+      ->elementExists('css', '#edit-submit')
+      ->getXpath();
 
-    sleep(10);
+    $frame = $session->evaluateScript('window.name') ?: $session->evaluateScript('window.active_iframe.name');
+    assert(! empty($frame));
+
+    // Switch out of the iFrame, because it will be destroyed as soon as we
+    // press the button.
+    $session->switchToIFrame();
+
+    $js = <<<END
+document.evaluate('$button', window.$frame.document, null).iterateNext().click();
+END;
+    $session->executeScript($js);
     $this->awaitAjax();
   }
 
