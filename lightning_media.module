@@ -125,6 +125,7 @@ function lightning_media_field_widget_entity_browser_entity_reference_form_alter
         'open' => TRUE,
       ],
       '#title' => new Plural($cardinality, 'Current selection', 'Current selections'),
+      '#summary_attributes' => [],
     ],
   ];
 }
