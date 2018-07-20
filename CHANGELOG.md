@@ -1,3 +1,6 @@
+## 3.0.0
+* Updated to Drupal core 8.6.0.
+
 ## 2.3.0
 No changes since last release.
 
