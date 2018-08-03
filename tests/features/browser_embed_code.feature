@@ -1,11 +1,13 @@
-@lightning @lightning_media @api @javascript @errors
+@lightning @lightning_media @api @errors
 Feature: Creating media assets from within the media browser using embed codes
 
-  @video @twitter @instagram @2c43f38c
+  @2c43f38c
   Scenario Outline: Creating media assets from within the media browser using embed codes
     Given I am logged in as a user with the "access media_browser entity browser pages, access media overview, create media" permissions
     When I visit "/entity-browser/iframe/media_browser"
-    And I enter embed code "<embed_code>"
+    And I press the "Create embed" button
+    And I enter "<embed_code>" for "input"
+    And I press the "Update" button
     And I enter "<title>" for "Name"
     And I press "Place"
     And I visit "/admin/content/media"
@@ -22,7 +24,7 @@ Feature: Creating media assets from within the media browser using embed codes
   Scenario: Embed code widget should require input
     Given I am logged in as a user with the "access media_browser entity browser pages" permission
     When I visit "/entity-browser/iframe/media_browser"
-    And I click "Create embed"
+    And I press the "Create embed" button
     And I press "Place"
     Then I should see the error message "You must enter a URL or embed code."
 
@@ -30,21 +32,17 @@ Feature: Creating media assets from within the media browser using embed codes
   Scenario: Embed code widget should ensure that input can be matched to a media bundle
     Given I am logged in as a user with the "access media_browser entity browser pages" permission
     When I visit "/entity-browser/iframe/media_browser"
-    And I click "Create embed"
+    And I press the "Create embed" button
     And I enter "The quick brown fox gets eaten by hungry lions." for "input"
-    # The change event, which triggers AJAX, is fired after 600 milliseconds.
-    And I wait 1 second
-    And I wait for AJAX to finish
+    And I press the "Update" button
     And I press "Place"
     Then I should see the error message containing "Could not match any bundles to input:"
 
-  @twitter @security @6a9aaf7f
+  @security @6a9aaf7f
   Scenario: Embed code widget will not allow the user to create media of bundles to which they do not have access
     Given I am logged in as a user with the "access media_browser entity browser pages" permission
     When I visit "/entity-browser/iframe/media_browser"
-    And I click "Create embed"
+    And I press the "Create embed" button
     And I enter "https://twitter.com/webchick/status/824051274353999872" for "input"
-    # The change event, which triggers AJAX, is fired after 600 milliseconds.
-    And I wait 1 second
-    And I wait for AJAX to finish
+    And I press the "Update" button
     Then the "#entity" element should be empty
