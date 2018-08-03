@@ -1,7 +1,7 @@
-@lightning @lightning_media @api @javascript @errors
+@lightning @lightning_media @api @errors
 Feature: Uploading media assets through the media browser
 
-  @image @document @1f81e59b
+  @1f81e59b
   Scenario Outline: Uploading a file from within the media browser
     Given I am logged in as a user with the "access media_browser entity browser pages, access media overview, create media" permissions
     When I visit "/entity-browser/iframe/media_browser"
@@ -20,7 +20,7 @@ Feature: Uploading media assets through the media browser
 # with our lives. Hopefully, we'll eventually be able to test this again.
 #      | test.pdf | A test file |
 
-  @image @cdebd426
+  @cdebd426 @javascript
   Scenario: Cropping should be enabled when uploading an image in the media browser
     Given I am logged in as a user with the media_creator role
     When I visit "/entity-browser/iframe/media_browser"
@@ -30,13 +30,13 @@ Feature: Uploading media assets through the media browser
 
   @b34126c1
   Scenario: The upload widget should require a file
-    Given I am logged in as a user with the "access media_browser entity browser pages" permission
+    Given I am logged in as a user with the media_creator role
     When I visit "/entity-browser/iframe/media_browser"
-    And I switch to the "Upload" Entity Browser tab
-    And I press "Place"
+    And I press the "Upload" button
+    And I press the "Place" button
     Then I should see the error message "You must upload a file."
 
-  @image @2f72f4a4 @with-module:test_2f72f4a4
+  @2f72f4a4 @with-module:test_2f72f4a4 @javascript
   Scenario: The upload widget validates file size
     Given I am logged in as a user with the media_creator role
     When I visit "/node/add/page"
@@ -52,30 +52,25 @@ Feature: Uploading media assets through the media browser
 
   @security @57537d2b
   Scenario: The upload widget rejects files with unrecognized extensions
-    Given I am logged in as a user with the "access media_browser entity browser pages" permission
+    Given I am logged in as a user with the media_creator role
     When I visit "/entity-browser/iframe/media_browser"
-    And I switch to the "Upload" Entity Browser tab
-    And I attach the file "test.php" to "input_file"
-    And I wait for AJAX to finish
+    And I upload "test.php"
     Then I should see the error message containing "Only files with the following extensions are allowed:"
 
   @security @627aeb22
   Scenario: Upload widget will not allow the user to create media of bundles they cannot access
-    Given I am logged in as a user with the "access media_browser entity browser pages" permission
+    Given I am logged in as a user with the media_creator role
     When I visit "/entity-browser/iframe/media_browser"
-    And I switch to the "Upload" Entity Browser tab
-    And I attach the file "test.php" to "input_file"
-    And I wait for AJAX to finish
+    And I upload "test.php"
     Then the "#entity" element should be empty
 
   @ced013a5 @with-module:test_ced013a5
   Scenario: The upload widget should respect media bundles allowed by the field
     Given I am logged in as a user with the "media_creator, media_manager" roles
     When I visit "/node/add/page"
-    And I switch to the "entity_browser_iframe_media_browser" frame
-    And I switch to the "Upload" Entity Browser tab
+    And I open the media browser
     And I upload "test.jpg"
     And I enter "Z Image Test" for "Name"
-    And I submit the entity browser
+    And I press the "Place" button
     Then 1 z_image media entity should exist
     And 0 image media entities should exist

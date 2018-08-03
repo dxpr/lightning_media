@@ -37,6 +37,10 @@ Feature: An entity browser for media assets
     And I wait 2 seconds
     And I select "- Any -" from "Type"
     And I apply the exposed filters
+    # Give the view a moment to reconstitute itself. Ideally the previous step
+    # should await the presence of a condition instead, but for now I'm trying
+    # to squash a random failure.
+    And I wait 2 seconds
     # End of regression test.
     And I select item 1 in the media browser
     And I select item 2 in the media browser

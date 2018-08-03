@@ -2,6 +2,7 @@
 
 namespace Acquia\LightningExtension\Context;
 
+use Behat\Behat\Hook\Scope\ScenarioScope;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Context\MinkContext;
 
@@ -18,11 +19,18 @@ class MediaBrowserContext extends DrupalSubContextBase {
   use AwaitTrait;
 
   /**
-   * Sets the path to any uploadable files.
+   * Indicates if the current scenario uses JavaScript.
+   *
+   * @var bool
+   */
+  private $isJS;
+
+  /**
+   * Performs pre-scenario tasks.
    *
    * @BeforeScenario
    */
-  public function setFilePath() {
+  public function setUp(ScenarioScope $scope) {
     /** @var MinkContext $mink_context */
     $mink_context = $this->getContext(MinkContext::class);
 
@@ -30,6 +38,13 @@ class MediaBrowserContext extends DrupalSubContextBase {
     if (empty($path)) {
       $mink_context->setMinkParameter('files_path', __DIR__ . '/../files');
     }
+
+    // Check if the feature or scenario has the 'javascript' tag.
+    $tags = array_merge(
+      $scope->getScenario()->getTags(),
+      $scope->getFeature()->getTags()
+    );
+    $this->isJS = in_array('javascript', $tags, TRUE);
   }
 
   /**
@@ -41,6 +56,16 @@ class MediaBrowserContext extends DrupalSubContextBase {
    * @When I open the media browser
    */
   public function open($button = 'media_browser') {
+    $this->isJS ? $this->openJS($button) : $this->openNoJS();
+  }
+
+  /**
+   * Opens the media browser when JavaScript is enabled.
+   *
+   * @param string $button
+   *   (optional) The embed button ID.
+   */
+  private function openJS($button = 'media_browser') {
     $this
       ->getContext(CkEditorContext::class)
       ->execute('editdrupalentity', NULL, ['id' => $button]);
@@ -49,6 +74,20 @@ class MediaBrowserContext extends DrupalSubContextBase {
       ->getAttribute('name');
 
     $this->getSession()->switchToIFrame($frame);
+  }
+
+  /**
+   * Opens the media browser without JavaScript.
+   *
+   * @param string $browser_id
+   *   (optional) The entity browser ID.
+   */
+  private function openNoJS($browser_id = 'media_browser') {
+    $uuid = $this->assertSession()
+      ->elementExists('named', ['link', 'Select entities'])
+      ->getAttribute('data-uuid');
+
+    $this->visitPath("/entity-browser/iframe/$browser_id?uuid=$uuid");
   }
 
   /**
@@ -124,12 +163,37 @@ END;
    * @When I upload :file
    */
   public function upload($file) {
-    /** @var MinkContext $mink_context */
-    $mink_context = $this->getContext(MinkContext::class);
+    $this->isJS ? $this->uploadJS($file) : $this->uploadNoJS($file);
+  }
 
-    $mink_context->clickLink('Upload');
-    $mink_context->attachFileToField('File', $file);
+  /**
+   * Uploads a file in the media browser using JavaScript.
+   *
+   * @param string $file
+   *   The path to the file, relative to the test files directory.
+   */
+  private function uploadJS($file) {
+    $this->assertSession()->elementExists('named', ['link', 'Upload'])->click();
+    $this->getContext(MinkContext::class)->attachFileToField('File', $file);
     $this->awaitExpression('jQuery("#entity").children().length');
+  }
+
+  /**
+   * Uploads a file in the media browser without using JavaScript.
+   *
+   * @param string $file
+   *   The path to the file, relative to the test files directory.
+   */
+  private function uploadNoJS($file) {
+    $assert = $this->assertSession();
+
+    // Switch to the "Upload" tab of the media browser, which should be the
+    // first button named "Upload" on the page.
+    $assert->elementExists('named', ['button', 'Upload'])->press();
+
+    $this->getContext(MinkContext::class)->attachFileToField('File', $file);
+    $wrapper = $assert->elementExists('css', '.js-form-managed-file');
+    $assert->elementExists('named', ['button', 'Upload'], $wrapper)->press();
   }
 
 }
