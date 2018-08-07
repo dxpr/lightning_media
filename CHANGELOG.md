@@ -1,5 +1,7 @@
 ## 3.0.0
 * Updated to Drupal core 8.6.0.
+* If Pathauto is installed, all new media items will by default receive a URL
+  alias of the form `/media/<MEDIA TYPE>/<ID>`. (#38)
 
 ## 2.3.0
 No changes since last release.
