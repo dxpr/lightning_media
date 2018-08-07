@@ -17,4 +17,4 @@ Feature: Bulk uploading media assets
     And I press "Continue"
     And I press "Save"
 #    And I press "Save"
-    Then I should be visiting a media item
+    Then I should see the link "test.jpg"

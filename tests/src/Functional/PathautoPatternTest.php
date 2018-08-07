@@ -4,22 +4,23 @@ namespace Drupal\Tests\lightning_media\Functional;
 
 use Drupal\media\Entity\Media;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\media\Functional\MediaFunctionalTestCreateMediaTypeTrait;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
+ * Tests that all media items have a /media/BUNDLE/ID Pathauto pattern.
+ *
  * @group lightning
  * @group lightning_media
  */
 class PathautoPatternTest extends BrowserTestBase {
 
-  use MediaFunctionalTestCreateMediaTypeTrait;
+  use MediaTypeCreationTrait;
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'pathauto',
-    'lightning_media',
     'lightning_media_document',
     'lightning_media_image',
     'lightning_media_instagram',
@@ -29,25 +30,35 @@ class PathautoPatternTest extends BrowserTestBase {
   ];
 
   /**
-   * Tests that media entities are available at path
-   * '/media/[media:bundle]/[media:mid]'.
+   * Tests media types that ship with Lightning.
    *
    * @param string $bundle
    *   Media bundle.
+   * @param mixed $source_value
+   *   (optional) The source field value.
    *
-   * @dataProvider mediaPatternProvider
+   * @dataProvider providerMediaPattern
    */
-  public function testMediaPattern($bundle) {
+  public function testMediaPattern($bundle, $source_value = NULL) {
+    /** @var \Drupal\media\MediaInterface $media */
     $media = Media::create([
-      'id' => 1,
       'bundle' => $bundle,
       'name' => 'Foo Bar',
-      'status' => 1,
     ]);
-    $media->save();
-    $this->drupalGet("/media/$bundle/{$media->id()}");
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Foo Bar');
+
+    if ($source_value) {
+      $source_field = $media->getSource()
+        ->getSourceFieldDefinition($media->bundle->entity)
+        ->getName();
+
+      $media->set($source_field, $source_value);
+    }
+    $this->assertSame(SAVED_NEW, $media->setPublished()->save());
+
+    $this->drupalGet('/media/' . strtolower($media->bundle()) . '/' . $media->id());
+    $assert = $this->assertSession();
+    $assert->statusCodeEquals(200);
+    $assert->pageTextContains('Foo Bar');
   }
 
   /**
@@ -56,63 +67,31 @@ class PathautoPatternTest extends BrowserTestBase {
    * @return array
    *   The test data.
    */
-  public function mediaPatternProvider() {
+  public function providerMediaPattern() {
     return [
-      ['bundle' => 'document'],
-      ['bundle' => 'image'],
-      ['bundle' => 'video'],
+      ['document'],
+      ['image'],
+      ['video'],
+      ['tweet', 'https://twitter.com/50NerdsofGrey/status/757319527151636480'],
+      ['instagram', 'https://www.instagram.com/p/BmIh_AFDBzX'],
     ];
   }
 
   /**
-   * Tests that tweet media entities are available at path '/media/tweet/[media:mid]'.
-   */
-  public function testTweetPattern() {
-    $media = Media::create([
-      'id' => 1,
-      'bundle' => 'tweet',
-      'name' => 'Foo Bar',
-      'status' => 1,
-      'embed_code' => 'https://twitter.com/50NerdsofGrey/status/757319527151636480',
-    ]);
-    $media->save();
-    $this->drupalGet("/media/tweet/{$media->id()}");
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Foo Bar');
-  }
-
-  /**
-   * Tests that instagram media entities are available at path '/media/instagram/[media:mid]'.
-   */
-  public function testInstagramPattern() {
-    $media = Media::create([
-      'id' => 1,
-      'bundle' => 'instagram',
-      'name' => 'Foo Bar',
-      'status' => 1,
-      'embed_code' => 'https://www.instagram.com/p/BmIh_AFDBzX',
-    ]);
-    $media->save();
-    $this->drupalGet("/media/instagram/{$media->id()}");
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Foo Bar');
-  }
-
-  /**
-   * Tests that entities of new media types are available at path '/media/[media:bundle]/[media:mid]'.
+   * Tests a new media type.
    */
   public function testNewMediaTypePattern() {
-    $bundle = $this->createMediaType()->id();
     $media = Media::create([
-      'id' => 1,
-      'bundle' => $bundle,
+      'bundle' => $this->createMediaType('test')->id(),
       'name' => 'Foo Bar',
-      'status' => 1,
     ]);
-    $media->save();
-    $this->drupalGet("/media/$bundle/{$media->id()}");
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Foo Bar');
+
+    $this->assertSame(SAVED_NEW, $media->setPublished()->save());
+    $this->drupalGet("/media/{$media->bundle()}/{$media->id()}");
+
+    $assert = $this->assertSession();
+    $assert->statusCodeEquals(200);
+    $assert->pageTextContains('Foo Bar');
   }
 
 }
