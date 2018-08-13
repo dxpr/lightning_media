@@ -18,7 +18,7 @@ Feature: Image media assets
     And I attach the file "test.jpg" to "Image"
     And I press the "Upload" button
     And I enter "Blorg" for "Name"
-    And I uncheck the box "Save to my media library"
+    And I uncheck the box "Show in media library"
     And I press "Save"
     And I visit "/entity-browser/iframe/media_browser"
     Then I should see "There are no media items to display."
