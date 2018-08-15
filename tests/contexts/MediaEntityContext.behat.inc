@@ -42,7 +42,7 @@ class MediaEntityContext extends DrupalSubContextBase {
 
     // The path must start with "/media/" and end with "/ID"; the bundle may be
     // in the middle if Pathauto is installed.
-    $assert->addressMatches('/^\/media(\/.+)?\/[0-9]+$/');
+    $assert->addressMatches('#^/media/([\w-]+/)?\d+$#');
 
     try {
       $assert->statusCodeEquals(200);

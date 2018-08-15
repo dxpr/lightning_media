@@ -151,6 +151,7 @@ function lightning_media_modules_installed(array $modules) {
     \Drupal::service('module_installer')->install([
       'image_widget_crop',
       'lightning_page',
+      'pathauto',
     ]);
 
     module_load_install('lightning_media_image');
