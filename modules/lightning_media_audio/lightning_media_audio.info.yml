@@ -1,0 +1,7 @@
+name: 'Media Audio'
+core: 8.x
+type: module
+package: Lightning
+description: 'Audio support for Lightning Media.'
+dependencies:
+  - lightning_media

@@ -35,7 +35,12 @@ module.
 #### Media Video (`lightning_media_video`)
 Provides a Video media type for displaying remote videos (e.g., YouTube or
 Vimeo) in your Drupal site using the
-[Video Embed Field](https://drupal.org/project/video_embed_field) module.
+[Video Embed Field](https://drupal.org/project/video_embed_field) module and the
+Video file media type for managing locally hosted videos.
+
+#### Media Audio (`lightning_media_audio`)
+Provides an Audio file media type for displaying locally hosted audio files
+(mp3, wav or aac).
 
 ### Installation
 This component can only be installed using Composer. To add it to your Drupal
@@ -50,8 +55,8 @@ composer require drupal/lightning_media
 Lightning Media and its components use the normal Drupal database update system
 as often as possible. However, there are occasionally certain updates which
 touch configuration and may change the functionality of your site. These updates
-are optional, and are performed by a special utility at the command line. This 
-utility is compatible with both 
+are optional, and are performed by a special utility at the command line. This
+utility is compatible with both
 [Drupal Console](https://github.com/hechoendrupal/drupal-console) and
 [Drush](https://drush.org) 9 or later.
 

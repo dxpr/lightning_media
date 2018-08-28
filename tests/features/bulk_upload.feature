@@ -15,5 +15,9 @@ Feature: Bulk uploading media assets
     When I upload the following files:
     """
     test.jpg
+    test.mp3
+    test.mp4
     """
     Then I should see "test.jpg" in the media library
+    And I should see "test.mp3" in the media library
+    And I should see "test.mp4" in the media library

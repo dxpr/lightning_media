@@ -10,6 +10,8 @@ Feature: Uploading media assets through the media browser
     Examples:
       | file     | title       |
       | test.jpg | Foobazzz    |
+      | test.mp4 | Foovideo    |
+      | test.mp3 | Fooaudio    |
 # We have no idea why, but this test persistently fails on Travis CI, but
 # invariably passes locally. It works. But Travis doesn't pass it, and
 # produces no errors. For now, we are commenting it out so we can move on

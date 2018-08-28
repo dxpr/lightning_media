@@ -4,6 +4,7 @@ namespace Drupal\lightning_media\Update;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Extension\ModuleInstallerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,13 +20,23 @@ final class Update240 implements ContainerInjectionInterface {
   private $fieldConfigStorage;
 
   /**
+   * The module installer.
+   *
+   * @var \Drupal\Core\Extension\ModuleInstallerInterface
+   */
+  protected $moduleInstaller;
+
+  /**
    * Update240 constructor.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $field_config_storage
    *   The field config storage.
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   *   The module installer service.
    */
-  public function __construct(EntityStorageInterface $field_config_storage) {
+  public function __construct(EntityStorageInterface $field_config_storage, ModuleInstallerInterface $module_installer) {
     $this->fieldConfigStorage = $field_config_storage;
+    $this->moduleInstaller = $module_installer;
   }
 
   /**
@@ -33,7 +44,8 @@ final class Update240 implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('field_config')
+      $container->get('entity_type.manager')->getStorage('field_config'),
+      $container->get('module_installer')
     );
   }
 
@@ -61,6 +73,17 @@ final class Update240 implements ContainerInjectionInterface {
         ])
         ->save();
     }
+  }
+
+  /**
+   * Enables Audio file media.
+   *
+   * @update
+   *
+   * @ask Do you want to install "Audio file" media?
+   */
+  public function enableAudioFileMedia() {
+    $this->moduleInstaller->install(['lightning_media_audio']);
   }
 
 }
