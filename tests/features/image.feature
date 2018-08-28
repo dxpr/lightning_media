@@ -8,8 +8,7 @@ Feature: Image media assets
     When I visit "/media/add/image"
     And I attach the file "test.jpg" to "Image"
     And I press the "Upload" button
-    Then I should see an open "Crop image" details element
-    And I should see a "Freeform" details element
+    Then I should be able to crop the image
 
   @b23435a5
   Scenario: Uploading an image to be ignored by the media library

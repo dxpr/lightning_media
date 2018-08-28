@@ -36,4 +36,17 @@ class ImageBrowserContext extends DrupalSubContextBase {
     sleep(10);
   }
 
+  /**
+   * Asserts that cropping is enabled for an uploaded image.
+   *
+   * @Then I should be able to crop the image
+   */
+  public function assertCrop() {
+    /** @var \Acquia\LightningExtension\Context\ElementContext $context */
+    $context = $this->getContext(ElementContext::class);
+
+    $context->assertOpenDetails('Crop image');
+    $context->assertDetails('Freeform');
+  }
+
 }

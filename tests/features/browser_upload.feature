@@ -4,12 +4,8 @@ Feature: Uploading media assets through the media browser
   @1f81e59b
   Scenario Outline: Uploading a file from within the media browser
     Given I am logged in as a user with the "access media_browser entity browser pages, access media overview, create media" permissions
-    When I visit "/entity-browser/iframe/media_browser"
-    And I upload "<file>"
-    And I enter "<title>" for "Name"
-    And I press "Place"
-    And I visit "/admin/content/media"
-    Then I should see "<title>"
+    When I create media named "<title>" by uploading "<file>"
+    Then I should see "<title>" in the media library
 
     Examples:
       | file     | title       |
@@ -20,43 +16,8 @@ Feature: Uploading media assets through the media browser
 # with our lives. Hopefully, we'll eventually be able to test this again.
 #      | test.pdf | A test file |
 
-  @cdebd426
-  Scenario: Cropping should be enabled when uploading an image in the media browser
-    Given I am logged in as a user with the media_creator role
-    When I visit "/entity-browser/iframe/media_browser"
-    And I upload "test.jpg"
-    Then I should see an open "Crop image" details element
-    # This is turned into a vertical tab by JavaScript.
-    And I should see a "Freeform" details element
-
-  @b34126c1
-  Scenario: The upload widget should require a file
-    Given I am logged in as a user with the media_creator role
-    When I visit "/entity-browser/iframe/media_browser"
-    And I press the "Upload" button
-    And I press the "Place" button
-    Then I should see the error message "You must upload a file."
-
-  @2f72f4a4 @with-module:test_2f72f4a4 @javascript
-  Scenario: The upload widget validates file size
-    Given I am logged in as a user with the media_creator role
-    When I visit "/node/add/page"
-    And I open the "Lightweight Image" image browser
-    And I switch to the "Upload" Entity Browser tab
-    And I attach the file "test.jpg" to "input_file"
-    And I wait for AJAX to finish
-    And I wait 1 second
-    # This is a weak-sauce assertion but I can't tell exactly what the error
-    # message will say.
-    Then I should see a ".messages [role='alert']" element
-    And I should see an "input.form-file.error" element
-
-  @security @57537d2b
-  Scenario: The upload widget rejects files with unrecognized extensions
-    Given I am logged in as a user with the media_creator role
-    When I visit "/entity-browser/iframe/media_browser"
-    And I upload "test.php"
-    Then I should see the error message containing "Only files with the following extensions are allowed:"
+  # TODO: Convert the rest of the tests to PHPUnit. They are not user stories
+  # and should not be tested in a BDD framework.
 
   @security @627aeb22
   Scenario: Upload widget will not allow the user to create media of bundles they cannot access
@@ -64,14 +25,3 @@ Feature: Uploading media assets through the media browser
     When I visit "/entity-browser/iframe/media_browser"
     And I upload "test.php"
     Then the "#entity" element should be empty
-
-  @ced013a5 @with-module:test_ced013a5
-  Scenario: The upload widget should respect media bundles allowed by the field
-    Given I am logged in as a user with the "media_creator, media_manager" roles
-    When I visit "/node/add/page"
-    And I open the media browser
-    And I upload "test.jpg"
-    And I enter "Z Image Test" for "Name"
-    And I press the "Place" button
-    Then 1 z_image media entity should exist
-    And 0 image media entities should exist

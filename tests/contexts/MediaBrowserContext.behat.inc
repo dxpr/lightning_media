@@ -196,4 +196,55 @@ END;
     $assert->elementExists('named', ['button', 'Upload'], $wrapper)->press();
   }
 
+  /**
+   * @param $title
+   * @param $file
+   *
+   * @When I create media named :title by uploading :file
+   */
+  public function createFromUpload($title, $file) {
+    /** @var MinkContext $mink_context */
+    $mink_context = $this->getContext(MinkContext::class);
+    $mink_context->assertAtPath('/entity-browser/iframe/media_browser');
+
+    $this->upload($file);
+
+    // If the file is an image, assert that cropping is available.
+    $extension = pathinfo($file, PATHINFO_EXTENSION);
+    $extension = strtolower($extension);
+
+    if (in_array($extension, ['jpg', 'jpeg', 'gif', 'png'])) {
+      /** @var \Acquia\LightningExtension\Context\ImageBrowserContext $context */
+      $context = $this->getContext(ImageBrowserContext::class);
+      $context->assertCrop();
+    }
+
+    $assert = $this->assertSession();
+    $assert->fieldExists('Name')->setValue($title);
+    $assert->elementExists('named', ['button', 'Place'])->press();
+  }
+
+  /**
+   * Creates a media item in the media browser using an embed code.
+   *
+   * @param string $title
+   *   The label of the created media item.
+   * @param string $embed_code
+   *   The embed code from which to create the media item.
+   *
+   * @When I create media named :title using the embed code :embed_code
+   */
+  public function createFromEmbedCode($title, $embed_code) {
+    /** @var MinkContext $mink_context */
+    $mink_context = $this->getContext(MinkContext::class);
+    $mink_context->assertAtPath('/entity-browser/iframe/media_browser');
+
+    $assert = $this->assertSession();
+    $assert->elementExists('named', ['button', 'Create embed'])->press();
+    $assert->fieldExists('input')->setValue($embed_code);
+    $assert->elementExists('named', ['button', 'Update'])->press();
+    $assert->fieldExists('Name')->setValue($title);
+    $assert->elementExists('named', ['button', 'Place'])->press();
+  }
+
 }
