@@ -8,8 +8,8 @@ Feature: Creating media assets from within the media browser using embed codes
     Then I should see "<title>" in the media library
 
     Examples:
-      | embed_code                                             | title                            |
-      | https://www.youtube.com/watch?v=zQ1_IbFFbzA            | The Pill Scene                   |
-      | https://vimeo.com/14782834                             | Cache Rules Everything Around Me |
-      | https://twitter.com/webchick/status/672110599497617408 | angie speaks                     |
-      | https://www.instagram.com/p/jAH6MNINJG                 | Drupal Does LSD                  |
+      | embed_code                                             | title                     |
+      | https://www.youtube.com/watch?v=zQ1_IbFFbzA            | The Pill Scene            |
+      | https://vimeo.com/25585320                             | Drupal 8 HTML5 Initiative |
+      | https://twitter.com/webchick/status/672110599497617408 | angie speaks              |
+      | https://www.instagram.com/p/jAH6MNINJG                 | Drupal Does LSD           |

@@ -25,7 +25,7 @@ Feature: Embedding entities in a WYSIWYG editor
     Examples:
       | bundle    | embed_code                                                   |
       | video     | https://www.youtube.com/watch?v=N2_HkWs7OM0                  |
-      | video     | https://vimeo.com/14782834                                   |
+      | video     | https://vimeo.com/25585320                                   |
       | tweet     | https://twitter.com/djphenaproxima/status/879739227617079296 |
       | instagram | https://www.instagram.com/p/lV3WqOoNDD                       |
 
