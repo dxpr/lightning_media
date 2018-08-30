@@ -11,13 +11,14 @@ Feature: Bulk uploading media assets
   @72286b5d
   Scenario: Bulk uploading media assets
     Given I am logged in as a user with the "access media overview, create media, update media, dropzone upload files" permissions
-    # TODO: Also upload test.pdf.
     When I upload the following files:
     """
     test.jpg
     test.mp3
     test.mp4
+    test.pdf
     """
     Then I should see "test.jpg" in the media library
     And I should see "test.mp3" in the media library
     And I should see "test.mp4" in the media library
+    And I should see "test.pdf" in the media library

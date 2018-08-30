@@ -12,11 +12,7 @@ Feature: Uploading media assets through the media browser
       | test.jpg | Foobazzz    |
       | test.mp4 | Foovideo    |
       | test.mp3 | Fooaudio    |
-# We have no idea why, but this test persistently fails on Travis CI, but
-# invariably passes locally. It works. But Travis doesn't pass it, and
-# produces no errors. For now, we are commenting it out so we can move on
-# with our lives. Hopefully, we'll eventually be able to test this again.
-#      | test.pdf | A test file |
+      | test.pdf | A test file |
 
   # TODO: Convert the rest of the tests to PHPUnit. They are not user stories
   # and should not be tested in a BDD framework.
