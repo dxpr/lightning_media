@@ -6,6 +6,10 @@ experiences.
 Lightning Media's components are not enabled by default. You can install them
 like any other Drupal modules.
 
+#### Media Audio (`lightning_media_audio`)
+Provides an Audio file media type, which can be used to store and play audio files like
+MP3s, WAVs, or AACs.
+
 #### Bulk Media Upload (`lightning_media_bulk_upload`)
 Leverages the [DropzoneJS](https://drupal.org/project/dropzonejs) module to
 provide a form for uploading media assets in bulk.
@@ -37,10 +41,6 @@ Provides a Video media type for displaying remote videos (e.g., YouTube or
 Vimeo) in your Drupal site using the
 [Video Embed Field](https://drupal.org/project/video_embed_field) module and the
 Video file media type for managing locally hosted videos.
-
-#### Media Audio (`lightning_media_audio`)
-Provides an Audio file media type for displaying locally hosted audio files
-(mp3, wav or aac).
 
 ### Installation
 This component can only be installed using Composer. To add it to your Drupal
