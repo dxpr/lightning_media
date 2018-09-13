@@ -9,6 +9,7 @@ use Drupal\entity_browser\WidgetBase;
 use Drupal\inline_entity_form\ElementSubmit;
 use Drupal\lightning_media\Exception\IndeterminateBundleException;
 use Drupal\lightning_media\MediaHelper;
+use Drupal\media\MediaTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -72,7 +73,19 @@ abstract class EntityFormProxy extends WidgetBase {
    *   returned array will be empty.
    */
   protected function getAllowedBundles(FormStateInterface $form_state) {
-    return (array) $form_state->get(['entity_browser', 'widget_context', 'target_bundles']);
+    $target_bundles = (array) $form_state->get(['entity_browser', 'widget_context', 'target_bundles']);
+    if ($target_bundles) {
+      return $target_bundles;
+    }
+
+    $bundle = $form_state->getValue('bundle');
+    if ($bundle) {
+      return [
+        $bundle,
+      ];
+    }
+
+    return [];
   }
 
   /**
@@ -85,6 +98,11 @@ abstract class EntityFormProxy extends WidgetBase {
       $form['actions']['#weight'] = 100;
     }
 
+    $form['bundle'] = [
+      '#prefix' => '<div id="bundle">',
+      '#suffix' => '</div>',
+      '#weight' => 98,
+    ];
     $form['entity'] = [
       '#prefix' => '<div id="entity">',
       '#suffix' => '</div>',
@@ -97,8 +115,49 @@ abstract class EntityFormProxy extends WidgetBase {
       return $form;
     }
 
+    $allowed_bundles = $this->getAllowedBundles($form_state);
+    $applicable_bundles = $this->helper->getBundlesFromInput($value, $allowed_bundles);
+
+    // Show bundle select for ambiguous bundles before creating the entity.
+    if (count($applicable_bundles) > 1 && !$allowed_bundles) {
+      // Options array for the Bundle select.
+      // @code
+      //   $options = [
+      //     '' => 'None',
+      //     'image' => 'Image',
+      //     'image_2' => 'Image 2',
+      //   ];
+      // @endcode
+      $options = array_reduce(
+        $applicable_bundles,
+        function (array $options, MediaTypeInterface $media_type) {
+          $options[$media_type->id()] = $media_type->label();
+
+          return $options;
+        },
+        [
+          '' => $this->t('None'),
+        ]
+      );
+
+      $form['bundle'] += [
+        '#type' => 'select',
+        '#title' => $this->t('Bundle'),
+        '#options' => $options,
+        '#required' => TRUE,
+        '#default_value' => '',
+        '#ajax' => [
+          'callback' => [
+            static::class, 'ajax',
+          ],
+        ],
+      ];
+
+      return $form;
+    }
+
     try {
-      $entity = $this->helper->createFromInput($value, $this->getAllowedBundles($form_state));
+      $entity = $this->helper->createFromInput($value, $allowed_bundles);
     }
     catch (IndeterminateBundleException $e) {
       return $form;
@@ -146,6 +205,10 @@ abstract class EntityFormProxy extends WidgetBase {
     catch (IndeterminateBundleException $e) {
       $form_state->setError($form['widget'], $e->getMessage());
     }
+
+    if ($form_state->hasValue('bundle')) {
+      $form_state->setError($form['widget'], $this->t('You must select the bundle.'));
+    }
   }
 
   /**
@@ -173,6 +236,9 @@ abstract class EntityFormProxy extends WidgetBase {
     return (new AjaxResponse())
       ->addCommand(
         new ReplaceCommand('#entity', $form['widget']['entity'])
+      )
+      ->addCommand(
+        new ReplaceCommand('#bundle', $form['widget']['bundle'])
       );
   }
 

@@ -146,6 +146,10 @@ class FileUpload extends EntityFormProxy {
   public static function ajax(array &$form, FormStateInterface $form_state) {
     $el = AjaxUpload::el($form, $form_state);
 
+    if (!isset($el['#ajax']['wrapper'])) {
+      return parent::ajax($form, $form_state);
+    }
+
     $wrapper = '#' . $el['#ajax']['wrapper'];
 
     return parent::ajax($form, $form_state)
