@@ -46,7 +46,11 @@
         "bower-asset/dropzone": "^5.1",
         "drupal/crop": "^2.0.0-rc1",
         "drupal/image_widget_crop": "^2.1",
-        "bower-asset/cropper": "^2.3"
+        "bower-asset/cropper": "^2.3",
+        "bower-asset/slick-carousel": "^1.8",
+        "vardot/blazy": "^1.8",
+        "drupal/slick_entityreference": "^1.1",
+        "drupal/libraries": "3.0-alpha1"
     },
     "scripts": {
         "post-install-cmd": [
@@ -100,6 +104,10 @@
             "drupal/media_entity_instagram": {
                 "2917454 - Field formatter test is broken":
                 "https://www.drupal.org/files/issues/2917454-2.patch"
+            },
+            "drupal/slick": {
+                "2996130 - Misleading (false-negative) report on status report page":
+                "https://www.drupal.org/files/issues/2018-08-30/slick-misleading_report-2996130-2.patch"
             }
         },
         "enable-patching": true
