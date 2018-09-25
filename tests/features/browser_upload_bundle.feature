@@ -29,6 +29,6 @@ Feature: Upload widget's bundle select
     And I press the "Place" button
     And I wait for AJAX to finish
     And I wait 1 second
-    And I visit "/admin/content/media"
+    And I visit "/admin/content/media-table"
     Then I should see "Foobar"
     And I should see "Test Image 2"

@@ -10,7 +10,7 @@ dependencies:
   - image
   - inline_entity_form
   - lightning_core
-  - media
+  - media_library
   - user
   - views_infinite_scroll
 components:
