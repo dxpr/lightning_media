@@ -3,6 +3,7 @@
 namespace Drupal\lightning_media\Plugin\EntityBrowser\Widget;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_browser\WidgetBase;
@@ -73,11 +74,6 @@ abstract class EntityFormProxy extends WidgetBase {
    *   returned array will be empty.
    */
   protected function getAllowedBundles(FormStateInterface $form_state) {
-    $target_bundles = (array) $form_state->get(['entity_browser', 'widget_context', 'target_bundles']);
-    if ($target_bundles) {
-      return $target_bundles;
-    }
-
     $bundle = $form_state->getValue('bundle');
     if ($bundle) {
       return [
@@ -85,7 +81,7 @@ abstract class EntityFormProxy extends WidgetBase {
       ];
     }
 
-    return [];
+    return (array) $form_state->get(['entity_browser', 'widget_context', 'target_bundles']);
   }
 
   /**
@@ -98,20 +94,25 @@ abstract class EntityFormProxy extends WidgetBase {
       $form['actions']['#weight'] = 100;
     }
 
-    $form['bundle'] = [
-      '#prefix' => '<div id="bundle">',
-      '#suffix' => '</div>',
-      '#weight' => 98,
-    ];
-    $form['entity'] = [
-      '#prefix' => '<div id="entity">',
-      '#suffix' => '</div>',
-      '#weight' => 99,
+    $form['entity_form'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'entity-form',
+      ],
+      'entity' => [
+        '#prefix' => '<div id="entity">',
+        '#suffix' => '</div>',
+        '#weight' => 90,
+      ],
+      'bundle' => [
+        '#prefix' => '<div id="bundle">',
+        '#suffix' => '</div>',
+        '#weight' => 80,
+      ],
     ];
 
     $value = $this->getInputValue($form_state);
     if (empty($value)) {
-      $form['entity']['#markup'] = NULL;
       return $form;
     }
 
@@ -119,7 +120,7 @@ abstract class EntityFormProxy extends WidgetBase {
     $applicable_bundles = $this->helper->getBundlesFromInput($value, $allowed_bundles);
 
     // Show bundle select for ambiguous bundles before creating the entity.
-    if (count($applicable_bundles) > 1 && !$allowed_bundles) {
+    if (count($applicable_bundles) > 1 && count($allowed_bundles) !== 1) {
       // Options array for the Bundle select.
       // @code
       //   $options = [
@@ -136,11 +137,11 @@ abstract class EntityFormProxy extends WidgetBase {
           return $options;
         },
         [
-          '' => $this->t('None'),
+          '' => $this->t('- Select -'),
         ]
       );
 
-      $form['bundle'] += [
+      $form['entity_form']['bundle'] += [
         '#type' => 'select',
         '#title' => $this->t('Bundle'),
         '#options' => $options,
@@ -163,7 +164,7 @@ abstract class EntityFormProxy extends WidgetBase {
       return $form;
     }
 
-    $form['entity'] += [
+    $form['entity_form']['entity'] += [
       '#type' => 'inline_entity_form',
       '#entity_type' => $entity->getEntityTypeId(),
       '#bundle' => $entity->bundle(),
@@ -182,9 +183,9 @@ abstract class EntityFormProxy extends WidgetBase {
    * {@inheritdoc}
    */
   protected function prepareEntities(array $form, FormStateInterface $form_state) {
-    if (isset($form['widget']['entity']['#entity'])) {
+    if (isset($form['widget']['entity_form']['entity']['#entity'])) {
       return [
-        $form['widget']['entity']['#entity'],
+        $form['widget']['entity_form']['entity']['#entity'],
       ];
     }
     else {
@@ -203,11 +204,7 @@ abstract class EntityFormProxy extends WidgetBase {
       $this->helper->getBundleFromInput($value, TRUE, $this->getAllowedBundles($form_state));
     }
     catch (IndeterminateBundleException $e) {
-      $form_state->setError($form['widget'], $e->getMessage());
-    }
-
-    if ($form_state->hasValue('bundle')) {
-      $form_state->setError($form['widget'], $this->t('You must select the bundle.'));
+      $form_state->setError($form['widget']['entity_form']['input'], $e->getMessage());
     }
   }
 
@@ -217,7 +214,7 @@ abstract class EntityFormProxy extends WidgetBase {
   public function submit(array &$element, array &$form, FormStateInterface $form_state) {
     // IEF will take care of creating the entity upon submission. All we need to
     // do is send it upstream to Entity Browser.
-    $entity = $form['widget']['entity']['#entity'];
+    $entity = $form['widget']['entity_form']['entity']['#entity'];
     $this->selectEntities([$entity], $form_state);
   }
 
@@ -235,10 +232,10 @@ abstract class EntityFormProxy extends WidgetBase {
   public static function ajax(array &$form, FormStateInterface $form_state) {
     return (new AjaxResponse())
       ->addCommand(
-        new ReplaceCommand('#entity', $form['widget']['entity'])
+        new ReplaceCommand('#entity-form', $form['widget']['entity_form'])
       )
       ->addCommand(
-        new ReplaceCommand('#bundle', $form['widget']['bundle'])
+        new PrependCommand('#entity-form', ['#type' => 'status_messages'])
       );
   }
 

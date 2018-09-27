@@ -60,6 +60,8 @@ before_script:
   - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
   - export DTT_BASE_URL=http://localhost:8080
   - export DTT_API_URL=http://localhost:9222
+  - export MINK_DRIVER_ARGS_WEBDRIVER='["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless","--no-sandbox","--disable-dev-shm-usage","--disable-extensions"]}}, "http://localhost:9515"]'
+  - chromedriver &
 
 script:
   - composer validate composer.json --no-check-all --ansi --no-interaction
