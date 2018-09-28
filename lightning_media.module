@@ -559,3 +559,17 @@ function lightning_media_entity_form_display_presave(EntityFormDisplayInterface 
     ]);
   }
 }
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function lightning_media_library_info_alter(array &$libraries, $extension) {
+  if ($extension === 'entity_browser') {
+    // Clicking the "Remove" or "Edit" buttons in the media browser doesn't
+    // trigger the event that makes Quick Edit display the "Save" button.
+    // Loading the drupal.file library before entity browser attaches the
+    // file button event handlers to the media browser buttons.
+    // @see Drupal.behaviors.fileButtons
+    $libraries['entity_reference']['dependencies'][] = 'file/drupal.file';
+  }
+}
