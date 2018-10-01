@@ -101,4 +101,16 @@ final class Update310 implements ContainerInjectionInterface {
     }
   }
 
+  /**
+   * Enables the Media Slideshow sub-component.
+   *
+   * @update
+   *
+   * @ask Do you want to add support for creating slideshows and carousels
+   * of media assets?
+   */
+  public function enableMediaSlideshow() {
+    $this->moduleInstaller->install(['lightning_media_slideshow']);
+  }
+
 }

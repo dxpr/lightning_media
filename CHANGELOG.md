@@ -1,3 +1,7 @@
+## 3.1.0
+* Added a new component, Media Slideshow, which allows you to create
+  slideshows and carousels of assets from your media library. (#52)
+
 ## 3.0.0
 * Updated Lightning Core to 3.0, which requires Drupal core 8.6.0.
 

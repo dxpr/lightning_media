@@ -105,10 +105,6 @@
             "drupal/media_entity_instagram": {
                 "2917454 - Field formatter test is broken":
                 "https://www.drupal.org/files/issues/2917454-2.patch"
-            },
-            "drupal/slick": {
-                "2996130 - Misleading (false-negative) report on status report page":
-                "https://www.drupal.org/files/issues/2018-08-30/slick-misleading_report-2996130-2.patch"
             }
         },
         "enable-patching": true
