@@ -4,5 +4,5 @@ type: module
 package: Lightning
 description: 'Twitter support for Lightning Media.'
 dependencies:
-  - lightning_media
-  - media_entity_twitter
+  - lightning_media:lightning_media
+  - media_entity_twitter:media_entity_twitter

@@ -4,4 +4,4 @@ type: module
 description: 'Locally hosted document support for Lightning Media.'
 package: Lightning
 dependencies:
-  - lightning_media
+  - lightning_media:lightning_media

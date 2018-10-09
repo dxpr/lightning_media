@@ -4,4 +4,4 @@ type: module
 package: Lightning
 description: 'Audio support for Lightning Media.'
 dependencies:
-  - lightning_media
+  - lightning_media:lightning_media

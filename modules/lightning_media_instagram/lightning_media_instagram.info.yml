@@ -4,5 +4,5 @@ type: module
 description: 'Instagram support for Lightning Media.'
 package: Lightning
 dependencies:
-  - lightning_media
-  - media_entity_instagram
+  - lightning_media:lightning_media
+  - media_entity_instagram:media_entity_instagram

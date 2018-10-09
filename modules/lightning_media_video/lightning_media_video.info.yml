@@ -4,5 +4,5 @@ type: module
 package: Lightning
 description: 'Video support for Lightning Media.'
 dependencies:
-  - lightning_media
-  - video_embed_media
+  - lightning_media:lightning_media
+  - video_embed_media:video_embed_media

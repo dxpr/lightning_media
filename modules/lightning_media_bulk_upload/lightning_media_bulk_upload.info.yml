@@ -4,5 +4,5 @@ type: module
 description: 'Provides a form to upload many media items at once.'
 package: Lightning
 dependencies:
-  - dropzonejs
-  - lightning_media
+  - dropzonejs:dropzonejs
+  - lightning_media:lightning_media
