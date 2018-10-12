@@ -44,7 +44,7 @@ class Upload extends FileElement {
       $errors = file_validate($file, $element['#upload_validators']);
       if ($errors) {
         foreach ($errors as $error) {
-          $form_state->setError($element, (string) $error);
+          $form_state->setError($element, $error);
         }
         static::delete($element);
       }

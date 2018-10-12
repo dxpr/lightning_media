@@ -64,6 +64,8 @@ class MediaBrowserTest extends ExistingSiteBase {
     $wrapper = $this->assert->elementExists('css', '.js-form-managed-file');
     $this->assert->elementExists('named', ['button', 'Upload'], $wrapper)->press();
     $this->assert->pageTextContains('Only files with the following extensions are allowed:');
+    // The error message should not be double-escaped.
+    $this->assert->responseNotContains('&lt;em class="placeholder"&gt;');
   }
 
   /**

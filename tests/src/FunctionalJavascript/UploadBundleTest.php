@@ -143,7 +143,7 @@ class UploadBundleTest extends WebDriverTestBase {
     $path = $this->container->get('file_system')->realpath('public://test_text.txt');
     $web_assert->fieldExists('input_file')->attachFile($path);
     $error_message = $web_assert->waitForElement('css', 'div[role="alert"]')->getText();
-    $this->assertSame('Error message Only files with the following extensions are allowed: <em class="placeholder">png gif jpg jpeg</em>.', $error_message);
+    $this->assertSame('Error message Only files with the following extensions are allowed: png gif jpg jpeg.', $error_message);
 
     // Previous alert gets hidden after uploading .png file.
     $this->getRandomGenerator()->image('public://test_image.png', '240x240', '640x480');
