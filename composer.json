@@ -38,7 +38,7 @@
         "drupal/embed": "^1.0",
         "drupal/entity_embed": "1.0.0-beta2",
         "drupal/inline_entity_form": "^1.0",
-        "drupal/media_entity_instagram": "2.0.0-alpha1",
+        "drupal/media_entity_instagram": "2.0.0-alpha2",
         "drupal/media_entity_twitter": "2.0.0-alpha2",
         "drupal/entity_browser": "2.0.0",
         "drupal/views_infinite_scroll": "^1.1",
@@ -101,10 +101,6 @@
                 "https://www.drupal.org/files/issues/entity-browser-view-context-2865928-14.patch",
                 "2877751 - Inform users how many items they can add to a field that uses an entity browser":
                 "https://www.drupal.org/files/issues/2877751-27-8.x-2.x.patch"
-            },
-            "drupal/media_entity_instagram": {
-                "2917454 - Field formatter test is broken":
-                "https://www.drupal.org/files/issues/2917454-2.patch"
             }
         },
         "enable-patching": true
