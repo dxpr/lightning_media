@@ -1,0 +1,14 @@
+imports:
+  - 'docroot/modules/contrib/lightning_core/behat.yml'
+
+default:
+  suites:
+    lightning_media:
+      paths:
+        - 'modules/lightning_media_slideshow/tests/features'
+        - 'tests/features'
+      contexts:
+        - '\Drupal\DrupalExtension\Context\DrupalContext'
+        - '\Drupal\DrupalExtension\Context\MinkContext'
+        - '\Drupal\DrupalExtension\Context\MessageContext'
+        - '\Drupal\DrupalExtension\Context\DrushContext'

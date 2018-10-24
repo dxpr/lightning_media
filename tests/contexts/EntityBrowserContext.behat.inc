@@ -11,13 +11,8 @@ use Webmozart\Assert\Assert;
 
 /**
  * Contains step definitions for interacting with entity browser instances.
- *
- * @internal
- * This class is part of Lightning's internal testing code. It is not an API and
- * should not be extended. This class will be marked final, and all protected
- * members will be made private, in Lightning Media 3.x.
  */
-class EntityBrowserContext extends DrupalSubContextBase {
+final class EntityBrowserContext extends DrupalSubContextBase {
 
   use AwaitTrait;
 
@@ -51,7 +46,7 @@ class EntityBrowserContext extends DrupalSubContextBase {
    * @return \Behat\Mink\Element\NodeElement[]
    *   An array of items in the entity browser.
    */
-  protected function getItems($browser_id = NULL) {
+  private function getItems($browser_id = NULL) {
     if ($browser_id) {
       $selector = 'form#entity-browser-' . Html::cleanCssIdentifier($browser_id) . '-form';
     }
