@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\entity_browser\Element\EntityBrowserElement;
-use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_install().
@@ -22,12 +21,4 @@ function test_10a21ffe_install() {
       'region' => 'content',
     ])
     ->save();
-}
-
-/**
- * Implements hook_uninstall().
- */
-function test_10a21ffe_uninstall() {
-  FieldConfig::loadByName('node', 'page', 'field_hero_image')->delete();
-  field_purge_batch(10);
 }
