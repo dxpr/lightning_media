@@ -78,30 +78,4 @@ final class FixtureContext extends FixtureBase {
     parent::tearDown();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function installTheme($theme) {
-    parent::installTheme($theme);
-
-    block_theme_initialize($theme);
-
-    $blocks = $this->container->get('entity_type.manager')
-      ->getStorage('block')
-      ->loadByProperties([
-        'theme' => $theme,
-        'region' => '',
-        'status' => FALSE,
-      ]);
-
-    /** @var \Drupal\block\BlockInterface $block */
-    foreach ($blocks as $block) {
-      $this->container->get('config.factory')
-        ->getEditable($block->getConfigDependencyName())
-        ->set('region', 'content')
-        ->set('status', TRUE)
-        ->save();
-    }
-  }
-
 }
