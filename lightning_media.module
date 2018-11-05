@@ -116,8 +116,10 @@ function lightning_media_field_widget_form_alter(array &$element, FormStateInter
  */
 function lightning_media_field_widget_entity_browser_entity_reference_form_alter(array &$element, FormStateInterface $form_state, array $context) {
   // Move the remaining number of selections to the details summary.
-  $element['#description'] .= $element['current']['#prefix'];
-  unset($element['current']['#prefix']);
+  if (isset($element['current']['#prefix'])) {
+    $element['#description'] .= $element['current']['#prefix'];
+    unset($element['current']['#prefix']);
+  }
 
   /** @var \Drupal\Core\Field\FieldItemListInterface $items */
   $items = $context['items'];
