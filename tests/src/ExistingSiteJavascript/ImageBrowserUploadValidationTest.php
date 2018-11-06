@@ -6,13 +6,13 @@ use Behat\Mink\Element\ElementInterface;
 use Behat\Mink\Element\NodeElement;
 use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
-use weitzman\DrupalTestTraits\ExistingSiteJavascriptBase;
+use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class ImageBrowserUploadValidationTest extends ExistingSiteJavascriptBase {
+class ImageBrowserUploadValidationTest extends ExistingSiteWebDriverTestBase {
 
   /**
    * The session assertion helper.

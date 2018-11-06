@@ -3,13 +3,13 @@
 namespace Drupal\Tests\lightning_media\ExistingSiteJavascript;
 
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
-use weitzman\DrupalTestTraits\ExistingSiteJavascriptBase;
+use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class MediaImageFieldTest extends ExistingSiteJavascriptBase {
+class MediaImageFieldTest extends ExistingSiteWebDriverTestBase {
 
   /**
    * The name of the media item created during the test.

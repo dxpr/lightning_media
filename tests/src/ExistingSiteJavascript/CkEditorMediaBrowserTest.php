@@ -3,13 +3,13 @@
 namespace Drupal\Tests\lightning_media\ExistingSiteJavascript;
 
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
-use weitzman\DrupalTestTraits\ExistingSiteJavascriptBase;
+use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class CkEditorMediaBrowserTest extends ExistingSiteJavascriptBase {
+class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
 
   /**
    * Media items created during the test.

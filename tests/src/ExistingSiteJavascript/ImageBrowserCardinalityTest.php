@@ -9,13 +9,13 @@ use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\file\Entity\File;
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\media\Entity\Media;
-use weitzman\DrupalTestTraits\ExistingSiteJavascriptBase;
+use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class ImageBrowserCardinalityTest extends ExistingSiteJavascriptBase {
+class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
 
   /**
    * Media items created during the test.
