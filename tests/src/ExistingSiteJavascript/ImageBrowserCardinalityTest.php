@@ -2,13 +2,16 @@
 
 namespace Drupal\Tests\lightning_media\ExistingSiteJavascript;
 
-use Behat\Mink\Element\ElementInterface;
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\file\Entity\File;
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\media\Entity\Media;
+use Drupal\Tests\lightning_media\Traits\ConfigCacheTrait;
+use Drupal\Tests\lightning_media\Traits\ExtensionTrait;
+use Drupal\Tests\lightning_media\Traits\ImageBrowserTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use weitzman\DrupalTestTraits\Entity\MediaCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
@@ -17,19 +20,18 @@ use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
  */
 class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
 
-  /**
-   * Media items created during the test.
-   *
-   * @var \Drupal\media\MediaInterface[]
-   */
-  private $media = [];
+  use ConfigCacheTrait;
+  use ContentTypeCreationTrait;
+  use ExtensionTrait;
+  use ImageBrowserTrait;
+  use MediaCreationTrait;
 
   /**
-   * The session assertion helper.
+   * The content type created during the test.
    *
-   * @var JSWebAssert
+   * @var \Drupal\node\NodeTypeInterface
    */
-  private $assert;
+  private $nodeType;
 
   /**
    * {@inheritdoc}
@@ -37,17 +39,23 @@ class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
   public function setUp() {
     parent::setUp();
 
+    $this->nodeType = $this->createContentType();
+    $this->markEntityForCleanup($this->nodeType);
+
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     $field_storage = entity_create('field_storage_config', [
       'field_name' => 'field_multi_image',
       'entity_type' => 'node',
       'type' => 'image',
       'cardinality' => 3,
     ]);
-    $field_storage->save();
+    $dependencies = $field_storage->getDependencies();
+    $dependencies['enforced']['config'][] = $this->nodeType->id();
+    $field_storage->set('dependencies', $dependencies)->save();
 
     entity_create('field_config', [
       'field_storage' => $field_storage,
-      'bundle' => 'page',
+      'bundle' => $this->nodeType->id(),
       'label' => 'Multi-Image',
     ])->save();
 
@@ -57,15 +65,17 @@ class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
       'type' => 'image',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ]);
-    $field_storage->save();
+    $dependencies = $field_storage->getDependencies();
+    $dependencies['enforced']['config'][] = $this->nodeType->id();
+    $field_storage->set('dependencies', $dependencies)->save();
 
     entity_create('field_config', [
       'field_storage' => $field_storage,
-      'bundle' => 'page',
+      'bundle' => $this->nodeType->id(),
       'label' => 'Unlimited Images',
     ])->save();
 
-    entity_get_form_display('node', 'page', 'default')
+    entity_get_form_display('node', $this->nodeType->id(), 'default')
       ->setComponent('field_multi_image', [
         'type' => 'entity_browser_file',
         'settings' => [
@@ -110,57 +120,49 @@ class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
         'image' => $file->id(),
         'field_media_in_library' => TRUE,
       ]);
-      $media->save();
-      array_push($this->media, $media);
+      $this->assertSame(SAVED_NEW, $media->save());
+      $this->markEntityForCleanup($media);
     }
 
-    $account = $this->createUser();
-    $account->addRole('media_creator');
-    $account->save();
+    $account = $this->createUser([
+      'access media overview',
+      'create ' . $this->nodeType->id() . ' content',
+      'access image_browser entity browser pages',
+    ]);
+    $this->drupalLogin($account);
 
-    $this->assertNotEmpty($account->passRaw);
-    $this->visit('/user/login');
+    $GLOBALS['install_state'] = [];
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $view = entity_load('view', 'media');
+    $this->cacheConfig($view);
+    $this->cacheConfig('entity_browser.browser.image_browser');
+    lightning_media_image_view_insert($view);
+    unset($GLOBALS['install_state']);
 
-    $this->assert = new JSWebAssert($this->getSession());
-    $this->assert->fieldExists('name')->setValue($account->getAccountName());
-    $this->assert->fieldExists('pass')->setValue($account->passRaw);
-    $this->assert->buttonExists('Log in')->press();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    while ($this->media) {
-      array_pop($this->media)->delete();
-    }
-
-    entity_load('field_config', 'node.page.field_multi_image')->delete();
-    entity_load('field_config', 'node.page.field_unlimited_images')->delete();
-    field_purge_batch(10);
-
-    parent::tearDown();
+    $this->installModule('image_widget_crop');
+    module_load_install('lightning_media_image');
+    lightning_media_image_install();
   }
 
   /**
    * Tests that multiple cardinality is enforced in the image browser.
    */
   public function testMultipleCardinality() {
-    $this->visit('/node/add/page');
+    $this->drupalGet('/node/add/' . $this->nodeType->id());
     $session = $this->getSession();
     $page = $session->getPage();
 
-    $this->open('Multi-Image');
+    $this->openImageBrowser('Multi-Image');
     $items = $page->findAll('css', '[data-selectable]');
     $this->assertGreaterThanOrEqual(4, count($items));
     $this->select($items[0]);
     $this->select($items[1]);
 
-    $this->assert->buttonExists('Select')->press();
+    $this->assertSession()->buttonExists('Select')->press();
     $session->switchToIFrame(NULL);
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->open('Multi-Image');
+    $this->openImageBrowser('Multi-Image');
     $this->select($items[2]);
 
     $disabled = $page->findAll('css', '[data-selectable].disabled');
@@ -171,61 +173,26 @@ class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
    * Tests that the image browser respects unlimited cardinality.
    */
   public function testUnlimitedCardinality() {
-    $this->visit('/node/add/page');
+    $this->visit('/node/add/' . $this->nodeType->id());
     $session = $this->getSession();
     $page = $session->getPage();
 
-    $this->open('Unlimited Images');
+    $this->openImageBrowser('Unlimited Images');
     $items = $page->findAll('css', '[data-selectable]');
     $this->assertGreaterThanOrEqual(4, count($items));
     $this->select($items[0]);
     $this->select($items[1]);
     $this->select($items[2]);
 
-    $this->assert->buttonExists('Select')->press();
+    $this->assertSession()->buttonExists('Select')->press();
     $session->switchToIFrame(NULL);
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->open('Unlimited Images');
+    $this->openImageBrowser('Unlimited Images');
     $this->select($items[3]);
 
     $disabled = $page->findAll('css', '[data-selectable].disabled');
     $this->assertEmpty($disabled);
-  }
-
-  /**
-   * Opens a modal image browser.
-   *
-   * @param string $label
-   *   The label of the image field.
-   */
-  private function open($label) {
-    $this->assert->buttonExists('Select Image(s)', $this->getWrapper($label))->press();
-    $this->assert->assertWaitOnAjaxRequest();
-    $this->getSession()->switchToIFrame('entity_browser_iframe_image_browser');
-  }
-
-  /**
-   * Finds a details element by its summary text.
-   *
-   * @param string $label
-   *   The summary.
-   *
-   * @return NodeElement
-   *   The details element.
-   */
-  private function getWrapper($label) {
-    $elements = $this->getSession()
-      ->getPage()
-      ->findAll('css', 'details > summary');
-
-    $filter =  function (ElementInterface $element) use ($label) {
-      return $element->getText() === $label;
-    };
-    $wrappers = array_filter($elements, $filter);
-    $this->assertNotEmpty($wrappers);
-
-    return reset($wrappers)->getParent();
   }
 
   /**
@@ -236,7 +203,7 @@ class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
    */
   private function select(NodeElement $element) {
     $element->click();
-    $this->assert->fieldExists('Select this item', $element)->check();
+    $this->assertSession()->fieldExists('Select this item', $element)->check();
   }
 
 }

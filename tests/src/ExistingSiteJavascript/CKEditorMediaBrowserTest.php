@@ -2,28 +2,29 @@
 
 namespace Drupal\Tests\lightning_media\ExistingSiteJavascript;
 
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
+use Drupal\Tests\lightning_media\Traits\ConfigCacheTrait;
+use Drupal\Tests\lightning_media\Traits\ExtensionTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use weitzman\DrupalTestTraits\Entity\MediaCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
+class CKEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
+
+  use ConfigCacheTrait;
+  use ContentTypeCreationTrait;
+  use ExtensionTrait;
+  use MediaCreationTrait;
 
   /**
-   * Media items created during the test.
+   * The content type created during the test.
    *
-   * @var \Drupal\media\MediaInterface[]
+   * @var \Drupal\node\NodeTypeInterface
    */
-  private $media = [];
-
-  /**
-   * The session assertion helper.
-   *
-   * @var JSWebAssert
-   */
-  private $assert;
+  private $nodeType;
 
   /**
    * The ID of the current user.
@@ -52,28 +53,39 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
       'embed_code' => 'https://twitter.com/CodeWisdom/status/826460810121773057',
     ]);
 
-    $account = $this->createUser();
-    $account->addRole('media_creator');
-    $account->save();
+    $this->nodeType = $this->createContentType();
+    $this->markEntityForCleanup($this->nodeType);
 
-    $this->assertNotEmpty($account->passRaw);
-    $this->visit('/user/login');
-
-    $this->assert = new JSWebAssert($this->getSession());
-    $this->assert->fieldExists('name')->setValue($account->getAccountName());
-    $this->assert->fieldExists('pass')->setValue($account->passRaw);
-    $this->assert->buttonExists('Log in')->press();
+    $account = $this->createUser([
+      'access media overview',
+      'create ' . $this->nodeType->id() . ' content',
+      'edit own ' . $this->nodeType->id() . ' content',
+      'access media_browser entity browser pages',
+      'use text format rich_text',
+    ]);
+    $this->drupalLogin($account);
 
     $this->uid = $account->id();
+
+    $GLOBALS['install_state'] = [];
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $view = entity_load('view', 'media');
+    $this->cacheConfig($view);
+    $this->cacheConfig('entity_browser.browser.media_browser');
+    lightning_media_view_insert($view);
+    unset($GLOBALS['install_state']);
+
+    $this->installModule('image_widget_crop');
+    module_load_install('lightning_media_image');
+    lightning_media_image_install();
   }
 
   /**
    * {@inheritdoc}
    */
   public function tearDown() {
-    while ($this->media) {
-      array_pop($this->media)->delete();
-    }
+    $this->uninstallModule('image_widget_crop');
+    $this->restoreConfig();
     parent::tearDown();
   }
 
@@ -81,31 +93,29 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
    * Tests exposed filters in the media browser.
    */
   public function testExposedFilters() {
-    $this->visit('/node/add/page');
-    $this->open();
-
-    $this->getSession()->switchToIFrame('entity_browser_iframe_media_browser');
+    $this->drupalGet('/node/add/' . $this->nodeType->id());
+    $this->open(TRUE);
 
     // All items should be visible.
     $this->assertCount(3, $this->getItems());
 
     // Try filtering by media type.
-    $this->assert->fieldExists('Type')->selectOption('Image');
+    $this->assertSession()->fieldExists('Type')->selectOption('Image');
     $this->applyFilters();
     $this->assertEmpty($this->getItems());
 
     // Clear the type filter.
-    $this->assert->fieldExists('Type')->selectOption('- Any -');
+    $this->assertSession()->fieldExists('Type')->selectOption('- Any -');
     $this->applyFilters();
     $this->assertCount(3, $this->getItems());
 
     // Try filtering by keywords.
-    $this->assert->fieldExists('Keywords')->setValue('Code Wisdom 1');
+    $this->assertSession()->fieldExists('Keywords')->setValue('Code Wisdom 1');
     $this->applyFilters();
     $this->assertCount(1, $this->getItems());
 
     // Clear the keyword filter.
-    $this->assert->fieldExists('Keywords')->setValue('');
+    $this->assertSession()->fieldExists('Keywords')->setValue('');
     $this->applyFilters();
     $this->assertCount(3, $this->getItems());
   }
@@ -114,32 +124,27 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
    * Tests that cardinality is never enforced in the media browser.
    */
   public function testUnlimitedCardinality() {
-    $session = $this->getSession();
-
-    $this->visit('/node/add/page');
-    $this->open();
-    $session->switchToIFrame('entity_browser_iframe_media_browser');
+    $this->drupalGet('/node/add/' . $this->nodeType->id());
+    $this->open(TRUE);
 
     $items = $this->getItems();
     $this->assertGreaterThanOrEqual(3, count($items));
-    $this->assert->fieldExists('Select this item', $items[0])->check();
+    $this->assertSession()->fieldExists('Select this item', $items[0])->check();
     $items[0]->click();
-    $this->assert->fieldExists('Select this item', $items[1])->check();
+    $this->assertSession()->fieldExists('Select this item', $items[1])->check();
     $items[1]->click();
 
     // Only one item can be selected at any time, but nothing is ever disabled.
-    $this->assert->elementsCount('css', '[data-selectable].selected', 1);
-    $this->assert->elementNotExists('css', '[data-selectable].disabled');
+    $this->assertSession()->elementsCount('css', '[data-selectable].selected', 1);
+    $this->assertSession()->elementNotExists('css', '[data-selectable].disabled');
   }
 
   /**
    * Tests that the entity embed dialog opens when editing a pre-existing embed.
    */
   public function testEditEmbed() {
-    $session = $this->getSession();
-
     $node = $this->createNode([
-      'type' => 'page',
+      'type' => $this->nodeType->id(),
       'title' => 'Blorf',
       'uid' => $this->uid,
       'body' => [
@@ -148,26 +153,26 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
       ],
     ]);
 
-    $this->visit('/node/' . $node->id() . '/edit');
-    $this->open();
-    $session->switchToIFrame('entity_browser_iframe_media_browser');
+    $this->drupalGet($node->toUrl('edit-form'));
+    $this->open(TRUE);
 
     $items = $this->getItems();
     $this->assertGreaterThanOrEqual(3, count($items));
-    $this->assert->fieldExists('Select this item', $items[0])->check();
-    $this->assert->buttonExists('Place')->press();
-    $session->switchToIFrame(NULL);
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldExists('Select this item', $items[0])->check();
+    $this->assertSession()->buttonExists('Place')->press();
+    $this->getSession()->switchToIFrame(NULL);
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $embed_dialog = $this->assert->elementExists('css', 'form.entity-embed-dialog');
-    $this->assert->buttonExists('Embed', $embed_dialog)->press();
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()
+      ->elementExists('css', 'form.entity-embed-dialog')
+      ->pressButton('Embed');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->assert->buttonExists('Save')->press();
-    $this->visit('/node/' . $node->id() . '/edit');
+    $this->assertSession()->buttonExists('Save')->press();
+    $this->drupalGet($node->toUrl('edit-form'));
     $this->open();
-    $this->assert->assertWaitOnAjaxRequest();
-    $this->assert->elementExists('css', 'form.entity-embed-dialog');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementExists('css', 'form.entity-embed-dialog');
   }
 
   /**
@@ -176,8 +181,6 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
    * @depends testExposedFilters
    */
   public function testImageEmbed() {
-    $session = $this->getSession();
-
     /** @var \Drupal\Core\Entity\EntityStorageInterface $file_storage */
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
     $uri = uniqid('public://') . '.png';
@@ -195,24 +198,23 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
     $media->image->alt = 'I am the greetest';
     $this->assertSame(SAVED_UPDATED, $media->save());
 
-    $this->visit('/node/add/page');
-    $this->open();
-    $session->switchToIFrame('entity_browser_iframe_media_browser');
+    $this->visit('/node/add/' . $this->nodeType->id());
+    $this->open(TRUE);
 
-    $this->assert->fieldExists('Type')->selectOption('Image');
+    $this->assertSession()->fieldExists('Type')->selectOption('Image');
     $this->applyFilters();
 
     $items = $this->getItems();
     $this->assertGreaterThanOrEqual(1, count($items));
     $items[0]->click();
-    $this->assert->buttonExists('Place')->press();
-    $session->switchToIFrame(NULL);
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonExists('Place')->press();
+    $this->getSession()->switchToIFrame(NULL);
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $embed_dialog = $this->assert->elementExists('css', 'form.entity-embed-dialog');
-    $this->assert->optionExists('Image style', 'Cropped: Freeform', $embed_dialog);
-    $this->assert->fieldValueEquals('Alternate text', 'I am the greetest', $embed_dialog);
-    $this->assert->fieldValueEquals('attributes[title]', 'Foobar', $embed_dialog);
+    $embed_dialog = $this->assertSession()->elementExists('css', 'form.entity-embed-dialog');
+    $this->assertSession()->optionExists('Image style', 'Cropped: Freeform', $embed_dialog);
+    $this->assertSession()->fieldValueEquals('Alternate text', 'I am the greetest', $embed_dialog);
+    $this->assertSession()->fieldValueEquals('attributes[title]', 'Foobar', $embed_dialog);
   }
 
   /**
@@ -237,24 +239,23 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
       'field_document' => $file->id(),
     ]);
 
-    $this->visit('/node/add/page');
-    $this->open();
-    $session->switchToIFrame('entity_browser_iframe_media_browser');
+    $this->visit('/node/add/' . $this->nodeType->id());
+    $this->open(TRUE);
 
-    $this->assert->fieldExists('Type')->selectOption('Document');
+    $this->assertSession()->fieldExists('Type')->selectOption('Document');
     $this->applyFilters();
 
     $items = $this->getItems();
     $this->assertGreaterThanOrEqual(1, count($items));
     $items[0]->click();
-    $this->assert->buttonExists('Place')->press();
+    $this->assertSession()->buttonExists('Place')->press();
     $session->switchToIFrame(NULL);
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $embed_dialog = $this->assert->elementExists('css', 'form.entity-embed-dialog');
-    $this->assert->fieldNotExists('Image style', $embed_dialog);
-    $this->assert->fieldNotExists('Alternative text', $embed_dialog);
-    $this->assert->fieldNotExists('attributes[title]', $embed_dialog);
+    $embed_dialog = $this->assertSession()->elementExists('css', 'form.entity-embed-dialog');
+    $this->assertSession()->fieldNotExists('Image style', $embed_dialog);
+    $this->assertSession()->fieldNotExists('Alternative text', $embed_dialog);
+    $this->assertSession()->fieldNotExists('attributes[title]', $embed_dialog);
   }
 
   /**
@@ -267,21 +268,9 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
    *   The saved media item.
    */
   private function addMedia(array $values) {
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
-      ->getStorage('media');
-
-    $values += [
-      'name' => $this->randomString(),
-    ];
-    /** @var \Drupal\media\MediaInterface $media */
-    $media = $storage->create($values);
-    $media->set('field_media_in_library', TRUE)->setPublished();
-
-    $this->assertSame(SAVED_NEW, $storage->save($media));
-    array_push($this->media, $media);
-
-    return $media;
+    $values['field_media_in_library'] = TRUE;
+    $values['status'] = TRUE;
+    return $this->createMedia($values);
   }
 
   /**
@@ -300,15 +289,19 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
    * Applies exposed Views filters.
    */
   private function applyFilters() {
-    $this->assert->elementExists('css', '.views-exposed-form .form-actions input[type = "submit"]')->press();
-    $this->assert->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementExists('css', '.views-exposed-form .form-actions input[type = "submit"]')->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     sleep(2);
   }
 
   /**
    * Opens the CKeditor media browser.
+   *
+   * @param bool $switch
+   *   (optional) If TRUE, switch into the media browser iFrame. Defaults to
+   *   FALSE.
    */
-  private function open() {
+  private function open($switch = FALSE) {
     // Assert that at least one CKeditor instance is initialized.
     $session = $this->getSession();
     $status = $session->wait(10000, 'Object.keys( CKEDITOR.instances ).length > 0');
@@ -329,6 +322,10 @@ class CkEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
     $status = $session->evaluateScript("CKEDITOR.instances['$editor'].execCommand('editdrupalentity', { id: 'media_browser' });");
     $this->assertNotEmpty($status);
     sleep(3);
+
+    if ($switch) {
+      $session->switchToIFrame('entity_browser_iframe_media_browser');
+    }
   }
 
 }

@@ -135,10 +135,8 @@ final class EntityBrowserContext extends DrupalSubContextBase {
   public function submit() {
     $session = $this->getSession();
 
-    // @TODO: Make this smarter, because we can't be sure that #edit-submit
-    // exists at all, or that it's the correct submit button.
     $button = $this->assertSession()
-      ->elementExists('css', '#edit-submit')
+      ->elementExists('css', '[data-drupal-selector="edit-submit"]')
       ->getXpath();
 
     $frame = $session->evaluateScript('window.name') ?: $session->evaluateScript('window.active_iframe.name');

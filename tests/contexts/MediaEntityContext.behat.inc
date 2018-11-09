@@ -9,11 +9,22 @@ use Drupal\Component\Utility\Random;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
+use Drupal\Tests\lightning_media\FixtureContext;
 
 /**
  * Contains step definitions for interacting with media entities.
  */
 final class MediaEntityContext extends DrupalSubContextBase {
+
+  /**
+   * @BeforeScenario
+   */
+  public function setUp() {
+    // Automatically delete all media items created by the user during this
+    // scenario.
+    $this->getContext(FixtureContext::class)
+      ->trackUserContent($this->getUserManager(), 'media');
+  }
 
   /**
    * Creates a set of media items from tabular data.
