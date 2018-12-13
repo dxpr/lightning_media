@@ -31,9 +31,12 @@ trait ImageBrowserTrait {
     $elements = $this->getSession()
       ->getPage()
       ->findAll('css', 'details > summary');
+    $lowercase_label = mb_strtolower($label);
 
-    $filter =  function (ElementInterface $element) use ($label) {
-      return $element->getText() === $label;
+    $filter =  function (ElementInterface $element) use ($lowercase_label) {
+      $lowercase_text = mb_strtolower($element->getText());
+
+      return $lowercase_text === $lowercase_label;
     };
     $wrappers = array_filter($elements, $filter);
     $this->assertNotEmpty($wrappers);

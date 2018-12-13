@@ -1,3 +1,12 @@
+## 3.2.0
+* Updated Lightning Core to 3.4.
+* Changed the testing infrastructure, sealed all subcontexts, refactored most
+  of the Behat tests into PHPUnit.
+* Updated Media Entity Instagram to 2.0-alpha2.
+* Added namespaces to dependencies.
+* Warning messages are not double escaped anymore.
+* Updated Entity Browser to 2.0.
+
 ## 3.1.0
 * Added a new component, Media Slideshow, which allows you to create
   slideshows and carousels of assets from your media library using the
