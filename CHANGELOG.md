@@ -1,3 +1,7 @@
+## 3.3.0
+* Behat test now check for existence of FixtureContext prior to invoking its
+  methods. (Issue #3020990)
+
 ## 3.2.0
 * Updated Lightning Core to 3.4.
 * Changed the testing infrastructure, sealed all subcontexts, refactored most
