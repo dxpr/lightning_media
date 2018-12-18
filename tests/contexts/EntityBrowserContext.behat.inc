@@ -3,6 +3,7 @@
 namespace Acquia\LightningExtension\Context;
 
 use Behat\Behat\Hook\Scope\ScenarioScope;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
@@ -146,6 +147,11 @@ final class EntityBrowserContext extends DrupalSubContextBase {
     // press the button.
     $session->switchToIFrame();
 
+    // If there are single quotes in the button's XPath query, WebDriver needs
+    // them to be escaped.
+    if ($session->getDriver() instanceof Selenium2Driver) {
+      $button = addslashes($button);
+    }
     $js = <<<END
 document.evaluate('$button', window.$frame.document, null).iterateNext().click();
 END;

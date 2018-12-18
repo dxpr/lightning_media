@@ -56,7 +56,6 @@ before_script:
   # If Lightning Dev is installed, uninstall it. It is no longer needed.
   - drush pm-uninstall --yes lightning_dev
   - drush runserver --default-server=builtin 8080 &>/dev/null &
-  - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
   - chromedriver --port=4444 &
   - cp -f phpunit.xml ./docroot/core
 
@@ -65,7 +64,7 @@ script:
   - phpunit --configuration ./docroot/core --group lightning_media
   - phpunit --configuration ./docroot/core tests/src/ExistingSite
   - phpunit --configuration ./docroot/core tests/src/ExistingSiteJavascript
-  - behat --suite lightning_media
+  - behat
 
 after_failure:
   - cd docroot

@@ -6,13 +6,14 @@ use Drupal\Tests\lightning_media\Traits\ConfigCacheTrait;
 use Drupal\Tests\lightning_media\Traits\ExtensionTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\MediaCreationTrait;
+use weitzman\DrupalTestTraits\ExistingSiteSelenium2DriverTestBase;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class CKEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
+class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
 
   use ConfigCacheTrait;
   use ContentTypeCreationTrait;
@@ -129,10 +130,10 @@ class CKEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
 
     $items = $this->getItems();
     $this->assertGreaterThanOrEqual(3, count($items));
-    $this->assertSession()->fieldExists('Select this item', $items[0])->check();
     $items[0]->click();
-    $this->assertSession()->fieldExists('Select this item', $items[1])->check();
+    $this->assertTrue($items[0]->hasCheckedField('Select this item'));
     $items[1]->click();
+    $this->assertTrue($items[1]->hasCheckedField('Select this item'));
 
     // Only one item can be selected at any time, but nothing is ever disabled.
     $this->assertSession()->elementsCount('css', '[data-selectable].selected', 1);
@@ -158,14 +159,17 @@ class CKEditorMediaBrowserTest extends ExistingSiteWebDriverTestBase {
 
     $items = $this->getItems();
     $this->assertGreaterThanOrEqual(3, count($items));
-    $this->assertSession()->fieldExists('Select this item', $items[0])->check();
+    $items[0]->click();
+    $this->assertTrue($items[0]->hasCheckedField('Select this item'));
     $this->assertSession()->buttonExists('Place')->press();
     $this->getSession()->switchToIFrame(NULL);
     $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->assertSession()
-      ->elementExists('css', 'form.entity-embed-dialog')
-      ->pressButton('Embed');
+    // Assert that the Entity Embed dialog box is present, but don't click the
+    // Embed button *in* the form, because it is suppressed by Drupal's dialog
+    // system.
+    $this->assertSession()->waitForElementVisible('css', 'form.entity-embed-dialog');
+    $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Embed');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->buttonExists('Save')->press();

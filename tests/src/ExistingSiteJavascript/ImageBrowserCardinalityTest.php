@@ -12,13 +12,14 @@ use Drupal\Tests\lightning_media\Traits\ExtensionTrait;
 use Drupal\Tests\lightning_media\Traits\ImageBrowserTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\MediaCreationTrait;
+use weitzman\DrupalTestTraits\ExistingSiteSelenium2DriverTestBase;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class ImageBrowserCardinalityTest extends ExistingSiteWebDriverTestBase {
+class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
 
   use ConfigCacheTrait;
   use ContentTypeCreationTrait;
