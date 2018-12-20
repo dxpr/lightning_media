@@ -1,3 +1,7 @@
+## 3.4.0
+* Many changes to internal testing infrastructure, but nothing that affects
+  users of Lightning Media.
+
 ## 3.3.0
 * Behat test now check for existence of FixtureContext prior to invoking its
   methods. (Issue #3020990)
