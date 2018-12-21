@@ -2,6 +2,8 @@
 * Added a configuration option to control whether newly-created media fields 
   (i.e., entity reference fields which reference media items) will be configured 
   to use the media browser by default. (Issue #2945153)
+* The "Show in media library" field is no longer translatable by default in any
+  media type included with Lightning Media. (Issue #3014913)
 
 ## 3.4.0
 * Many changes to internal testing infrastructure, but nothing that affects
