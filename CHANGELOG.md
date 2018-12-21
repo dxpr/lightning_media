@@ -1,3 +1,8 @@
+## 3.5.0
+* Added a configuration option to control whether newly-created media fields 
+  (i.e., entity reference fields which reference media items) will be configured 
+  to use the media browser by default. (Issue #2945153)
+
 ## 3.4.0
 * Many changes to internal testing infrastructure, but nothing that affects
   users of Lightning Media.
