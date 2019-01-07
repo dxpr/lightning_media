@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\lightning_media\Traits;
+namespace Drupal\Tests\lightning_media_image\Traits;
 
 use Behat\Mink\Element\ElementInterface;
 

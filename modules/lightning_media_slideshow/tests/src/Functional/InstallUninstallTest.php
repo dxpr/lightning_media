@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\lightning_media_slideshow\Functiona;
+namespace Drupal\Tests\lightning_media_slideshow\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\field\Entity\FieldConfig;

@@ -1,24 +1,29 @@
 <?php
 
-namespace Drupal\Tests\lightning_media\ExistingSiteJavascript;
+namespace Drupal\Tests\lightning_media\FunctionalJavascript;
 
-use Drupal\Tests\lightning_media\Traits\ConfigCacheTrait;
-use Drupal\Tests\lightning_media\Traits\ExtensionTrait;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\media\Entity\Media;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use weitzman\DrupalTestTraits\Entity\MediaCreationTrait;
-use weitzman\DrupalTestTraits\ExistingSiteSelenium2DriverTestBase;
-use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
+class CKEditorMediaBrowserTest extends WebDriverTestBase {
 
-  use ConfigCacheTrait;
   use ContentTypeCreationTrait;
-  use ExtensionTrait;
-  use MediaCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'image_widget_crop',
+    'lightning_media_document',
+    'lightning_media_image',
+    'lightning_media_twitter',
+    'node',
+  ];
 
   /**
    * The content type created during the test.
@@ -55,7 +60,6 @@ class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
     ]);
 
     $this->nodeType = $this->createContentType();
-    $this->markEntityForCleanup($this->nodeType);
 
     $account = $this->createUser([
       'access media overview',
@@ -71,23 +75,11 @@ class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
     $GLOBALS['install_state'] = [];
     /** @var \Drupal\views\ViewEntityInterface $view */
     $view = entity_load('view', 'media');
-    $this->cacheConfig($view);
-    $this->cacheConfig('entity_browser.browser.media_browser');
     lightning_media_view_insert($view);
     unset($GLOBALS['install_state']);
 
-    $this->installModule('image_widget_crop');
     module_load_install('lightning_media_image');
     lightning_media_image_install();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    $this->uninstallModule('image_widget_crop');
-    $this->restoreConfig();
-    parent::tearDown();
   }
 
   /**
@@ -189,10 +181,11 @@ class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
     $uri = uniqid('public://') . '.png';
     $uri = $this->getRandomGenerator()->image($uri, '640x480', '800x600');
+    $this->assertFileExists($uri);
     $image = $file_storage->create([
       'uri' => $uri,
     ]);
-    $file_storage->save($image);
+    $this->assertSame(SAVED_NEW, $file_storage->save($image));
 
     $media = $this->addMedia([
       'bundle' => 'image',
@@ -202,7 +195,7 @@ class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
     $media->image->alt = 'I am the greetest';
     $this->assertSame(SAVED_UPDATED, $media->save());
 
-    $this->visit('/node/add/' . $this->nodeType->id());
+    $this->drupalGet('/node/add/' . $this->nodeType->id());
     $this->open(TRUE);
 
     $this->assertSession()->fieldExists('Type')->selectOption('Image');
@@ -243,7 +236,7 @@ class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
       'field_document' => $file->id(),
     ]);
 
-    $this->visit('/node/add/' . $this->nodeType->id());
+    $this->drupalGet('/node/add/' . $this->nodeType->id());
     $this->open(TRUE);
 
     $this->assertSession()->fieldExists('Type')->selectOption('Document');
@@ -274,7 +267,11 @@ class CKEditorMediaBrowserTest extends ExistingSiteSelenium2DriverTestBase {
   private function addMedia(array $values) {
     $values['field_media_in_library'] = TRUE;
     $values['status'] = TRUE;
-    return $this->createMedia($values);
+
+    $media = Media::create($values);
+    $this->assertSame(SAVED_NEW, $media->save());
+
+    return $media;
   }
 
   /**

@@ -1,5 +1,5 @@
 {
-    "name": "acquia/lightning_media",
+    "name": "drupal/lightning_media",
     "description": "Slick media handling for Lightning. So cool you'll make the A/C jealous.",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",

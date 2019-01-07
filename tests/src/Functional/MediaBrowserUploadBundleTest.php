@@ -1,21 +1,30 @@
 <?php
 
-namespace Drupal\Tests\lightning_media\ExistingSite;
+namespace Drupal\Tests\lightning_media\Functional;
 
 use Drupal\entity_browser\Element\EntityBrowserElement;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class MediaBrowserUploadBundleTest extends ExistingSiteBase {
+class MediaBrowserUploadBundleTest extends BrowserTestBase {
 
   use ContentTypeCreationTrait;
   use MediaTypeCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'lightning_media_image',
+    'node',
+  ];
 
   /**
    * The content type created during the test.
@@ -38,10 +47,7 @@ class MediaBrowserUploadBundleTest extends ExistingSiteBase {
     parent::setUp();
 
     $this->nodeType = $this->createContentType();
-    $this->markEntityForCleanup($this->nodeType);
-
     $this->mediaType = $this->createMediaType('image');
-    $this->markEntityForCleanup($this->mediaType);
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_z_image',
@@ -51,12 +57,9 @@ class MediaBrowserUploadBundleTest extends ExistingSiteBase {
         'target_type' => 'media',
       ],
     ]);
-    $dependencies = $field_storage->getDependencies();
-    // Ensure that the field is deleted when the media type is.
-    $dependencies['enforced']['config'][] = $this->mediaType->getConfigDependencyName();
-    $field_storage->set('dependencies', $dependencies)->save();
+    $this->assertSame(SAVED_NEW, $field_storage->save());
 
-    entity_create('field_config', [
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $this->nodeType->id(),
       'label' => 'Z Image',

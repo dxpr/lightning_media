@@ -1,19 +1,30 @@
 <?php
 
-namespace Drupal\Tests\lightning_media\ExistingSite;
+namespace Drupal\Tests\lightning_media_image\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\entity_browser\Element\EntityBrowserElement;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
  * @group lightning
  * @group lightning_media
+ * @group lightning_media_image
  */
-class ImageBrowserUploadValidationTest extends ExistingSiteBase {
+class ImageBrowserUploadValidationTest extends BrowserTestBase {
 
   use ContentTypeCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'lightning_media_image',
+    'node',
+  ];
 
   /**
    * Data provider for testValidation().
@@ -45,20 +56,17 @@ class ImageBrowserUploadValidationTest extends ExistingSiteBase {
    */
   public function testValidation($file, $expected_error) {
     $node_type = $this->createContentType();
-    $this->markEntityForCleanup($node_type);
 
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    $field_storage = entity_create('field_storage_config', [
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_lightweight_image',
       'entity_type' => 'node',
       'type' => 'image',
       'cardinality' => 1,
     ]);
-    $dependencies = $field_storage->getDependencies();
-    $dependencies['enforced']['config'][] = $node_type->id();
-    $field_storage->set('dependencies', $dependencies)->save();
+    $this->assertSame(SAVED_NEW, $field_storage->save());
 
-    entity_create('field_config', [
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $node_type->id(),
       'label' => 'Lightweight Image',

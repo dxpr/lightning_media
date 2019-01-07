@@ -10,7 +10,7 @@ Feature: Bulk uploading media assets
   # only really be run locally.
   @72286b5d
   Scenario: Bulk uploading media assets
-    Given I am logged in as a user with the "access media overview, create media, update media, dropzone upload files" permissions
+    Given I am logged in as a user with the "access media overview, create media, update media, dropzone upload files, view the administration theme" permissions
     When I upload the following files:
     """
     test.jpg

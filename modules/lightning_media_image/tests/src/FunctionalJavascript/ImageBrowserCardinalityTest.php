@@ -1,31 +1,35 @@
 <?php
 
-namespace Drupal\Tests\lightning_media\ExistingSiteJavascript;
+namespace Drupal\Tests\lightning_media_image\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_browser\Element\EntityBrowserElement;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
-use Drupal\Tests\lightning_media\Traits\ConfigCacheTrait;
-use Drupal\Tests\lightning_media\Traits\ExtensionTrait;
-use Drupal\Tests\lightning_media\Traits\ImageBrowserTrait;
+use Drupal\Tests\lightning_media_image\Traits\ImageBrowserTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use weitzman\DrupalTestTraits\Entity\MediaCreationTrait;
-use weitzman\DrupalTestTraits\ExistingSiteSelenium2DriverTestBase;
-use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * @group lightning
  * @group lightning_media
  */
-class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
+class ImageBrowserCardinalityTest extends WebDriverTestBase {
 
-  use ConfigCacheTrait;
   use ContentTypeCreationTrait;
-  use ExtensionTrait;
   use ImageBrowserTrait;
-  use MediaCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'image_widget_crop',
+    'lightning_media_image',
+    'node',
+  ];
 
   /**
    * The content type created during the test.
@@ -37,40 +41,35 @@ class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->nodeType = $this->createContentType();
-    $this->markEntityForCleanup($this->nodeType);
 
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    $field_storage = entity_create('field_storage_config', [
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_multi_image',
       'entity_type' => 'node',
       'type' => 'image',
       'cardinality' => 3,
     ]);
-    $dependencies = $field_storage->getDependencies();
-    $dependencies['enforced']['config'][] = $this->nodeType->id();
-    $field_storage->set('dependencies', $dependencies)->save();
+    $this->assertSame(SAVED_NEW, $field_storage->save());
 
-    entity_create('field_config', [
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $this->nodeType->id(),
       'label' => 'Multi-Image',
     ])->save();
 
-    $field_storage = entity_create('field_storage_config', [
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_unlimited_images',
       'entity_type' => 'node',
       'type' => 'image',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ]);
-    $dependencies = $field_storage->getDependencies();
-    $dependencies['enforced']['config'][] = $this->nodeType->id();
-    $field_storage->set('dependencies', $dependencies)->save();
+    $this->assertSame(SAVED_NEW, $field_storage->save());
 
-    entity_create('field_config', [
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $this->nodeType->id(),
       'label' => 'Unlimited Images',
@@ -122,7 +121,6 @@ class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
         'field_media_in_library' => TRUE,
       ]);
       $this->assertSame(SAVED_NEW, $media->save());
-      $this->markEntityForCleanup($media);
     }
 
     $account = $this->createUser([
@@ -135,12 +133,9 @@ class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
     $GLOBALS['install_state'] = [];
     /** @var \Drupal\views\ViewEntityInterface $view */
     $view = entity_load('view', 'media');
-    $this->cacheConfig($view);
-    $this->cacheConfig('entity_browser.browser.image_browser');
     lightning_media_image_view_insert($view);
     unset($GLOBALS['install_state']);
 
-    $this->installModule('image_widget_crop');
     module_load_install('lightning_media_image');
     lightning_media_image_install();
   }
@@ -174,7 +169,7 @@ class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
    * Tests that the image browser respects unlimited cardinality.
    */
   public function testUnlimitedCardinality() {
-    $this->visit('/node/add/' . $this->nodeType->id());
+    $this->drupalGet('/node/add/' . $this->nodeType->id());
     $session = $this->getSession();
     $page = $session->getPage();
 
@@ -186,7 +181,7 @@ class ImageBrowserCardinalityTest extends ExistingSiteSelenium2DriverTestBase {
     $this->select($items[2]);
 
     $this->assertSession()->buttonExists('Select')->press();
-    $session->switchToIFrame(NULL);
+    $this->getSession()->switchToIFrame(NULL);
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->openImageBrowser('Unlimited Images');
