@@ -8,7 +8,6 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @group lightning
  * @group lightning_media
  */
 class EntityFormDisplayPresaveTest extends KernelTestBase {

@@ -9,7 +9,6 @@ use Prophecy\Argument;
 use Symfony\Component\Console\Style\StyleInterface;
 
 /**
- * @group lightning
  * @group lightning_media
  * @group lightning_media_audio
  *

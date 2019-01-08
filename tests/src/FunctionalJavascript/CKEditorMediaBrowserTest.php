@@ -7,7 +7,6 @@ use Drupal\media\Entity\Media;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
- * @group lightning
  * @group lightning_media
  */
 class CKEditorMediaBrowserTest extends WebDriverTestBase {

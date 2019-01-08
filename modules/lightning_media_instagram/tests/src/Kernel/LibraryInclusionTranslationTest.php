@@ -7,7 +7,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 
 /**
- * @group lightning
  * @group lightning_media
  * @group lightning_media_instagram
  */

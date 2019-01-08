@@ -10,7 +10,6 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
- * @group lightning
  * @group lightning_media
  * @group lightning_media_image
  */

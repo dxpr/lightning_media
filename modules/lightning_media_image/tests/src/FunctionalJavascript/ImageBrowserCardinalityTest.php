@@ -14,8 +14,8 @@ use Drupal\Tests\lightning_media_image\Traits\ImageBrowserTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
- * @group lightning
  * @group lightning_media
+ * @group lightning_media_image
  */
 class ImageBrowserCardinalityTest extends WebDriverTestBase {
 

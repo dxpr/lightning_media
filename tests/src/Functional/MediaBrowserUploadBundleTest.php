@@ -10,7 +10,6 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
- * @group lightning
  * @group lightning_media
  */
 class MediaBrowserUploadBundleTest extends BrowserTestBase {

@@ -5,7 +5,6 @@ namespace Drupal\Tests\lightning_media\Kernel\Update;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @group lightning
  * @group lightning_media
  */
 class Update8020Test extends KernelTestBase {

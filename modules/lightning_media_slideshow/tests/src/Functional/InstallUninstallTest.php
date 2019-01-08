@@ -9,7 +9,6 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests install/uninstall operations of Media Slideshow.
  *
- * @group lightning
  * @group lightning_media
  * @group lightning_media_slideshow
  */
