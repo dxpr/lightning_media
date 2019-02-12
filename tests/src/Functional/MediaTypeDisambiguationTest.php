@@ -8,6 +8,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
  * @group lightning_media
+ * @group orca_public
  */
 class MediaTypeDisambiguationTest extends BrowserTestBase {
 
