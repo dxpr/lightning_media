@@ -1,14 +1,14 @@
 langcode: en
 status: true
 dependencies: {  }
-name: media_browser
-label: 'Media browser'
-display: modal
+name: ckeditor_media_browser
+label: 'Media browser (CKEditor)'
+display: iframe
 display_configuration:
-  width: ''
-  height: ''
-  link_text: 'Add media'
-  auto_open: false
+  width: 100%
+  height: '640'
+  link_text: 'Select entities'
+  auto_open: true
 selection_display: no_display
 selection_display_configuration: {  }
 widget_selector: tabs
