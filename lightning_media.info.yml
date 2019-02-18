@@ -3,6 +3,7 @@ core: 8.x
 type: module
 description: "Slick media handling for Lightning. So cool you'll make the A/C jealous."
 package: Lightning
+configure: lightning_media.settings
 dependencies:
   - drupal:ckeditor
   - entity_browser:entity_browser
