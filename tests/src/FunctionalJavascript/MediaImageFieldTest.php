@@ -3,6 +3,8 @@
 namespace Drupal\Tests\lightning_media\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * @group lightning_media
@@ -24,14 +26,14 @@ class MediaImageFieldTest extends WebDriverTestBase {
   public function test() {
     $field_name = 'field_test' . mb_strtolower($this->randomMachineName());
 
-    $field_storage = entity_create('field_storage_config', [
+    $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'media',
       'type' => 'image',
     ]);
     $this->assertSame(SAVED_NEW, $field_storage->save());
 
-    entity_create('field_config', [
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'video',
       'label' => 'Image',
