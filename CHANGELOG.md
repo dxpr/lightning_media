@@ -1,3 +1,6 @@
+## 3.8.0
+* Lightning Media is now compatible with Lightning Core 4.x (Drupal core 8.7.x).
+
 ## 3.7.0
 * Updated Entity Browser to 2.1.
 * Added a link to the settings form on the module list page. (Issue #3033650)
