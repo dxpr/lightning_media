@@ -91,7 +91,7 @@ class MediaBrowserTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $values, 'Save settings');
 
-    $component = entity_get_form_display('node', $node_type, 'default')
+    $component = lightning_media_entity_get_form_display('node', $node_type)
       ->getComponent('field_foobar');
 
     $this->assertInternalType('array', $component);

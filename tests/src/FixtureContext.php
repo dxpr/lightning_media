@@ -64,7 +64,7 @@ final class FixtureContext extends FixtureBase {
 
     $GLOBALS['install_state'] = [];
     /** @var \Drupal\views\ViewEntityInterface $view */
-    $view = entity_load('view', 'media');
+    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('media');
     lightning_media_view_insert($view);
     lightning_media_image_view_insert($view);
     unset($GLOBALS['install_state']);

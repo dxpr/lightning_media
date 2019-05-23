@@ -74,7 +74,7 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
       ]
     ])->save();
 
-    entity_get_form_display('node', $node_type->id(), 'default')
+    lightning_media_entity_get_form_display('node', $node_type->id())
       ->setComponent('field_lightweight_image', [
         'type' => 'entity_browser_file',
         'settings' => [

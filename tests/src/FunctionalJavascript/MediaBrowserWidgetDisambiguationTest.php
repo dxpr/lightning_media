@@ -12,7 +12,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 /**
  * @group lightning_media
  */
-class EmbedBundleTest extends WebDriverTestBase {
+class MediaBrowserWidgetDisambiguationTest extends WebDriverTestBase {
 
   use MediaTypeCreationTrait;
 
@@ -20,19 +20,25 @@ class EmbedBundleTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'lightning_media_image',
     'lightning_media_video',
   ];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
+    $this->createMediaType('image', [
+      'id' => 'picture',
+      'label' => 'Picture',
+    ]);
     $this->createMediaType('video_embed_field', [
       'id' => 'advertisement',
       'label' => 'Advertisement',
     ]);
+
     $this->createContentType([
       'type' => 'article',
       'name' => 'Article',
@@ -54,17 +60,12 @@ class EmbedBundleTest extends WebDriverTestBase {
       'label' => 'Media',
       'settings' => [
         'handler_settings' => [
-          'target_bundles' => [
-            'video' => 'video',
-            'advertisement' => 'advertisement',
-          ],
+          'target_bundles' => NULL,
         ],
       ],
     ])->save();
 
-    $this->container->get('entity_type.manager')
-      ->getStorage('entity_form_display')
-      ->load('node.article.default')
+    lightning_media_entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_media', [
         'type' => 'entity_browser_entity_reference',
         'settings' => [
@@ -82,8 +83,68 @@ class EmbedBundleTest extends WebDriverTestBase {
       ])
       ->save();
 
-    $user = $this->createUser([], NULL, TRUE);
-    $this->drupalLogin($user);
+    $account = $this->createUser([
+      'create article content',
+      'access media_browser entity browser pages',
+      'create media',
+    ]);
+    $this->drupalLogin($account);
+
+    $session = $this->getSession();
+    $page = $session->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('/node/add/article');
+    $page->fillField('Title', 'Foo');
+    $page->pressButton('Add media');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $session->switchToIFrame('entity_browser_iframe_media_browser');
+    // Assert that we are actually in the frame. If we are still in the
+    // top-level window, window.frameElement will be null.
+    // @see https://developer.mozilla.org/en-US/docs/Web/API/Window/frameElement
+    $this->assertJsCondition('window.frameElement !== null');
+  }
+
+  /**
+   * Tests that select is shown when media bundle is ambiguous.
+   */
+  public function testUpload() {
+    $session = $this->getSession();
+    $page = $session->getPage();
+    $assert_session = $this->assertSession();
+
+    // To increase reliability, ensure auto-upload is disabled.
+    $session->executeScript('Drupal.behaviors.fileAutoUpload.detach(document, drupalSettings, "unload");');
+    // Make the "Upload" button visible so that we can press it.
+    $session->executeScript('document.getElementById("edit-input-upload").classList.remove("js-hide");');
+
+    $page->attachFileToField('input_file', __DIR__ . '/../../files/test.jpg');
+    $assert_session->elementExists('css', '.js-form-managed-file')->pressButton('Upload');
+
+    $this->assertNotEmpty($assert_session->waitForField('Bundle'));
+    $page->selectFieldOption('Bundle', 'Picture');
+    $this->assertNotEmpty($assert_session->waitForField('Name'));
+    $page->fillField('Name', 'Bar');
+    $page->fillField('Alternative text', 'Baz');
+    $page->pressButton('Place');
+    $assert_session->assertWaitOnAjaxRequest();
+    sleep(1);
+
+    $session->switchToIFrame();
+    $this->assertNotEmpty($assert_session->waitForButton('Remove'));
+    $page->pressButton('Save');
+
+    // Assert the correct entities are created.
+    $node = Node::load(1);
+    $this->assertInstanceOf(Node::class, $node);
+    /** @var \Drupal\node\NodeInterface $node */
+    $this->assertSame('Foo', $node->getTitle());
+    $this->assertFalse($node->get('field_media')->isEmpty());
+    $this->assertSame('picture', $node->field_media->entity->bundle());
+    $this->assertSame('Bar', $node->field_media->entity->getName());
+    $this->assertSame('Baz', $node->field_media->entity->field_media_image->alt);
+    $this->assertSame('test.jpg', $node->field_media->entity->field_media_image->entity->getFilename());
   }
 
   /**
@@ -93,11 +154,6 @@ class EmbedBundleTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $session = $this->getSession();
     $page = $session->getPage();
-
-    // Create an article with a media via the embed widget.
-    $this->drupalGet('node/add/article');
-    $page->fillField('Title', 'Foo');
-    $this->openMediaBrowser();
 
     $page->clickLink('Create embed');
     $video_url = 'https://www.youtube.com/watch?v=zQ1_IbFFbzA';
@@ -122,77 +178,6 @@ class EmbedBundleTest extends WebDriverTestBase {
     $this->assertSame('advertisement', $node->field_media->entity->bundle());
     $this->assertSame('Bar', $node->field_media->entity->label());
     $this->assertSame($video_url, $node->field_media->entity->field_media_video_embed_field->value);
-  }
-
-  /**
-   * Tests that an error message is displayed for malformed URLs.
-   */
-  public function testErrorMessages() {
-    $assert_session = $this->assertSession();
-
-    $this->drupalGet('node/add/article');
-    $this->openMediaBrowser();
-
-    // Error message is displayed for malformed URLs.
-    $assert_session->elementExists('named', ['link', 'Create embed'])->click();
-    $assert_session->fieldExists('input')->setValue('Foo');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->fieldNotExists('Bundle');
-    $this->assertError("Error message Input did not match any media types: 'Foo'");
-
-    $assert_session->fieldExists('input')->setValue('');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->fieldNotExists('Bundle');
-    $this->assertNoErrors();
-
-    // No error message when URL is valid.
-    $assert_session->fieldExists('input')->setValue('https://www.youtube.com/watch?v=zQ1_IbFFbzA');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->selectExists('Bundle');
-    $this->assertNoErrors();
-
-    // Rerender the form if URL is changed.
-    $assert_session->fieldExists('input')->setValue('Bar');
-    $assert_session->assertWaitOnAjaxRequest();
-    $this->assertError("Error message Input did not match any media types: 'Bar'");
-    $assert_session->fieldNotExists('Bundle');
-  }
-
-  /**
-   * Opens the media browser.
-   *
-   * @param bool $switch
-   *   (optional) If TRUE, switch into the entity browser frame. Defaults to
-   *   TRUE.
-   */
-  private function openMediaBrowser($switch = TRUE) {
-    $assert_session = $this->assertSession();
-
-    $assert_session->buttonExists('Add media')->press();
-    $assert_session->assertWaitOnAjaxRequest();
-
-    if ($switch) {
-      $this->getSession()->switchToIFrame('entity_browser_iframe_media_browser');
-    }
-  }
-
-  /**
-   * Asserts that an error message is present on the page.
-   *
-   * @param string $message
-   *   The message to look for.
-   */
-  private function assertError($message) {
-    $assert_session = $this->assertSession();
-    $assert_session->elementExists('css', '[role="alert"]');
-    $assert_session->pageTextContains($message);
-  }
-
-  /**
-   * Asserts that there are no error messages present on the page.
-   */
-  private function assertNoErrors() {
-    $this->assertSession()->elementNotExists('css', '[role="alert"]');
   }
 
 }

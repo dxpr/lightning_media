@@ -55,7 +55,7 @@ abstract class MediaBrowserWidgetTestBase extends BrowserTestBase {
       ],
     ])->save();
 
-    entity_get_form_display('node', 'page', 'default')
+    lightning_media_entity_get_form_display('node', 'page', 'default')
       ->setComponent('field_media', [
         'type' => 'entity_browser_entity_reference',
         'settings' => [
