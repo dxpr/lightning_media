@@ -128,32 +128,34 @@ class EmbedBundleTest extends WebDriverTestBase {
    * Tests that an error message is displayed for malformed URLs.
    */
   public function testErrorMessages() {
+    $assert_session = $this->assertSession();
+
     $this->drupalGet('node/add/article');
     $this->openMediaBrowser();
 
     // Error message is displayed for malformed URLs.
-    $this->assertSession()->elementExists('named', ['link', 'Create embed'])->click();
-    $this->assertSession()->fieldExists('input')->setValue('Foo');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->fieldNotExists('Bundle');
+    $assert_session->elementExists('named', ['link', 'Create embed'])->click();
+    $assert_session->fieldExists('input')->setValue('Foo');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->fieldNotExists('Bundle');
     $this->assertError("Error message Input did not match any media types: 'Foo'");
 
-    $this->assertSession()->fieldExists('input')->setValue('');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->fieldNotExists('Bundle');
+    $assert_session->fieldExists('input')->setValue('');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->fieldNotExists('Bundle');
     $this->assertNoErrors();
 
     // No error message when URL is valid.
-    $this->assertSession()->fieldExists('input')->setValue('https://www.youtube.com/watch?v=zQ1_IbFFbzA');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->selectExists('Bundle');
+    $assert_session->fieldExists('input')->setValue('https://www.youtube.com/watch?v=zQ1_IbFFbzA');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->selectExists('Bundle');
     $this->assertNoErrors();
 
     // Rerender the form if URL is changed.
-    $this->assertSession()->fieldExists('input')->setValue('Bar');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $assert_session->fieldExists('input')->setValue('Bar');
+    $assert_session->assertWaitOnAjaxRequest();
     $this->assertError("Error message Input did not match any media types: 'Bar'");
-    $this->assertSession()->fieldNotExists('Bundle');
+    $assert_session->fieldNotExists('Bundle');
   }
 
   /**
@@ -164,8 +166,10 @@ class EmbedBundleTest extends WebDriverTestBase {
    *   TRUE.
    */
   private function openMediaBrowser($switch = TRUE) {
-    $this->assertSession()->buttonExists('Add media')->press();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $assert_session = $this->assertSession();
+
+    $assert_session->buttonExists('Add media')->press();
+    $assert_session->assertWaitOnAjaxRequest();
 
     if ($switch) {
       $this->getSession()->switchToIFrame('entity_browser_iframe_media_browser');
@@ -179,8 +183,9 @@ class EmbedBundleTest extends WebDriverTestBase {
    *   The message to look for.
    */
   private function assertError($message) {
-    $this->assertSession()->elementExists('css', '[role="alert"]');
-    $this->assertSession()->pageTextContains($message);
+    $assert_session = $this->assertSession();
+    $assert_session->elementExists('css', '[role="alert"]');
+    $assert_session->pageTextContains($message);
   }
 
   /**

@@ -42,7 +42,7 @@ before_install:
   - export PATH="$ORCA_FIXTURE/vendor/bin:$PATH"
 
   # Install ORCA and prepare the environment.
-  - git clone --branch develop --depth 1 https://github.com/acquia/orca.git $ORCA
+  - git clone --branch master --depth 1 https://github.com/acquia/orca.git $ORCA
   - $ORCA/bin/travis/before_install.sh
 
 install:
@@ -53,6 +53,8 @@ install:
 
   # Use ORCA to build the code base.
   - orca fixture:init -f --sut $ORCA_SUT_NAME $ORCA_FIXTURE_FLAGS
+  # Install dev dependencies.
+  - composer require --dev drupal/drupal-extension --working-dir $ORCA_FIXTURE
 
 before_script:
   - cd $ORCA_FIXTURE/docroot

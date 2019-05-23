@@ -172,8 +172,20 @@ END;
    *   The path to the file, relative to the test files directory.
    */
   private function uploadJS($file) {
-    $this->assertSession()->elementExists('named', ['link', 'Upload'])->click();
-    $this->getContext(MinkContext::class)->attachFileToField('File', $file);
+    /** @var MinkContext $mink_context */
+    $mink_context = $this->getContext(MinkContext::class);
+    $mink_context->clickLink('Upload');
+    $mink_context->attachFileToField('File', $file);
+
+    // To increase reliability, disable auto-upload.
+    $session = $this->getSession();
+    $session->executeScript('Drupal.behaviors.fileAutoUpload.detach(document, drupalSettings, "unload");');
+    $session->executeScript('document.getElementById("edit-input-upload").classList.remove("js-hide");');
+
+    $this->assertSession()
+      ->elementExists('css', '.js-form-managed-file')
+      ->pressButton('Upload');
+
     $this->awaitExpression('jQuery("#entity").children().length');
   }
 

@@ -3,6 +3,8 @@
 // Forcibly uninstall Lightning Dev, switch the current installation profile
 // from Standard to Minimal, and delete defunct config objects.
 
+Drupal::entityTypeManager()->clearCachedDefinitions();
+
 Drupal::configFactory()
   ->getEditable('core.extension')
   ->clear('module.lightning_dev')
