@@ -1,3 +1,7 @@
+## 3.9.0
+* Removed deprecated function calls. (Issue #3034965)
+* Fixed text capitalization in user interface. (Issue #2984684)
+
 ## 3.8.0
 * Lightning Media is now compatible with Lightning Core 4.x (Drupal core 8.7.x).
 
