@@ -200,7 +200,7 @@ class FileUpload extends EntityFormProxy {
   public function processUploadElement(array $element, FormStateInterface $form_state) {
     $element = AjaxUpload::process($element, $form_state);
 
-    $element['upload']['#ajax']['callback'] =
+    $element['upload_button']['#ajax']['callback'] =
     $element['remove']['#ajax']['callback'] = [static::class, 'ajax'];
 
     $element['remove']['#value'] = $this->t('Cancel');

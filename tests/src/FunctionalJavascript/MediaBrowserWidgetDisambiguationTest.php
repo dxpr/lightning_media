@@ -114,14 +114,7 @@ class MediaBrowserWidgetDisambiguationTest extends WebDriverTestBase {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    // To increase reliability, ensure auto-upload is disabled.
-    $session->executeScript('Drupal.behaviors.fileAutoUpload.detach(document, drupalSettings, "unload");');
-    // Make the "Upload" button visible so that we can press it.
-    $session->executeScript('document.getElementById("edit-input-upload").classList.remove("js-hide");');
-
     $page->attachFileToField('input_file', __DIR__ . '/../../files/test.jpg');
-    $assert_session->elementExists('css', '.js-form-managed-file')->pressButton('Upload');
-
     $this->assertNotEmpty($assert_session->waitForField('Bundle'));
     $page->selectFieldOption('Bundle', 'Picture');
     $this->assertNotEmpty($assert_session->waitForField('Name'));

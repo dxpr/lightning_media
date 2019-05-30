@@ -177,15 +177,6 @@ END;
     $mink_context->clickLink('Upload');
     $mink_context->attachFileToField('File', $file);
 
-    // To increase reliability, disable auto-upload.
-    $session = $this->getSession();
-    $session->executeScript('Drupal.behaviors.fileAutoUpload.detach(document, drupalSettings, "unload");');
-    $session->executeScript('document.getElementById("edit-input-upload").classList.remove("js-hide");');
-
-    $this->assertSession()
-      ->elementExists('css', '.js-form-managed-file')
-      ->pressButton('Upload');
-
     $this->awaitExpression('jQuery("#entity").children().length');
   }
 
