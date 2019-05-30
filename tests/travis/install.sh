@@ -28,8 +28,8 @@ drush php:script "$TRAVIS_BUILD_DIR/tests/update.php"
 drush updatedb --yes
 drush update:lightning --no-interaction --yes
 
-# Reinstall modules which were blown away by the database restore.
-orca fixture:enable-modules
+# Reinstall extensions which were blown away by the database restore.
+orca fixture:enable-extensions
 
 # Reinstall from exported configuration to prove that it's coherent.
 drush config:export --yes
