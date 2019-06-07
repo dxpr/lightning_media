@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\lightning_media_video\Kernel\Update;
+namespace Drupal\Tests\lightning_media_video\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\KernelTestBase;
