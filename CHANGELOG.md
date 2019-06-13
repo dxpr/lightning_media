@@ -1,3 +1,6 @@
+## 3.10.0
+There are no user-facing changes in this release.
+
 ## 3.9.0
 * Removed deprecated function calls. (Issue #3034965)
 * Fixed text capitalization in user interface. (Issue #2984684)
