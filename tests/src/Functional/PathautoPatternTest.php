@@ -31,9 +31,9 @@ class PathautoPatternTest extends BrowserTestBase {
   /**
    * Slick Entity Reference has a schema error.
    *
-   * @todo Remove when depending on slick_entityreference 1.2 or later.
-   *
    * @var bool
+   *
+   * @todo Remove when depending on slick_entityreference 1.2 or later.
    */
   protected $strictConfigSchema = FALSE;
 

@@ -67,6 +67,13 @@ class FileUpload extends EntityFormProxy {
     return $form;
   }
 
+  /**
+   * Returns all applicable upload validators.
+   *
+   * @return array[]
+   *   A set of argument arrays for each upload validator, keyed by the upload
+   *   validator's function name.
+   */
   protected function getUploadValidators() {
     $validators = $this->configuration['upload_validators'];
 
@@ -191,7 +198,7 @@ class FileUpload extends EntityFormProxy {
    *
    * @param array $element
    *   The upload element.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
    *
    * @return array

@@ -26,9 +26,9 @@ class MediaBrowserTest extends BrowserTestBase {
   /**
    * Slick Entity Reference has a schema error.
    *
-   * @todo Remove when depending on slick_entityreference 1.2 or later.
-   *
    * @var bool
+   *
+   * @todo Remove when depending on slick_entityreference 1.2 or later.
    */
   protected $strictConfigSchema = FALSE;
 
@@ -65,8 +65,7 @@ class MediaBrowserTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the media browser is the default widget for a new media
-   * reference field.
+   * The media browser should be the default widget for a new media field.
    */
   public function testNewMediaReferenceField() {
     $this->drupalPlaceBlock('local_actions_block');

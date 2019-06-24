@@ -1,3 +1,8 @@
+## 3.11.0
+* Updated DropzoneJS to 2.0-alpha4.
+* Updated Entity Embed to 1.0-rc2.
+* Updated Media Entity Twitter to 2.0-alpha3.
+
 ## 3.10.0
 There are no user-facing changes in this release.
 

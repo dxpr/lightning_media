@@ -1,7 +1,12 @@
 <?php
 
-// Forcibly uninstall Lightning Dev, switch the current installation profile
-// from Standard to Minimal, and delete defunct config objects.
+/**
+ * @file
+ * Prepares a fixture to run updates.
+ *
+ * Forcibly uninstalls Lightning Dev, switches the current installation profile
+ * from Standard to Minimal, and deletes defunct config objects.
+ */
 
 Drupal::entityTypeManager()->clearCachedDefinitions();
 

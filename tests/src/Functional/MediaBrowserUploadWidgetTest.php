@@ -77,7 +77,6 @@ class MediaBrowserUploadWidgetTest extends MediaBrowserWidgetTestBase {
     $page->pressButton('Place');
     $assert_session->statusCodeEquals(200);
 
-
     $this->assertMediaCount(1, ['bundle' => 'image']);
   }
 

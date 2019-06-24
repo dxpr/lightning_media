@@ -62,7 +62,7 @@ class MediaBrowserEmbedCodeWidgetTest extends MediaBrowserWidgetTestBase {
    * {@inheritdoc}
    */
   public function testFieldAllowedTypesSettingIsRespected() {
-    // TODO
+    // @todo: Nothing here yet.
   }
 
   /**

@@ -69,8 +69,8 @@ final class EntityBrowserContext extends DrupalSubContextBase {
    * @param string $browser_id
    *   (optional) The entity browser ID.
    *
-   * @throws \Behat\Mink\Exception\ExpectationException if the entity browser
-   * contains fewer than $n items.
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   If the entity browser contains fewer than $n items.
    *
    * @When I select item :n
    * @When I select item :n from the entity browser
@@ -95,8 +95,9 @@ final class EntityBrowserContext extends DrupalSubContextBase {
    * @param string $browser_id
    *   (optional) The entity browser ID.
    *
-   * @throws ExpectationException if the actual number of items in the entity
-   * browser does not match the expected number.
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   If the actual number of items in the entity browser does not match the
+   *   expected number.
    *
    * @Then I should see :n item(s) in the entity browser
    */
@@ -121,7 +122,7 @@ final class EntityBrowserContext extends DrupalSubContextBase {
       ->getXpath();
 
     $frame = $session->evaluateScript('window.name') ?: $session->evaluateScript('window.active_iframe.name');
-    assert(! empty($frame));
+    Assert::notEmpty($frame);
 
     // Switch out of the iFrame, because it will be destroyed as soon as we
     // press the button.
@@ -146,7 +147,7 @@ END;
    *   The entity browser ID.
    */
   public function open($id) {
-    $this->isJS ? $this->openJS($id) : $this->openNoJS($id);
+    $this->isJS ? $this->openJs($id) : $this->openNoJs($id);
   }
 
   /**
@@ -155,7 +156,7 @@ END;
    * @param string $id
    *   The entity browser ID.
    */
-  private function openJS($id) {
+  private function openJs($id) {
     $settings = $this->getEntityBrowserSettings($id);
 
     $this->assertSession()
@@ -173,7 +174,7 @@ END;
    * @param string $id
    *   The entity browser ID.
    */
-  private function openNoJS($id) {
+  private function openNoJs($id) {
     $settings = $this->getEntityBrowserSettings($id);
     Assert::notEmpty($settings['src']);
     $this->visitPath($settings['src']);
@@ -255,7 +256,7 @@ END;
    * @When I select :count item(s) from the :id entity browser
    */
   public function selectItems($count, $id) {
-    $this->isJS ? $this->switchJS($id) : $this->switchNoJS($id);
+    $this->isJS ? $this->switchJs($id) : $this->switchNoJs($id);
     $this->getSession()->getPage()->clickLink('Library');
     $this->awaitAjax();
     for ($n = 0; $n < $count; $n++) {
@@ -271,7 +272,7 @@ END;
    * @param string $id
    *   The entity browser ID.
    */
-  private function switchJS($id) {
+  private function switchJs($id) {
     $this->assertSession()
       ->elementExists('named', ['button', 'Add media'])
       ->press();
@@ -289,7 +290,7 @@ END;
    * @param string $id
    *   The entity browser ID.
    */
-  private function switchNoJS($id) {
+  private function switchNoJs($id) {
     $settings = $this->getEntityBrowserSettings($id);
     Assert::notEmpty($settings['src']);
     $this->visitPath($settings['src']);

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains installation and update functions.
+ */
+
 use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\field\Entity\FieldConfig;
 

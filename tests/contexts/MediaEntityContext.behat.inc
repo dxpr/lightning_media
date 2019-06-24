@@ -24,7 +24,7 @@ final class MediaEntityContext extends DrupalSubContextBase {
   public function setUp() {
     // Automatically delete all media items created by the user during this
     // scenario.
-    /** @var FixtureContext $fixtureContext */
+    /** @var \Drupal\Tests\lightning_media\FixtureContext $fixtureContext */
     if ($fixtureContext = $this->getContext(FixtureContext::class)) {
       $fixtureContext->trackUserContent($this->getUserManager(), 'media');
     }
