@@ -1,3 +1,7 @@
+## 3.12.0
+* Fixed an improperly namespaced dependency in Lightning Media
+  Video's info file.
+
 ## 3.11.0
 * Updated DropzoneJS to 2.0-alpha4.
 * Updated Entity Embed to 1.0-rc2.
