@@ -1,3 +1,7 @@
+## 3.13.0
+* Updated Entity Embed to 1.0.
+* Updated Views Infinite Scroll to 1.6.
+
 ## 3.12.0
 * Fixed an improperly namespaced dependency in Lightning Media
   Video's info file.

@@ -13,7 +13,7 @@
         "drupal/dropzonejs": "2.0.0-alpha4",
         "drupal/embed": "^1.0",
         "drupal/entity_browser": "2.1.0",
-        "drupal/entity_embed": "^1.0.0-rc2",
+        "drupal/entity_embed": "1.0",
         "drupal/image_widget_crop": "^2.1",
         "drupal/inline_entity_form": "^1.0",
         "drupal/libraries": "3.0-alpha1",
@@ -22,7 +22,7 @@
         "drupal/media_entity_twitter": "2.0.0-alpha3",
         "drupal/slick_entityreference": "^1.1",
         "drupal/video_embed_field": "^2.0",
-        "drupal/views_infinite_scroll": "^1.1",
+        "drupal/views_infinite_scroll": "^1.6",
         "oomphinc/composer-installers-extender": "^1.1",
         "vardot/blazy": "^1.8"
     },
