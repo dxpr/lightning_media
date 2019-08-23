@@ -28,7 +28,9 @@
     },
     "require-dev": {
         "drupal/facets": "^1.2",
-        "drupal/schema_metatag": "^1.3"
+        "drupal/schema_metatag": "^1.3",
+        "drush/drush": "^9.7",
+        "webflo/drupal-core-require-dev": "*"
     },
     "config": {
         "preferred-install": {
@@ -102,13 +104,6 @@
             "@drupal-scaffold"
         ],
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-        "install-drupal": [
-            "rm -r -f ./docroot/sites/default/settings.php",
-            "drush site:install minimal --yes --config drush.yml",
-            "chmod u+w ./docroot/sites/default ./docroot/sites/default/settings.php",
-            "drush pm:enable lightning_media lightning_media_bulk_upload lightning_media_document lightning_media_image lightning_media_instagram lightning_media_slideshow lightning_media_twitter lightning_media_video --yes",
-            "cp -f phpunit.xml ./docroot/core"
-        ],
         "nuke": "rm -r -f docroot vendor",
         "pull": "cp -R -f ./docroot/modules/contrib/lightning_media/* .",
         "push": [
