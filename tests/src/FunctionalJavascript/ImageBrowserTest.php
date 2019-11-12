@@ -81,10 +81,8 @@ class ImageBrowserTest extends WebDriverTestBase {
       ->pressButton('Select Image(s)');
     $this->waitForEntityBrowser('image_browser');
 
-    $page->attachFileToField('File', __DIR__ . '/../../files/test.jpg');
-    $field = $assert_session->waitForField('Name');
-    $this->assertNotEmpty($field);
-    $field->setValue('Behold, a generic logo');
+    $assert_session->waitForField('File')->attachFile(__DIR__ . '/../../files/test.jpg');
+    $assert_session->waitForField('Name')->setValue('Behold, a generic logo');
 
     $summary = $assert_session->elementExists('css', 'details > summary:contains(Crop image)');
     $this->assertTrue($summary->getParent()->hasAttribute('open'));
@@ -94,6 +92,13 @@ class ImageBrowserTest extends WebDriverTestBase {
     $this->waitForEntityBrowserToClose();
 
     $assert_session->elementNotExists('css', "table[drupal-data-selector='edit-image-current'] td.empty");
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function assertSession($name = NULL) {
+    return new WebDriverWebAssert($this->getSession($name), $this->baseUrl);
   }
 
 }

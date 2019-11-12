@@ -134,9 +134,10 @@ class ImageBrowserCardinalityTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests that multiple cardinality is enforced in the image browser.
+   * Tests that cardinality is enforced in the image browser.
    */
-  public function testMultipleCardinality() {
+  public function testCardinality() {
+    $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
     $this->drupalGet('/node/add/page');
@@ -146,31 +147,23 @@ class ImageBrowserCardinalityTest extends WebDriverTestBase {
     $this->assertGreaterThanOrEqual(4, count($items));
     $this->selectItem($items[0]);
     $this->selectItem($items[1]);
-
     $page->pressButton('Select');
     $this->waitForEntityBrowserToClose();
-
     // Wait for the selected items to actually appear on the page.
-    $this->assertSession()->waitForElement('css', '[data-drupal-selector="edit-field-multi-image-current"] [data-entity-id]');
+    $assert_session->waitForElement('css', '[data-drupal-selector="edit-field-multi-image-current"] [data-entity-id]');
 
     $this->openImageBrowser('Multi-Image');
     $items = $this->waitForItems();
     $this->assertGreaterThanOrEqual(4, count($items));
     $this->selectItem($items[2]);
-
     $disabled = $page->waitFor(10, function (DocumentElement $page) {
       return $page->findAll('css', '[data-selectable].disabled');
     });
     $this->assertGreaterThanOrEqual(3, count($disabled));
-  }
 
-  /**
-   * Tests that the image browser respects unlimited cardinality.
-   */
-  public function testUnlimitedCardinality() {
-    $assert_session = $this->assertSession();
-
-    $this->drupalGet('/node/add/page');
+    // Close the image browser without selecting anything.
+    $this->getSession()->switchToIFrame(NULL);
+    $assert_session->elementExists('css', '.ui-dialog')->pressButton('Close');
 
     $this->openImageBrowser('Unlimited Images');
     $items = $this->waitForItems();
@@ -178,10 +171,8 @@ class ImageBrowserCardinalityTest extends WebDriverTestBase {
     $this->selectItem($items[0]);
     $this->selectItem($items[1]);
     $this->selectItem($items[2]);
-
-    $this->getSession()->getPage()->pressButton('Select');
+    $page->pressButton('Select');
     $this->waitForEntityBrowserToClose();
-
     // Wait for the selected items to actually appear on the page.
     $assert_session->waitForElement('css', '[data-drupal-selector="edit-field-unlimited-images-current"] [data-entity-id]');
 
