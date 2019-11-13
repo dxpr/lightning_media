@@ -40,6 +40,14 @@ class MediaBrowserTest extends BrowserTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('local_tasks_block');
+  }
+
+  /**
    * Tests access to the media browser.
    */
   public function testAccess() {
@@ -141,7 +149,8 @@ class MediaBrowserTest extends BrowserTestBase {
       $page->fillField('Name', $title);
       $page->pressButton('Place');
 
-      $this->drupalGet('/admin/content/media-table');
+      $this->drupalGet('/admin/content/media');
+      $page->clickLink('Table');
       $assert_session->linkExists($title);
     }
   }
@@ -186,7 +195,8 @@ class MediaBrowserTest extends BrowserTestBase {
       $page->fillField('Name', $title);
       $page->pressButton('Place');
 
-      $this->drupalGet('/admin/content/media-table');
+      $this->drupalGet('/admin/content/media');
+      $page->clickLink('Table');
       $assert_session->linkExists($title);
     }
   }

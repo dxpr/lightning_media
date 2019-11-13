@@ -16,9 +16,18 @@ class MediaListTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'block',
     'lightning_media_instagram',
     'lightning_media_twitter',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('local_tasks_block');
+  }
 
   /**
    * Tests the administrative media list page.
@@ -48,7 +57,8 @@ class MediaListTest extends BrowserTestBase {
       ->setPublished()
       ->save();
 
-    $this->drupalGet('/admin/content/media-table');
+    $this->drupalGet('/admin/content/media');
+    $page->clickLink('Table');
     $assert_session->fieldExists('Published status');
     $assert_session->fieldExists('Media name');
     $assert_session->fieldExists('Language');
