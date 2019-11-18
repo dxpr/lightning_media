@@ -18,7 +18,7 @@
         "drupal/lightning_core": "3.* || 4.* || 5.*",
         "drupal/media_entity_instagram": "2.0.0-alpha2",
         "drupal/media_entity_twitter": "2.0.0-alpha3",
-        "drupal/slick_entityreference": "^1.1",
+        "drupal/slick_entityreference": "^2.0",
         "drupal/video_embed_field": "^2.0",
         "drupal/views_infinite_scroll": "^1.6",
         "vardot/blazy": "^1.8"
