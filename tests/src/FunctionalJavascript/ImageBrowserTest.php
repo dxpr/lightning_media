@@ -81,6 +81,12 @@ class ImageBrowserTest extends WebDriverTestBase {
       ->pressButton('Select Image(s)');
     $this->waitForEntityBrowser('image_browser');
 
+    // This helps stabilize the next couple of calls; without it, the
+    // upload is more likely to randomly fail. It's not clear why this
+    // is the case, but repeated testing on Travis CI seems to support
+    // it.
+    $assert_session->assertWaitOnAjaxRequest();
+
     $assert_session->waitForField('File')->attachFile(__DIR__ . '/../../files/test.jpg');
     $assert_session->waitForField('Name')->setValue('Behold, a generic logo');
 
