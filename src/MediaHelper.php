@@ -208,19 +208,9 @@ class MediaHelper {
     $item = static::getSourceField($entity)->first();
 
     $destination = $item->getUploadLocation();
+    $options = FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS;
+    \Drupal::service('file_system')->prepareDirectory($destination, $options);
 
-    // Support both Drupal 8.7's API and its antecedents. We need to call the
-    // deprecated symbols in an obscure way to prevent failures during
-    // deprecation testing.
-    if (version_compare(\Drupal::VERSION, '8.7.0', '>=')) {
-      $options = FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS;
-      \Drupal::service('file_system')->prepareDirectory($destination, $options);
-    }
-    else {
-      $options = constant('FILE_CREATE_DIRECTORY') | constant('FILE_MODIFY_PERMISSIONS');
-      $function = 'file_prepare_directory';
-      $function($destination, $options);
-    }
     return $destination;
   }
 

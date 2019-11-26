@@ -76,14 +76,6 @@
             }
         }
     },
-    "autoload": {
-        "psr-4": {
-            "Drupal\\Tests\\lightning_media\\": "tests/src"
-        },
-        "classmap": [
-            "tests/contexts"
-        ]
-    },
     "repositories": {
         "drupal": {
             "type": "composer",
