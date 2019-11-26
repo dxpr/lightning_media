@@ -7,6 +7,8 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
+ * Tests image fields attached to media items.
+ *
  * @group lightning_media
  */
 class MediaImageFieldTest extends WebDriverTestBase {
@@ -92,7 +94,9 @@ class MediaImageFieldTest extends WebDriverTestBase {
     $page->fillField('Name', $name);
     $page->fillField('Video URL', 'https://www.youtube.com/watch?v=z9qY4VUZzcY');
     $this->assertNotEmpty($assert_session->waitForField('Image'));
-    $page->attachFileToField('Image', __DIR__ . '/../../files/test.jpg');
+    $path = realpath(__DIR__ . '/../../files/test.jpg');
+    $this->assertNotEmpty($path);
+    $page->attachFileToField('Image', $path);
     $this->assertNotEmpty($assert_session->waitForField('Alternative text'));
     $page->fillField('Alternative text', 'This is a beauty.');
     $page->pressButton('Save');

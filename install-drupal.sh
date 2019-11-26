@@ -14,7 +14,7 @@ fi
 # Install Drupal.
 drush site:install minimal --yes --config ./drush.yml --account-pass admin --db-url $DB_URL
 # Install sub-components.
-drush pm-enable lightning_media lightning_media_bulk_upload lightning_media_document lightning_media_image lightning_media_instagram lightning_media_slideshow lightning_media_twitter lightning_media_video --yes
+drush pm-enable lightning_media lightning_media_audio lightning_media_bulk_upload lightning_media_document lightning_media_image lightning_media_instagram lightning_media_slideshow lightning_media_twitter lightning_media_video --yes
 
 # Make settings writable.
 chmod +w $SITE_DIR $SETTINGS

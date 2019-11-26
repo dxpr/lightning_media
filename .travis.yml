@@ -15,8 +15,9 @@ cache:
 env:
   global:
     - ORCA_SUT_NAME=drupal/lightning_media
-    - ORCA_SUT_BRANCH=8.x-3.x
+    - ORCA_SUT_BRANCH=8.x-4.x
     - ORCA_VERSION=master
+    - ORCA_PACKAGES_CONFIG_ALTER=../lightning_media/tests/packages_alter.yml
     - ORCA_TELEMETRY_ENABLE=TRUE
 
 matrix:

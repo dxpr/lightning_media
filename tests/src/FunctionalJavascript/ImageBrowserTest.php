@@ -88,7 +88,9 @@ class ImageBrowserTest extends WebDriverTestBase {
     // it.
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->waitForField('File')->attachFile(__DIR__ . '/../../files/test.jpg');
+    $path = realpath(__DIR__ . '/../../files/test.jpg');
+    $this->assertNotEmpty($path);
+    $assert_session->waitForField('File')->attachFile($path);
     $assert_session->waitForField('Name')->setValue('Behold, a generic logo');
 
     $summary = $assert_session->elementExists('css', 'details > summary:contains(Crop image)');

@@ -121,7 +121,9 @@ class MediaBrowserWidgetDisambiguationTest extends WebDriverTestBase {
     // it.
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->waitForField('input_file')->attachFile(__DIR__ . '/../../files/test.jpg');
+    $path = realpath(__DIR__ . '/../../files/test.jpg');
+    $this->assertNotEmpty($path);
+    $assert_session->waitForField('input_file')->attachFile($path);
     $assert_session->waitForField('Bundle')->selectOption('Picture');
     $assert_session->waitForField('Name')->setValue('Bar');
     $page->fillField('Alternative text', 'Baz');
