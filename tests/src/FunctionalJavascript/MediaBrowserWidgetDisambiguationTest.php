@@ -69,7 +69,8 @@ class MediaBrowserWidgetDisambiguationTest extends WebDriverTestBase {
       ],
     ])->save();
 
-    lightning_media_entity_get_form_display('node', 'article', 'default')
+    $this->container->get('entity_display.repository')
+      ->getFormDisplay('node', 'article')
       ->setComponent('field_media', [
         'type' => 'entity_browser_entity_reference',
         'settings' => [

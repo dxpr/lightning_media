@@ -68,7 +68,8 @@ class ImageBrowserCardinalityTest extends WebDriverTestBase {
       'label' => 'Unlimited Images',
     ])->save();
 
-    lightning_media_entity_get_form_display('node', 'page')
+    $this->container->get('entity_display.repository')
+      ->getFormDisplay('node', 'page')
       ->setComponent('field_multi_image', [
         'type' => 'entity_browser_file',
         'settings' => [

@@ -46,7 +46,8 @@ class ImageBrowserTest extends WebDriverTestBase {
       'field_storage' => $field_storage,
     ])->save();
 
-    lightning_media_entity_get_form_display('node', 'page')
+    $this->container->get('entity_display.repository')
+      ->getFormDisplay('node', 'page')
       ->setComponent('field_hero_image', [
         'type' => 'entity_browser_file',
         'settings' => [

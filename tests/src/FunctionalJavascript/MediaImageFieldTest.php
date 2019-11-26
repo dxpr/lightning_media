@@ -62,7 +62,8 @@ class MediaImageFieldTest extends WebDriverTestBase {
 
     $this->drupalPlaceBlock('local_tasks_block');
 
-    $form_display = lightning_media_entity_get_form_display('media', 'video');
+    $form_display = $this->container->get('entity_display.repository')
+      ->getFormDisplay('media', 'video');
     // Add field_image to the display and save it; lightning_media_image will
     // default it to the image browser widget.
     $form_display->setComponent($field_name, ['type' => 'image_image'])->save();
