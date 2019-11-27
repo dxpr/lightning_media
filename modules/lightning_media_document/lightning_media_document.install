@@ -12,6 +12,15 @@ function lightning_media_document_update_8001() {
 }
 
 /**
+ * Creates the media_library form display for documents.
+ */
+function lightning_media_document_update_8002() {
+  Config::forModule('lightning_media_document')
+    ->getEntity('entity_form_display', 'media.document.media_library')
+    ->save();
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function lightning_media_document_update_dependencies() {
