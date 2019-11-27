@@ -143,6 +143,15 @@ function lightning_media_image_update_8006() {
 }
 
 /**
+ * Creates the media_library form display for images.
+ */
+function lightning_media_image_update_8007() {
+  Config::forModule('lightning_media_image')
+    ->getEntity('entity_form_display', 'media.image.media_library')
+    ->save();
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function lightning_media_image_update_dependencies() {

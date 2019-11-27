@@ -5,6 +5,8 @@ namespace Drupal\Tests\lightning_media_image\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
+ * Tests install-time logic and configuration of Lightning Media Image.
+ *
  * @group lightning_media
  * @group lightning_media_image
  */
@@ -19,14 +21,8 @@ class InstallTest extends BrowserTestBase {
   ];
 
   /**
-   * Slick Entity Reference has a schema error.
-   *
-   * @var bool
-   *
-   * @todo Remove when depending on slick_entityreference 1.2 or later.
+   * Tests Lightning Media Image's install-time logic.
    */
-  protected $strictConfigSchema = FALSE;
-
   public function test() {
     // Assert that a local copy of the Cropper library is being used.
     $settings = $this->config('image_widget_crop.settings')->get('settings');
@@ -40,6 +36,7 @@ class InstallTest extends BrowserTestBase {
       ->loadByProperties([
         'targetEntityType' => 'media',
         'bundle' => 'image',
+        'mode' => ['default', 'media_browser'],
       ]);
 
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
