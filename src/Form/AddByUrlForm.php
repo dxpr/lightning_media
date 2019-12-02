@@ -9,6 +9,11 @@ use Drupal\media_library\Form\AddFormBase;
 
 /**
  * Provides a form for adding URL-based media in the media library.
+ *
+ * @internal
+ *   This is an internal part of Lightning Media and may be changed or removed
+ *   at any time, in any way, without warning. External code should not
+ *   instantiate or depend on this class!
  */
 final class AddByUrlForm extends AddFormBase {
 
