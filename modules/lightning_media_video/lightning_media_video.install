@@ -93,6 +93,15 @@ function lightning_media_video_update_8003() {
 }
 
 /**
+ * Creates the media_library form display for videos.
+ */
+function lightning_media_video_update_8004() {
+  $config = Config::forModule('lightning_media_video');
+  $config->getEntity('entity_form_display', 'media.video.media_library')->save();
+  $config->getEntity('entity_form_display', 'media.video_file.media_library')->save();
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function lightning_media_video_update_dependencies() {

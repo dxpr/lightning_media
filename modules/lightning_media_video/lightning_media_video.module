@@ -6,6 +6,7 @@
  */
 
 use Drupal\lightning_core\OverrideHelper as Override;
+use Drupal\lightning_media\Form\AddByUrlForm;
 use Drupal\lightning_media_video\Plugin\media\Source\Video;
 use Drupal\lightning_media_video\Plugin\media\Source\VideoFile;
 
@@ -21,6 +22,7 @@ function lightning_media_video_media_source_info_alter(array &$sources) {
     ],
   ];
   $sources['video_embed_field']['preview'] = TRUE;
+  $sources['video_embed_field']['forms']['media_library_add'] = AddByUrlForm::class;
 
   Override::pluginClass($sources['video_embed_field'], Video::class);
   Override::pluginClass($sources['video_file'], VideoFile::class);
