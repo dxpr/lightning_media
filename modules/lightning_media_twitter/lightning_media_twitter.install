@@ -26,15 +26,6 @@ function lightning_media_twitter_update_8002() {
 }
 
 /**
- * Creates the media_library form display for tweets.
- */
-function lightning_media_twitter_update_8003() {
-  Config::forModule('lightning_media_twitter')
-    ->getEntity('entity_form_display', 'media.tweet.media_library')
-    ->save();
-}
-
-/**
  * Implements hook_update_dependencies().
  */
 function lightning_media_twitter_update_dependencies() {
