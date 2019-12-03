@@ -83,41 +83,6 @@ class MediaBrowserTest extends BrowserTestBase {
   }
 
   /**
-   * The media browser should be the default widget for a new media field.
-   */
-  public function testNewMediaReferenceField() {
-    $this->drupalPlaceBlock('local_actions_block');
-
-    $node_type = $this->drupalCreateContentType()->id();
-    $media_type = $this->createMediaType('image')->id();
-
-    $account = $this->drupalCreateUser([], NULL, TRUE);
-    $this->drupalLogin($account);
-
-    $this->drupalGet("/admin/structure/types/manage/$node_type/fields");
-    $this->clickLink('Add field');
-    $values = [
-      'new_storage_type' => 'field_ui:entity_reference:media',
-      'label' => 'Foobar',
-      'field_name' => 'foobar',
-    ];
-    $this->drupalPostForm(NULL, $values, 'Save and continue');
-    $this->drupalPostForm(NULL, [], 'Save field settings');
-    $values = [
-      "settings[handler_settings][target_bundles][$media_type]" => $media_type,
-    ];
-    $this->drupalPostForm(NULL, $values, 'Save settings');
-
-    $component = $this->container->get('entity_display.repository')
-      ->getFormDisplay('node', $node_type)
-      ->getComponent('field_foobar');
-
-    $this->assertInternalType('array', $component);
-    $this->assertSame('entity_browser_entity_reference', $component['type']);
-    $this->assertSame('media_browser', $component['settings']['entity_browser']);
-  }
-
-  /**
    * Tests creating embed code-based media in the media browser.
    */
   public function testEmbedCodeBasedMediaCreation() {

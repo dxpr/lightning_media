@@ -9,6 +9,7 @@ use Drupal\lightning_core\OverrideHelper as Override;
 use Drupal\lightning_media\Form\AddByUrlForm;
 use Drupal\lightning_media_video\Plugin\media\Source\Video;
 use Drupal\lightning_media_video\Plugin\media\Source\VideoFile;
+use Drupal\media\MediaInterface;
 
 /**
  * Implements hook_media_source_info_alter().
@@ -26,4 +27,16 @@ function lightning_media_video_media_source_info_alter(array &$sources) {
 
   Override::pluginClass($sources['video_embed_field'], Video::class);
   Override::pluginClass($sources['video_file'], VideoFile::class);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function lightning_media_video_media_view_alter(array &$build, MediaInterface $media) {
+  // If we are rendering an embedded video, give it a minimum width so that the
+  // responsive styles provided by Video Embed Field don't accidentally cause
+  // the video to be "invisible".
+  if (isset($build['#embed']) && $media->bundle() === 'video') {
+    $build['#attributes']['style'][] = 'min-width: 50%;';
+  }
 }

@@ -365,11 +365,19 @@ function lightning_media_update_8019() {
 
 /**
  * Sets the default value of the entity_browser.override_widget config switch.
+ *
+ * Removed in Lightning Media 4.0.
  */
 function lightning_media_update_8020() {
+}
+
+/**
+ * Deletes the entity_browser.override_widget config switch.
+ */
+function lightning_media_update_8021() {
   Drupal::configFactory()
     ->getEditable('lightning_media.settings')
-    ->set('entity_browser.override_widget', TRUE)
+    ->clear('entity_browser.override_widget')
     ->save();
 }
 
