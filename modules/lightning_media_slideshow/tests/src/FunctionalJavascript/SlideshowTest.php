@@ -5,8 +5,6 @@ namespace Drupal\Tests\lightning_media_slideshow\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\lightning_media\FunctionalJavascript\WebDriverWebAssert;
-use Drupal\Tests\lightning_media\Traits\EntityBrowserTrait;
-use Drupal\views\Entity\View;
 
 /**
  * Tests the basic functionality of Lightning Media's slideshow component.
@@ -15,17 +13,6 @@ use Drupal\views\Entity\View;
  * @group lightning_media
  */
 class SlideshowTest extends WebDriverTestBase {
-
-  use EntityBrowserTrait;
-
-  /**
-   * Slick Entity Reference has a schema error.
-   *
-   * @var bool
-   *
-   * @todo Remove when depending on slick_entityreference 1.2 or later.
-   */
-  protected $strictConfigSchema = FALSE;
 
   /**
    * {@inheritdoc}
@@ -38,19 +25,6 @@ class SlideshowTest extends WebDriverTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $GLOBALS['install_state'] = [];
-    /** @var \Drupal\views\ViewEntityInterface $view */
-    $view = View::load('media');
-    lightning_media_view_insert($view);
-    unset($GLOBALS['install_state']);
-  }
-
-  /**
    * Tests creating a slideshow block with media items in it.
    */
   public function testSlideshow() {
@@ -59,7 +33,6 @@ class SlideshowTest extends WebDriverTestBase {
 
     $account = $this->drupalCreateUser([
       'access content',
-      'access media_browser entity browser pages',
       'access media overview',
       'view media',
       'create media',
@@ -86,19 +59,20 @@ class SlideshowTest extends WebDriverTestBase {
     $this->drupalGet('/block/add/media_slideshow');
     $page->fillField('Block description', 'Test Block');
 
+    // This is an amazingly sketchy way to use the media library, but it will
+    // suffice for now until there is a trait in core that allows us to write
+    // interact with it more cleanly.
     $page->pressButton('Add media');
-    $this->waitForEntityBrowser('media_browser');
-
-    $items = $this->waitForItems();
-    $this->assertGreaterThanOrEqual(2, count($items));
-    $this->selectItem($items[0]);
-    $this->selectItem($items[1]);
-
-    $page->pressButton('Place');
-    $this->waitForEntityBrowserToClose();
+    $assert_session->waitForText('Add or select media');
+    $assert_session->waitForElement('css', '.js-media-library-item')->click();
+    $page->clickLink('Instagram');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElement('css', '.js-media-library-item')->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
 
     // Wait for the selected items to actually appear on the page.
-    $assert_session->waitForElement('css', '[data-drupal-selector^="edit-field-slideshow-items-current-items-"]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElement('css', '.js-media-library-selection .js-media-library-item');
 
     $page->pressButton('Save');
     $page->selectFieldOption('Region', 'Content');

@@ -32,8 +32,6 @@ class Update400Test extends BrowserTestBase {
    * Tests that field widgets are changed to use Media Library.
    */
   public function test() {
-    $assert_session = $this->assertSession();
-
     $this->createContentType([
       'type' => 'article',
       'name' => 'Article',
@@ -115,14 +113,6 @@ class Update400Test extends BrowserTestBase {
     $format->filters();
     $format->removeFilter('media_embed');
     $format->save();
-
-    $account = $this->createUser(['create article content']);
-    $this->drupalLogin($account);
-
-    $this->drupalGet('/node/add/article');
-    $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains('Field to migrate');
-    $assert_session->pageTextContains('Field to ignore');
 
     $io = $this->prophesize(StyleInterface::class);
     $io->confirm('Do you want to convert the Field to migrate field of the Article content type to use the media library in the default form mode?')

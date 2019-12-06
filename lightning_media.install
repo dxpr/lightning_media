@@ -31,9 +31,6 @@ function lightning_media_install() {
   user_role_grant_permissions('anonymous', ['view media']);
   user_role_grant_permissions('authenticated', ['view media']);
 
-  // Set the icon for the media_browser embed button.
-  lightning_media_update_8006();
-
   // Grant the creator content role permission to use the rich_text format and
   // the media browser.
   if (\Drupal::moduleHandler()->moduleExists('lightning_roles')) {
@@ -89,15 +86,14 @@ function lightning_media_update_8004() {
 }
 
 /**
- * Installs the media browser and its embed button.
+ * Creates the media_browser form mode.
  */
 function lightning_media_update_8005() {
   \Drupal::service('module_installer')->install(['entity_browser']);
 
-  $config = Config::forModule('lightning_media');
-  $config->getEntity('entity_form_mode', 'media.media_browser')->save();
-  $config->getEntity('entity_browser', 'media_browser')->save();
-  $config->getEntity('embed_button', 'media_browser')->save();
+  Config::forModule('lightning_media')
+    ->getEntity('entity_form_mode', 'media.media_browser')
+    ->save();
 }
 
 /**
@@ -137,14 +133,11 @@ function lightning_media_update_8006() {
 }
 
 /**
- * Deletes the media_library view.
+ * Removed in Lightning Media 4.0.
+ *
+ * Formerly deleted the media_library view.
  */
 function lightning_media_update_8007() {
-  $view = View::load('media_library');
-
-  if ($view) {
-    $view->delete();
-  }
 }
 
 /**

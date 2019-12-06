@@ -97,8 +97,20 @@ function lightning_media_video_update_8003() {
  */
 function lightning_media_video_update_8004() {
   $config = Config::forModule('lightning_media_video');
-  $config->getEntity('entity_form_display', 'media.video.media_library')->save();
-  $config->getEntity('entity_form_display', 'media.video_file.media_library')->save();
+
+  $media_types = Drupal::entityTypeManager()
+    ->getStorage('media_type')
+    ->getQuery()
+    ->execute();
+
+  if (in_array('video', $media_types, TRUE)) {
+    $config->getEntity('entity_form_display', 'media.video.media_library')->save();
+  }
+  // The video_file media type was added without an update path, so it might
+  // not exist if we are updating from a really old version.
+  if (in_array('video_file', $media_types, TRUE)) {
+    $config->getEntity('entity_form_display', 'media.video_file.media_library')->save();
+  }
 }
 
 /**

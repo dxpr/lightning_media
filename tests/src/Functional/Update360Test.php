@@ -13,6 +13,8 @@ use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Tests the optional configuration updates targeting Lightning Media 3.6.0.
+ *
  * @group lightning_media
  *
  * @covers \Drupal\lightning_media\Update\Update360
@@ -45,15 +47,6 @@ class Update360Test extends UpdatePathTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Remove Lightning Dev from the restored database.
-    $this->config('core.extension')
-      ->clear('module.lightning_dev')
-      ->save();
-
-    $this->container->get('keyvalue')
-      ->get('system.schema')
-      ->delete('lightning_dev');
-
     // Create a content type so we can test that content roles are correctly
     // updated.
     $this->drupalCreateContentType(['type' => 'test']);
@@ -61,14 +54,11 @@ class Update360Test extends UpdatePathTestBase {
     // Install Lightning Roles so we can ensure that content authoring
     // permissions are updated too.
     \Drupal::service('module_installer')->install(['lightning_roles']);
-    // Installing Lightning Roles will create the roles as we ship them, so we
-    // need to revoke the new permissions before the test.
-    $permissions = ['access ckeditor_media_browser entity browser pages'];
-    user_role_revoke_permissions('media_creator', $permissions);
-    user_role_revoke_permissions('media_manager', $permissions);
-    user_role_revoke_permissions('test_creator', $permissions);
   }
 
+  /**
+   * Tests creating a CKEditor-specific media browser from the iFrame one.
+   */
   public function test() {
     $io = $this->prophesize(StyleInterface::class);
 
@@ -119,8 +109,7 @@ class Update360Test extends UpdatePathTestBase {
   private function assertPermissions($role_id) {
     $role = Role::load($role_id);
     $this->assertInstanceOf(Role::class, $role);
-    $this->assertTrue($role->hasPermission('access ckeditor_media_browser entity browser pages'));
-    $this->assertTrue($role->hasPermission('access media_browser entity browser pages'));
+    $this->assertTrue(Role::load($role_id)->hasPermission('access ckeditor_media_browser entity browser pages'));
   }
 
 }
