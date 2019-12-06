@@ -36,13 +36,6 @@ function lightning_media_install() {
   if (\Drupal::moduleHandler()->moduleExists('lightning_roles')) {
     lightning_media_modules_installed(['lightning_roles']);
   }
-
-  // Add the media.embedded view mode to the media_browser embed button. It
-  // cannot be part of the original embed button config entity because the view
-  // mode is itself installed at the same time as the button, as part of this
-  // module's default configuration -- which means that it might not exist when
-  // the button is installed, resulting in a scary PluginNotFoundException.
-  lightning_media_update_8013();
 }
 
 /**
@@ -372,6 +365,22 @@ function lightning_media_update_8021() {
     ->getEditable('lightning_media.settings')
     ->clear('entity_browser.override_widget')
     ->save();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function lightning_media_requirements() {
+  $requirements = [];
+
+  if (Drupal::moduleHandler()->moduleExists('entity_embed')) {
+    $requirements['lightning_media_deprecate_entity_embed'] = [
+      'severity' => REQUIREMENT_WARNING,
+      'title' => t('Deprecated dependency: Entity Embed'),
+      'description' => t('Lightning Media 5.0 will <strong>not</strong> include the Entity Embed module. Please add it to your project directly: <code>composer require drupal/entity_embed:1.0</code>.'),
+    ];
+  }
+  return $requirements;
 }
 
 /**

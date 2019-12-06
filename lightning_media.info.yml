@@ -7,7 +7,6 @@ configure: lightning_media.settings
 dependencies:
   - drupal:ckeditor
   - entity_browser:entity_browser
-  - entity_embed:entity_embed
   - drupal:image
   - inline_entity_form:inline_entity_form
   - lightning_core:lightning_core
