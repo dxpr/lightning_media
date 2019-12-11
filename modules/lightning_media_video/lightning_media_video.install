@@ -75,12 +75,11 @@ function lightning_media_video_update_8001() {
 }
 
 /**
- * Creates the media_browser form display.
+ * Removed in Lightning Media 4.0.
+ *
+ * Formerly created the media_browser form display.
  */
 function lightning_media_video_update_8002() {
-  Config::forModule('lightning_media_video')
-    ->getEntity('entity_form_display', 'media.video.media_browser')
-    ->save();
 }
 
 /**

@@ -25,7 +25,6 @@ final class Update240 {
     $helper->getEntity('field_storage_config', 'media.field_media_video_file')->save();
     $helper->getEntity('field_config', 'media.video_file.field_media_video_file')->save();
     $helper->getEntity('field_config', 'media.video_file.field_media_in_library')->save();
-    $helper->getEntity('entity_form_display', 'media.video_file.media_browser')->save();
     $helper->getEntity('entity_view_display', 'media.video_file.embedded')->save();
     $helper->getEntity('entity_view_display', 'media.video_file.thumbnail')->save();
 
