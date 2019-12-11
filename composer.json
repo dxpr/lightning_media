@@ -7,6 +7,8 @@
         "bower-asset/cropper": "^2.3",
         "bower-asset/dropzone": "^5.1",
         "bower-asset/slick-carousel": "^1.8",
+        "cweagans/composer-patches": "^1.6",
+        "drupal/core": "~8.8.0",
         "drupal/crop": "^2.0.0-rc1",
         "drupal/dropzonejs": "2.0.0-alpha4",
         "drupal/embed": "^1.0",
@@ -24,7 +26,6 @@
         "vardot/blazy": "^1.8"
     },
     "require-dev": {
-        "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.6",
         "drupal/drupal-extension": "^3.4",
         "drupal/facets": "^1.2",
