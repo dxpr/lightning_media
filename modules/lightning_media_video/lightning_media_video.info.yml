@@ -5,4 +5,3 @@ package: Lightning
 description: 'Video support for Lightning Media.'
 dependencies:
   - lightning_media:lightning_media
-  - video_embed_field:video_embed_media

@@ -4,24 +4,22 @@ dependencies:
   config:
     - core.entity_view_mode.media.embedded
     - field.field.media.video.field_media_in_library
-    - field.field.media.video.field_media_video_embed_field
+    - field.field.media.video.field_media_oembed_video
     - media.type.video
   module:
-    - video_embed_field
+    - media
 id: media.video.embedded
 targetEntityType: media
 bundle: video
 mode: embedded
 content:
-  field_media_video_embed_field:
-    type: video_embed_field_video
+  field_media_oembed_video:
+    type: oembed
     weight: 2
     label: hidden
     settings:
-      responsive: true
-      width: 854
-      height: 480
-      autoplay: true
+      max_width: 0
+      max_height: 0
     third_party_settings: {  }
     region: content
 hidden:

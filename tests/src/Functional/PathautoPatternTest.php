@@ -57,7 +57,7 @@ class PathautoPatternTest extends BrowserTestBase {
     $media = [
       'document' => NULL,
       'image' => NULL,
-      'video' => NULL,
+      'video' => 'https://www.youtube.com/watch?v=Nf_aD3dTloY',
       'tweet' => 'https://twitter.com/50NerdsofGrey/status/757319527151636480',
       'instagram' => 'https://www.instagram.com/p/BmIh_AFDBzX',
     ];
