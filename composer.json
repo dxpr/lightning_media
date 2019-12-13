@@ -69,6 +69,9 @@
             "npm-asset"
         ],
         "patches": {
+            "drupal/core": {
+                "3096566 - Copy media library styles from Seven to Claro": "https://www.drupal.org/files/issues/2019-12-05/claro-copy_media_library_styles-3096566-19.patch"
+            },
             "drupal/entity_browser": {
                 "2877751 - Inform users how many items they can add to a field that uses an entity browser": "https://www.drupal.org/files/issues/2018-06-28/2877751-39-8.x-2.x.patch"
             },
