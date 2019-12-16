@@ -10,6 +10,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
+ * Tests validation when uploading files into the image browser.
+ *
  * @group lightning_media
  * @group lightning_media_image
  */

@@ -70,7 +70,7 @@
         ],
         "patches": {
             "drupal/core": {
-                "3096566 - Copy media library styles from Seven to Claro": "https://www.drupal.org/files/issues/2019-12-05/claro-copy_media_library_styles-3096566-19.patch"
+                "3096566 - Copy media library styles from Seven to Claro & 3096241 - Refactor image and file field widgets to improve contrib compatibility and to make their templates and preprocess functions DRY": "https://www.drupal.org/files/issues/2019-12-16/3096566-23-combined-3096241-3.patch"
             },
             "drupal/entity_browser": {
                 "2877751 - Inform users how many items they can add to a field that uses an entity browser": "https://www.drupal.org/files/issues/2018-06-28/2877751-39-8.x-2.x.patch"
