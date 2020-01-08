@@ -10,7 +10,7 @@
         "cweagans/composer-patches": "^1.6",
         "drupal/core": "~8.8.1 || 8.9.* || 9.0.*",
         "drupal/crop": "^2.0.0-rc1",
-        "drupal/dropzonejs": "2.0.0-alpha4",
+        "drupal/dropzonejs": "2.0.0-alpha5",
         "drupal/embed": "^1.0",
         "drupal/entity_browser": "2.2.0",
         "drupal/entity_embed": "^1.0",
