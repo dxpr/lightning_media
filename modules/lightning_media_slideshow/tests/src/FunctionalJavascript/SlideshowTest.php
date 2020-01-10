@@ -5,6 +5,7 @@ namespace Drupal\Tests\lightning_media_slideshow\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\lightning_media\FunctionalJavascript\WebDriverWebAssert;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
  * Tests the basic functionality of Lightning Media's slideshow component.
@@ -14,15 +15,59 @@ use Drupal\Tests\lightning_media\FunctionalJavascript\WebDriverWebAssert;
  */
 class SlideshowTest extends WebDriverTestBase {
 
+  use MediaTypeCreationTrait;
+
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'block_content',
-    'lightning_media_instagram',
     'lightning_media_slideshow',
-    'lightning_media_twitter',
+    'media_test_source',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->createMediaType('test', [
+      'id' => 'alpha',
+      'label' => 'Alpha',
+    ]);
+    $this->createMediaType('test', [
+      'id' => 'beta',
+      'label' => 'Beta',
+    ]);
+    $this->createMedia('alpha');
+    $this->createMedia('beta');
+  }
+
+  /**
+   * Creates a media item of a specific type.
+   *
+   * The created media item will have a randomly generated label and source
+   * field value.
+   *
+   * @param string $media_type
+   *   The type of media to create.
+   */
+  private function createMedia($media_type) {
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = Media::create(['bundle' => $media_type]);
+
+    $source_field = $media->getSource()
+      ->getSourceFieldDefinition($media->bundle->entity)
+      ->getName();
+
+    $media
+      ->setName($this->randomString())
+      ->set('field_media_in_library', TRUE)
+      ->set($source_field, $this->randomString())
+      ->setPublished()
+      ->save();
+  }
 
   /**
    * Tests creating a slideshow block with media items in it.
@@ -41,21 +86,6 @@ class SlideshowTest extends WebDriverTestBase {
     ]);
     $this->drupalLogin($account);
 
-    /** @var \Drupal\media\MediaInterface $media */
-    Media::create(['bundle' => 'tweet'])
-      ->setName("I'm a tweet")
-      ->set('embed_code', 'https://twitter.com/50NerdsofGrey/status/757319527151636480')
-      ->set('field_media_in_library', TRUE)
-      ->setPublished()
-      ->save();
-
-    Media::create(['bundle' => 'instagram'])
-      ->setName("I'm an instagram")
-      ->set('embed_code', 'https://www.instagram.com/p/BaecNGYAYyP/')
-      ->set('field_media_in_library', TRUE)
-      ->setPublished()
-      ->save();
-
     $this->drupalGet('/block/add/media_slideshow');
     $page->fillField('Block description', 'Test Block');
 
@@ -65,7 +95,12 @@ class SlideshowTest extends WebDriverTestBase {
     $page->pressButton('Add media');
     $assert_session->waitForText('Add or select media');
     $assert_session->waitForElement('css', '.js-media-library-item')->click();
-    $page->clickLink('Instagram');
+
+    // Switch to the other media type.
+    $links = $page->findAll('css', '.js-media-library-menu a');
+    $this->assertCount(2, $links);
+    $links[1]->click();
+
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForElement('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
