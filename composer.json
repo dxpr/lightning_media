@@ -12,7 +12,7 @@
         "drupal/crop": "^2.0.0-rc1",
         "drupal/dropzonejs": "2.0.0-alpha5",
         "drupal/embed": "^1.0",
-        "drupal/entity_browser": "2.2.0",
+        "drupal/entity_browser": "^2.3",
         "drupal/entity_embed": "^1.0",
         "drupal/image_widget_crop": "^2.1",
         "drupal/inline_entity_form": "^1.0",
@@ -71,9 +71,6 @@
         "patches": {
             "drupal/core": {
                 "3096566 - Copy media library styles from Seven to Claro & 3096241 - Refactor image and file field widgets to improve contrib compatibility and to make their templates and preprocess functions DRY": "https://www.drupal.org/files/issues/2019-12-16/3096566-23-combined-3096241-3.patch"
-            },
-            "drupal/entity_browser": {
-                "2877751 - Inform users how many items they can add to a field that uses an entity browser": "https://www.drupal.org/files/issues/2018-06-28/2877751-39-8.x-2.x.patch"
             },
             "drupal/libraries": {
                 "2882709 - Misnamed interface causes \"Fatal error: Cannot declare interface Drupal\\libraries\\ExternalLibrary\\Utility\\LibraryAccessorIdInterface\"": "https://www.drupal.org/files/issues/2882709-2-interface-libraryidaccessorinterface-misnamed.patch"
