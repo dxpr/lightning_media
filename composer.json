@@ -16,7 +16,6 @@
         "drupal/entity_embed": "^1.0",
         "drupal/image_widget_crop": "^2.1",
         "drupal/inline_entity_form": "^1.0",
-        "drupal/libraries": "3.0-alpha1",
         "drupal/lightning_core": "5.*",
         "drupal/media_entity_instagram": "^2.0",
         "drupal/media_entity_twitter": "^2.1",
@@ -88,8 +87,8 @@
             "npm-asset"
         ],
         "patches": {
-            "drupal/libraries": {
-                "2882709 - Misnamed interface causes \"Fatal error: Cannot declare interface Drupal\\libraries\\ExternalLibrary\\Utility\\LibraryAccessorIdInterface\"": "https://www.drupal.org/files/issues/2882709-2-interface-libraryidaccessorinterface-misnamed.patch"
+            "drupal/dropzonejs": {
+                "3099836 - Use new LibrariesDirectoryFinder": "https://www.drupal.org/files/issues/2020-01-30/dropzonejs-libraries-directory-finder-3099836-3.patch"
             }
         }
     },

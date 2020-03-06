@@ -5,6 +5,5 @@ description: 'Provides the ability to create slideshows and carousels of media i
 package: Lightning
 dependencies:
   - drupal:block_content
-  - libraries:libraries
   - lightning_media:lightning_media
   - slick_entityreference:slick_entityreference

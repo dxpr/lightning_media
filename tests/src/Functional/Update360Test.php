@@ -47,6 +47,12 @@ class Update360Test extends UpdatePathTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Libraries API was removed as a dependency in Lightning Media 4.0, so pull
+    // it out of the database now.
+    $this->config('core.extension')
+      ->clear('module.libraries')
+      ->save();
+
     // Create a content type so we can test that content roles are correctly
     // updated.
     $this->drupalCreateContentType(['type' => 'test']);
