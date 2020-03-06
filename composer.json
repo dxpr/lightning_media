@@ -8,7 +8,7 @@
         "bower-asset/dropzone": "^5.1",
         "bower-asset/slick-carousel": "^1.8",
         "cweagans/composer-patches": "^1.6",
-        "drupal/core": "~8.8.1 || 8.9.* || 9.0.*",
+        "drupal/core": "~8.8.2 || 8.9.* || 9.0.*",
         "drupal/crop": "^2.0.0-rc1",
         "drupal/dropzonejs": "2.0.0-alpha5",
         "drupal/embed": "^1.0",
@@ -26,14 +26,15 @@
         "vardot/blazy": "^1.8"
     },
     "require-dev": {
-        "drupal-composer/drupal-scaffold": "^2.6",
+        "cweagans/composer-patches": "^1.6",
+        "drupal/core-composer-scaffold": "*",
+        "drupal/core-dev": "*",
         "drupal/drupal-extension": "^3.4",
         "drupal/facets": "^1.2",
         "drupal/schema_metatag": "^1.3",
         "drush/drush": "^9.7",
         "oomphinc/composer-installers-extender": "^1.1",
-        "vijaycs85/drupal-quality-checker": "^1.0",
-        "webflo/drupal-core-require-dev": "*"
+        "vijaycs85/drupal-quality-checker": "^1.0"
     },
     "config": {
         "preferred-install": {
@@ -43,6 +44,24 @@
     "extra": {
         "branch-alias": {
             "dev-8.x-4.x": "4.x-dev"
+        },
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "docroot/"
+            },
+            "file-mapping": {
+                "[project-root]/.gitattributes": false,
+                "[project-root]/.editorconfig": false,
+                "[web-root]/example.gitignore": false,
+                "[web-root]/.csslintrc": false,
+                "[web-root]/modules/README.txt": false,
+                "[web-root]/profiles/README.txt": false,
+                "[web-root]/sites/README.txt": false,
+                "[web-root]/themes/README.txt": false,
+                "[web-root]/INSTALL.txt": false,
+                "[web-root]/robots.txt": false,
+                "[web-root]/web.config": false
+            }
         },
         "enable-patching": true,
         "installer-paths": {
@@ -69,9 +88,6 @@
             "npm-asset"
         ],
         "patches": {
-            "drupal/core": {
-                "3096566 - Copy media library styles from Seven to Claro & 3096241 - Refactor image and file field widgets to improve contrib compatibility and to make their templates and preprocess functions DRY": "https://www.drupal.org/files/issues/2019-12-16/3096566-23-combined-3096241-3.patch"
-            },
             "drupal/libraries": {
                 "2882709 - Misnamed interface causes \"Fatal error: Cannot declare interface Drupal\\libraries\\ExternalLibrary\\Utility\\LibraryAccessorIdInterface\"": "https://www.drupal.org/files/issues/2882709-2-interface-libraryidaccessorinterface-misnamed.patch"
             }
@@ -91,14 +107,11 @@
     "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
-            "@push",
-            "@drupal-scaffold"
+            "@push"
         ],
         "post-update-cmd": [
-            "@push",
-            "@drupal-scaffold"
+            "@push"
         ],
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "nuke": "rm -r -f docroot vendor",
         "pull": "cp -R -f ./docroot/modules/contrib/lightning_media/* .",
         "push": [
