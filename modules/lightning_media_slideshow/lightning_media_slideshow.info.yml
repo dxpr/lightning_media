@@ -1,5 +1,5 @@
 name: 'Media Slideshow'
-core: 8.x
+core_version_requirement: '^8.8 || ^9'
 type: module
 description: 'Provides the ability to create slideshows and carousels of media items.'
 package: Lightning

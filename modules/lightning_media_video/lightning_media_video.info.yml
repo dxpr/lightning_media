@@ -1,5 +1,5 @@
 name: 'Media Video'
-core: 8.x
+core_version_requirement: '^8.8 || ^9'
 type: module
 package: Lightning
 description: 'Video support for Lightning Media.'
