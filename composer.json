@@ -7,8 +7,7 @@
         "bower-asset/cropper": "^2.3",
         "bower-asset/dropzone": "^5.1",
         "bower-asset/slick-carousel": "^1.8",
-        "cweagans/composer-patches": "^1.6",
-        "drupal/core": "~8.8.2 || 8.9.* || 9.0.*",
+        "drupal/core": "^8.8.4 || ~9.0.0",
         "drupal/crop": "^2.0.0-rc1",
         "drupal/dropzonejs": "^2.1",
         "drupal/embed": "^1.0",
@@ -27,9 +26,6 @@
     "require-dev": {
         "drupal/core-composer-scaffold": "*",
         "drupal/core-dev": "*",
-        "drupal/drupal-extension": "^3.4",
-        "drupal/facets": "^1.2",
-        "drupal/schema_metatag": "^1.3",
         "drush/drush": "^9.7",
         "oomphinc/composer-installers-extender": "^1.1",
         "vijaycs85/drupal-quality-checker": "^1.0"
