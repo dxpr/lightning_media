@@ -10,7 +10,7 @@
         "cweagans/composer-patches": "^1.6",
         "drupal/core": "~8.8.2 || 8.9.* || 9.0.*",
         "drupal/crop": "^2.0.0-rc1",
-        "drupal/dropzonejs": "^2.0.0-alpha5",
+        "drupal/dropzonejs": "^2.1",
         "drupal/embed": "^1.0",
         "drupal/entity_browser": "^2.3",
         "drupal/entity_embed": "^1.0",
@@ -25,7 +25,6 @@
         "vardot/blazy": "^1.8"
     },
     "require-dev": {
-        "cweagans/composer-patches": "^1.6",
         "drupal/core-composer-scaffold": "*",
         "drupal/core-dev": "*",
         "drupal/drupal-extension": "^3.4",
@@ -85,12 +84,7 @@
         "installer-types": [
             "bower-asset",
             "npm-asset"
-        ],
-        "patches": {
-            "drupal/dropzonejs": {
-                "3099836 - Use new LibrariesDirectoryFinder": "https://www.drupal.org/files/issues/2020-01-30/dropzonejs-libraries-directory-finder-3099836-3.patch"
-            }
-        }
+        ]
     },
     "repositories": {
         "drupal": {
