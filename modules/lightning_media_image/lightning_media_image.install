@@ -47,20 +47,14 @@ function lightning_media_image_install() {
     }
 
     // Try to use a local copy of Cropper over the CDN-hosted fallback.
-    $lib = 'libraries/cropper/dist';
-    $lib = [
-      $lib,
-      drupal_get_path('module', \Drupal::installProfile()) . "/$lib",
-    ];
-    $lib = array_filter($lib, 'is_dir');
+    $cropper_path = Drupal::service('library.libraries_directory_file_finder')
+      ->find('cropper/dist');
 
-    if ($lib) {
-      $lib = reset($lib);
-
-      \Drupal::configFactory()
+    if ($cropper_path) {
+      Drupal::configFactory()
         ->getEditable('image_widget_crop.settings')
-        ->set('settings.library_url', "$lib/cropper.min.js")
-        ->set('settings.css_url', "$lib/cropper.min.css")
+        ->set('settings.library_url', "$cropper_path/cropper.min.js")
+        ->set('settings.css_url', "$cropper_path/cropper.min.css")
         ->save();
     }
   }
