@@ -27,7 +27,7 @@
     "require-dev": {
         "drupal/core-composer-scaffold": "*",
         "drupal/core-dev": "*",
-        "drush/drush": "^9.7",
+        "drush/drush": ">=9.7",
         "vijaycs85/drupal-quality-checker": "^1.0"
     },
     "config": {
