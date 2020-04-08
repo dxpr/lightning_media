@@ -7,7 +7,6 @@ use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests validation when uploading files into the image browser.
@@ -17,7 +16,10 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  */
 class ImageBrowserUploadValidationTest extends BrowserTestBase {
 
-  use ContentTypeCreationTrait;
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * {@inheritdoc}

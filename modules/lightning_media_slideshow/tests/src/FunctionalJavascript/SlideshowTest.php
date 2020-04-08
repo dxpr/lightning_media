@@ -20,6 +20,11 @@ class SlideshowTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'block_content',
     'lightning_media_slideshow',

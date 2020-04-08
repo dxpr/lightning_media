@@ -22,6 +22,11 @@ class Update400Test extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'ckeditor',
     'lightning_media',

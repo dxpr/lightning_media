@@ -21,6 +21,11 @@ class RolesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'block',
     'lightning_media',
@@ -54,6 +59,8 @@ class RolesTest extends BrowserTestBase {
    * Tests the functionality of the 'media_creator' and 'media_manager' roles.
    */
   public function testRoles() {
+    $page = $this->getSession()->getPage();
+
     $account = $this->drupalCreateUser();
     $account->addRole('media_creator');
     $account->save();
@@ -69,7 +76,7 @@ class RolesTest extends BrowserTestBase {
 
     $assert = $this->assertSession();
     $this->drupalGet('/admin/content/media');
-    $this->clickLink($media->label());
+    $page->clickLink($media->label());
     $assert->statusCodeEquals(200);
     $assert->linkExists('Edit');
     $assert->linkExists('Delete');
@@ -82,7 +89,7 @@ class RolesTest extends BrowserTestBase {
     $this->drupalLogin($account);
 
     $this->drupalGet('/admin/content/media');
-    $this->clickLink($media->label());
+    $page->clickLink($media->label());
     $assert->statusCodeEquals(200);
     $assert->linkExists('Edit');
     $assert->linkExists('Delete');
