@@ -153,7 +153,7 @@ class Update400Test extends BrowserTestBase {
 
     $configuration = $filters->get('filter_html')->getConfiguration();
     $this->assertTrue($configuration['status']);
-    $this->assertContains('<drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt>', $configuration['settings']['allowed_html']);
+    $this->assertStringContainsString('<drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt>', $configuration['settings']['allowed_html']);
   }
 
 }

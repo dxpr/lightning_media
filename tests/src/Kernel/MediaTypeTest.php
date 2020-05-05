@@ -60,7 +60,7 @@ class MediaTypeTest extends KernelTestBase {
       ->getFormDisplay('media', $type)
       ->getComponent('field_media_in_library');
 
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
   }
 
 }
