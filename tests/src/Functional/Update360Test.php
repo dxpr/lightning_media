@@ -31,7 +31,7 @@ class Update360Test extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../fixtures/3.5.0.php.gz',
+      __DIR__ . '/../../fixtures/Update360Test.php.gz',
     ];
   }
 
