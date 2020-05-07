@@ -1,3 +1,27 @@
+## 4.0.0-beta1
+* Lightning Media now uses the core Media Library module in place of the media
+  browser by default. All media types packaged with Lightning Media now support
+  the core Media Library module out of the box. Media Library is also now the
+  default way of embedding media into WYSIWYG text editors, so Lightning Media
+  no longer has a hard dependency on the Entity Embed module.
+* Lightning Media Video now uses the core oEmbed system by default and no
+  longer has a hard dependency on the Video Embed Field module. Existing
+  sites are not affected by this change.
+* Made the Document field required on the Document media type.
+* Updated the Slick Entity Reference module to 2.0.
+* Lightning Media no longer includes Libraries API as a dependency.
+* Updated DropzoneJS to 2.1.
+* Updated Entity Browser to 2.3.
+
+## 3.16.0
+* Updated DropzoneJS to 2.0.0-alpha5.
+* Updated Entity Browser to 2.3.
+
+## 3.15.0
+* Updated Slick Entity Reference to 2.0.
+* Updated Media Entity Instagram to 2.0.
+* Updated Media Entity Twitter to 2.1.
+
 ## 3.14.0
 There are no user-facing changes in this version.
 
