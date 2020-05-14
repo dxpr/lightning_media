@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\lightning_media\Functional;
 
-use Drupal\Core\Update\UpdateKernel;
 use Drupal\embed\Entity\EmbedButton;
 use Drupal\entity_browser\Entity\EntityBrowser;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -10,7 +9,6 @@ use Drupal\lightning_media\Update\Update360;
 use Drupal\user\Entity\Role;
 use Prophecy\Argument;
 use Symfony\Component\Console\Style\StyleInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the optional configuration updates targeting Lightning Media 3.6.0.
@@ -37,26 +35,9 @@ class Update360Test extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * This is a temporary workaround for issue #3031128; it can be removed when
-   * UpdateKernel::fixSerializedExtensionObjects() is.
-   */
-  protected function initConfig(ContainerInterface $container) {
-    UpdateKernel::fixSerializedExtensionObjects($container);
-    parent::initConfig($container);
-  }
-
-  /**
-   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    // Libraries API was removed as a dependency in Lightning Media 4.0, so pull
-    // it out of the database now.
-    $this->config('core.extension')
-      ->clear('module.libraries')
-      ->save();
 
     // Create a content type so we can test that content roles are correctly
     // updated.
