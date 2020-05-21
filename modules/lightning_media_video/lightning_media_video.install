@@ -115,10 +115,10 @@ function lightning_media_video_update_8004() {
 /**
  * Implements hook_requirements().
  */
-function lightning_media_video_requirements() {
+function lightning_media_video_requirements($phase) {
   $requirements = [];
 
-  if (Drupal::moduleHandler()->moduleExists('video_embed_media')) {
+  if ($phase === 'runtime' && Drupal::moduleHandler()->moduleExists('video_embed_media')) {
     $requirements['lightning_media_deprecate_video_embed_media'] = [
       'severity' => REQUIREMENT_WARNING,
       'title' => t('Deprecated dependency: Video Embed Media'),
