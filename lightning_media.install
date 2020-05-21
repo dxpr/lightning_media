@@ -370,10 +370,10 @@ function lightning_media_update_8021() {
 /**
  * Implements hook_requirements().
  */
-function lightning_media_requirements() {
+function lightning_media_requirements($phase) {
   $requirements = [];
 
-  if (Drupal::moduleHandler()->moduleExists('entity_embed')) {
+  if ($phase === 'runtime' && Drupal::moduleHandler()->moduleExists('entity_embed')) {
     $requirements['lightning_media_deprecate_entity_embed'] = [
       'severity' => REQUIREMENT_WARNING,
       'title' => t('Deprecated dependency: Entity Embed'),
