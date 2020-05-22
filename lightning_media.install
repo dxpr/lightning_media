@@ -358,12 +358,12 @@ function lightning_media_update_8020() {
 }
 
 /**
- * Deletes the entity_browser.override_widget config switch.
+ * Deletes unsupported Entity Browser-related config settings.
  */
 function lightning_media_update_8021() {
   Drupal::configFactory()
     ->getEditable('lightning_media.settings')
-    ->clear('entity_browser.override_widget')
+    ->clear('entity_browser')
     ->save();
 }
 
