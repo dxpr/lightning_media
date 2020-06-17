@@ -19,8 +19,7 @@ final class Update240 {
    * @ask Do you want to install the "Video file" media type?
    */
   public function installVideoFileMedia() {
-    $helper = ConfigHelper::forModule('lightning_media_video')
-      ->optional();
+    $helper = ConfigHelper::forModule('lightning_media_video');
 
     $helper->getEntity('media_type', 'video_file')->save();
     $helper->getEntity('field_storage_config', 'media.field_media_video_file')->save();
