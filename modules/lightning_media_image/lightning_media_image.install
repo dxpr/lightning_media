@@ -65,6 +65,7 @@ function lightning_media_image_install() {
  */
 function lightning_media_image_update_8001() {
   Config::forModule('lightning_media_image')
+    ->optional()
     ->getEntity('entity_form_display', 'media.image.media_browser')
     ->save();
 }
@@ -132,6 +133,7 @@ function lightning_media_image_update_8005() {
  */
 function lightning_media_image_update_8006() {
   Config::forModule('lightning_media_image')
+    ->optional()
     ->getEntity('entity_view_display', 'media.image.thumbnail')
     ->save();
 }
@@ -141,6 +143,7 @@ function lightning_media_image_update_8006() {
  */
 function lightning_media_image_update_8007() {
   Config::forModule('lightning_media_image')
+    ->optional()
     ->getEntity('entity_form_display', 'media.image.media_library')
     ->save();
 }

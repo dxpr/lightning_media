@@ -12,6 +12,7 @@ use Drupal\lightning_core\ConfigHelper as Config;
  */
 function lightning_media_audio_update_8001() {
   Config::forModule('lightning_media_audio')
+    ->optional()
     ->getEntity('entity_form_display', 'media.audio_file.media_library')
     ->save();
 }
