@@ -7,7 +7,7 @@
         "bower-asset/cropper": "^2.3",
         "bower-asset/dropzone": "^5.1",
         "bower-asset/slick-carousel": "^1.8",
-        "drupal/core": "^8.8.4 || ~9.0.0",
+        "drupal/core": "^8.8.8 || ^9.0.1",
         "drupal/crop": "^2.0.0-rc1",
         "drupal/dropzonejs": "^2.1",
         "drupal/embed": "^1.0",
@@ -28,6 +28,7 @@
         "drupal/core-composer-scaffold": "*",
         "drupal/core-dev": "*",
         "drush/drush": ">=9.7",
+        "symfony/options-resolver": ">=4",
         "vijaycs85/drupal-quality-checker": "^1.0"
     },
     "config": {
