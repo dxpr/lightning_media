@@ -36,13 +36,13 @@ function lightning_media_image_install() {
 
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
     foreach ($form_displays as $form_display) {
-      $component = $form_display->getComponent('image');
+      $component = $form_display->getComponent('field_media_image');
 
       if ($component && $component['type'] == 'image_image') {
         $component['type'] = 'image_widget_crop';
         $component['settings']['crop_list'] = ['freeform'];
         $component['settings']['show_crop_area'] = TRUE;
-        $form_display->setComponent('image', $component)->save();
+        $form_display->setComponent('field_media_image', $component)->save();
       }
     }
 

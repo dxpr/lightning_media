@@ -33,8 +33,8 @@ class StandardInstallTest extends BrowserTestBase {
       'audio' => 'field_media_audio_file',
       'image' => 'field_media_image',
       'document' => 'field_media_document',
+      'remote_video' => 'field_media_oembed_video',
       'video' => 'field_media_video_file',
-      'video_file' => 'field_media_video_file',
     ];
 
     // None of these media types should exist yet, since Standard does not

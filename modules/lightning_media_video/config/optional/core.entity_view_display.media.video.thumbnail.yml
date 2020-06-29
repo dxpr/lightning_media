@@ -15,15 +15,15 @@ content:
   thumbnail:
     type: image
     weight: 0
-    label: hidden
+    region: content
+    label: visually_hidden
     settings:
       image_style: medium
       image_link: ''
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   field_media_in_library: true
-  field_media_oembed_video: true
+  field_media_video_file: true
   name: true
   uid: true

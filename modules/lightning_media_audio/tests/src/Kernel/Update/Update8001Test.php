@@ -32,7 +32,7 @@ class Update8001Test extends KernelTestBase {
    * Tests the update function.
    */
   public function testUpdate() {
-    $this->createMediaType('test', ['id' => 'audio_file']);
+    $this->createMediaType('test', ['id' => 'audio']);
 
     EntityFormMode::create([
       'targetEntityType' => 'media',

@@ -4,7 +4,6 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_library
     - field.field.media.video.field_media_in_library
-    - field.field.media.video.field_media_oembed_video
     - media.type.video
 id: media.video.media_library
 targetEntityType: media
@@ -13,23 +12,22 @@ mode: media_library
 content:
   field_media_in_library:
     type: boolean_checkbox
-    weight: 1
     settings:
       display_label: true
+    weight: 1
     third_party_settings: {  }
     region: content
   name:
     type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
-  field_media_oembed_video: true
+  field_media_video_file: true
   path: true
-  preview: true
   status: true
   uid: true

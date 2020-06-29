@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
-id: audio_file
+id: audio
 label: 'Audio file'
 description: 'A locally hosted audio file, such as an MP3.'
 source: audio_file

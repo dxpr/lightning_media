@@ -2,22 +2,22 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_media_audio_file
-    - media.type.audio_file
+    - field.storage.media.field_media_video_file
+    - media.type.video
   module:
     - file
-id: media.audio_file.field_media_audio_file
-field_name: field_media_audio_file
+id: media.video.field_media_video_file
+field_name: field_media_video_file
 entity_type: media
-bundle: audio_file
-label: 'Audio file'
+bundle: video
+label: 'Video file'
 description: ''
 required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  file_extensions: 'mp3 wav aac'
+  file_extensions: mp4
   file_directory: '[date:custom:Y]-[date:custom:m]'
   max_filesize: ''
   description_field: false

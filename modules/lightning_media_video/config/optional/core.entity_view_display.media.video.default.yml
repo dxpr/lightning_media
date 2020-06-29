@@ -2,50 +2,32 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.video.field_media_in_library
-    - field.field.media.video.field_media_oembed_video
+    - field.field.media.video.field_media_video_file
     - media.type.video
   module:
-    - media
+    - file
 id: media.video.default
 targetEntityType: media
 bundle: video
 mode: default
 content:
-  created:
-    label: hidden
-    type: timestamp
-    weight: 1
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-    region: content
-  field_media_oembed_video:
-    type: oembed
-    weight: 3
-    label: hidden
-    settings:
-      max_width: 0
-      max_height: 0
-    third_party_settings: {  }
-    region: content
-  name:
-    label: hidden
-    type: string
+  field_media_video_file:
+    type: file_video
     weight: 0
+    label: visually_hidden
     settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    region: content
-  uid:
-    label: hidden
-    type: author
-    weight: 2
-    settings: {  }
+      muted: false
+      width: 640
+      height: 480
+      controls: true
+      autoplay: false
+      loop: false
+      multiple_file_display_type: tags
     third_party_settings: {  }
     region: content
 hidden:
+  created: true
   field_media_in_library: true
+  name: true
   thumbnail: true
+  uid: true

@@ -59,6 +59,8 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
    * @dataProvider providerValidation
    */
   public function testValidation($file, $expected_error) {
+    $assert_session = $this->assertSession();
+
     $node_type = $this->createContentType();
 
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
@@ -68,7 +70,7 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
       'type' => 'image',
       'cardinality' => 1,
     ]);
-    $this->assertSame(SAVED_NEW, $field_storage->save());
+    $field_storage->save();
 
     FieldConfig::create([
       'field_storage' => $field_storage,
@@ -104,10 +106,9 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
     $this->drupalLogin($account);
 
     $this->drupalGet('/node/add/' . $node_type->id());
-    $this->assertSession()->statusCodeEquals(200);
+    $assert_session->statusCodeEquals(200);
 
-    $settings = $this->assertSession()
-      ->elementExists('css', '[data-drupal-selector="drupal-settings-json"]')
+    $settings = $assert_session->elementExists('css', '[data-drupal-selector="drupal-settings-json"]')
       ->getText();
 
     $settings = Json::decode($settings);
@@ -122,17 +123,17 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
       ],
     ]);
     $this->drupalGet($url);
-    $this->assertSession()->statusCodeEquals(200);
+    $assert_session->statusCodeEquals(200);
 
     $file_field = $this->assertSession()->elementExists('css', '.js-form-managed-file');
     $file_field->attachFileToField('File', __DIR__ . "/../../files/$file");
     $file_field->pressButton('Upload');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->elementExists('css', '[role="alert"]');
-    $this->assertSession()->pageTextContains($expected_error);
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementExists('css', '[role="alert"]');
+    $assert_session->pageTextContains($expected_error);
     // The error message should not be double-escaped.
-    $this->assertSession()->responseNotContains('&lt;em class="placeholder"&gt;');
-    $this->assertSession()->elementExists('css', 'input.form-file.error');
+    $assert_session->responseNotContains('&lt;em class="placeholder"&gt;');
+    $assert_session->elementExists('css', 'input.form-file.error');
   }
 
 }

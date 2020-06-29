@@ -63,14 +63,14 @@ class MediaImageFieldTest extends WebDriverTestBase {
 
     FieldConfig::create([
       'field_storage' => $field_storage,
-      'bundle' => 'video',
+      'bundle' => 'remote_video',
       'label' => 'Image',
     ])->save();
 
     $this->drupalPlaceBlock('local_tasks_block');
 
     $form_display = $this->container->get('entity_display.repository')
-      ->getFormDisplay('media', 'video');
+      ->getFormDisplay('media', 'remote_video');
     // Add field_image to the display and save it; lightning_media_image will
     // default it to the image browser widget.
     $form_display->setComponent($field_name, ['type' => 'image_image'])->save();
@@ -95,7 +95,7 @@ class MediaImageFieldTest extends WebDriverTestBase {
 
     $name = $this->randomString();
 
-    $this->drupalGet('/media/add/video');
+    $this->drupalGet('/media/add/remote_video');
     $page->fillField('Name', $name);
     $page->fillField('Video URL', 'https://www.youtube.com/watch?v=z9qY4VUZzcY');
     $this->assertNotEmpty($assert_session->waitForField('Image'));

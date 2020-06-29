@@ -2,24 +2,21 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.video_file.field_media_in_library
-    - field.field.media.video_file.field_media_video_file
-    - media.type.video_file
+    - field.field.media.audio.field_media_audio_file
+    - field.field.media.audio.field_media_in_library
+    - media.type.audio
   module:
     - file
-id: media.video_file.default
+id: media.audio.default
 targetEntityType: media
-bundle: video_file
+bundle: audio
 mode: default
 content:
-  field_media_video_file:
-    type: file_video
+  field_media_audio_file:
+    type: file_audio
     weight: 0
     label: visually_hidden
     settings:
-      muted: false
-      width: 640
-      height: 480
       controls: true
       autoplay: false
       loop: false

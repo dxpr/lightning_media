@@ -3,22 +3,22 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.embedded
-    - field.field.media.image.field_media_image
-    - media.type.image
+    - field.field.media.remote_video.field_media_oembed_video
+    - media.type.video
   module:
-    - image
-id: media.image.embedded
+    - media
+id: media.remote_video.embedded
 targetEntityType: media
-bundle: image
+bundle: remote_video
 mode: embedded
 content:
-  field_media_image:
-    type: image
-    weight: 0
+  field_media_oembed_video:
+    type: oembed
+    weight: 2
     label: hidden
     settings:
-      image_style: ''
-      image_link: ''
+      max_width: 0
+      max_height: 0
     third_party_settings: {  }
     region: content
 hidden:

@@ -35,7 +35,7 @@ class Update80038004Test extends KernelTestBase {
    * Tests the update function.
    */
   public function testUpdate() {
-    $this->createMediaType('test', ['id' => 'video']);
+    $this->createMediaType('test', ['id' => 'remote_video']);
 
     EntityViewMode::create([
       'targetEntityType' => 'media',

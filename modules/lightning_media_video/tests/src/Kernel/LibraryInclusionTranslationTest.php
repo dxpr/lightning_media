@@ -38,17 +38,17 @@ class LibraryInclusionTranslationTest extends KernelTestBase {
   }
 
   /**
-   * Tests translatability of field_media_in_library for video_file media type.
+   * Tests that field_media_in_library is not translatable for video.
    */
   public function testVideoFile() {
     $uri = uniqid('public://') . '.mp4';
     $this->assertGreaterThan(0, file_put_contents($uri, $this->getRandomGenerator()->paragraphs()));
 
     $file = File::create(['uri' => $uri]);
-    $this->assertSame(SAVED_NEW, $file->save());
+    $file->save();
 
     $media = Media::create([
-      'bundle' => 'video_file',
+      'bundle' => 'video',
       'name' => $this->randomString(),
       'field_media_video_file' => $file->id(),
       'field_media_in_library' => TRUE,
@@ -63,9 +63,9 @@ class LibraryInclusionTranslationTest extends KernelTestBase {
   }
 
   /**
-   * Tests translatability of field_media_in_library for video media type.
+   * Tests that field_media_in_library is not translatable for remote_video.
    */
-  public function testVideo() {
+  public function testRemoteVideo() {
     $url = $this->randomString();
 
     $url_resolver = $this->prophesize(UrlResolverInterface::class);
@@ -78,7 +78,7 @@ class LibraryInclusionTranslationTest extends KernelTestBase {
     $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
 
     $media = Media::create([
-      'bundle' => 'video',
+      'bundle' => 'remote_video',
       'field_media_oembed_video' => $url,
       'field_media_in_library' => TRUE,
     ]);

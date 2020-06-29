@@ -3,11 +3,11 @@ status: true
 dependencies:
   config:
     - field.storage.media.field_media_in_library
-    - media.type.video_file
-id: media.video_file.field_media_in_library
+    - media.type.remote_video
+id: media.remote_video.field_media_in_library
 field_name: field_media_in_library
 entity_type: media
-bundle: video_file
+bundle: remote_video
 label: 'Show in media library'
 description: ''
 required: false

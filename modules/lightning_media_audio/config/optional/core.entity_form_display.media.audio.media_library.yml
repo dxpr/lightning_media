@@ -3,12 +3,12 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.media.media_library
-    - field.field.media.audio_file.field_media_audio_file
-    - field.field.media.audio_file.field_media_in_library
-    - media.type.audio_file
-id: media.audio_file.media_library
+    - field.field.media.audio.field_media_audio_file
+    - field.field.media.audio.field_media_in_library
+    - media.type.audio
+id: media.audio.media_library
 targetEntityType: media
-bundle: audio_file
+bundle: audio
 mode: media_library
 content:
   field_media_in_library:

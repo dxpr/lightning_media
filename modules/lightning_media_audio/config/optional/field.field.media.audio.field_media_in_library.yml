@@ -3,11 +3,11 @@ status: true
 dependencies:
   config:
     - field.storage.media.field_media_in_library
-    - media.type.audio_file
-id: media.audio_file.field_media_in_library
+    - media.type.audio
+id: media.audio.field_media_in_library
 field_name: field_media_in_library
 entity_type: media
-bundle: audio_file
+bundle: audio
 label: 'Show in media library'
 description: ''
 required: false

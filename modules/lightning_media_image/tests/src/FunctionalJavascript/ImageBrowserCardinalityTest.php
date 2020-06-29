@@ -116,7 +116,7 @@ class ImageBrowserCardinalityTest extends WebDriverTestBase {
       $media = Media::create([
         'bundle' => 'image',
         'name' => $this->getRandomGenerator()->name(32),
-        'image' => $file->id(),
+        'field_media_image' => $file->id(),
         'field_media_in_library' => TRUE,
       ]);
       $media->save();

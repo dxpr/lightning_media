@@ -46,7 +46,7 @@ class InstallTest extends BrowserTestBase {
 
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
     foreach ($form_displays as $form_display) {
-      $component = $form_display->getComponent('image');
+      $component = $form_display->getComponent('field_media_image');
       $this->assertIsArray($component);
       $this->assertSame('image_widget_crop', $component['type']);
       $this->assertSame(['freeform'], $component['settings']['crop_list']);
