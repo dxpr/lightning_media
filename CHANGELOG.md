@@ -1,3 +1,9 @@
+## 4.0.0
+* Lightning Media is now compatible with the Standard installation profile.
+  Existing sites are unaffected by this change.
+* Fixed a bug where the link to bulk upload media would not show up on all
+  displays of the administrative media library. (Issue #3155229)
+
 ## 4.0.0-beta1
 * Lightning Media now uses the core Media Library module in place of the media
   browser by default. All media types packaged with Lightning Media now support
