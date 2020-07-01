@@ -1,3 +1,8 @@
+## 4.1.0
+* Fixed bugs introduced in Lightning Media 4.0 that could occur when updating from very old versions of Lightning.
+* Deprecated the dependency on Views Infinite Scroll. It will *NOT* be included in Lightning Media 5.0, so if you need to continue using it in your project, you will need to add it to your composer.json. For example: `composer require drupal/views_infinite_scroll:^1.6`.
+* The image browser has been split into its own separate view, called "Image Browser". This change will not affect existing sites.
+
 ## 4.0.0
 * Lightning Media is now compatible with the Standard installation profile.
   Existing sites are unaffected by this change.
