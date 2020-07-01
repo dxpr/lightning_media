@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\lightning_media_video\Kernel;
 
-use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -14,9 +13,8 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
  * @group lightning_media
  *
  * @covers lightning_media_video_update_8003()
- * @covers lightning_media_video_update_8004()
  */
-class Update80038004Test extends KernelTestBase {
+class Update8003Test extends KernelTestBase {
 
   use MediaTypeCreationTrait;
 
@@ -35,21 +33,26 @@ class Update80038004Test extends KernelTestBase {
    * Tests the update function.
    */
   public function testUpdate() {
-    $this->createMediaType('test', ['id' => 'remote_video']);
+    $this->createMediaType('test', [
+      'id' => 'video',
+    ]);
 
     EntityViewMode::create([
       'targetEntityType' => 'media',
       'id' => 'media.thumbnail',
     ])->save();
 
-    EntityFormMode::create([
-      'targetEntityType' => 'media',
-      'id' => 'media.media_library',
-    ])->save();
-
     module_load_install('lightning_media_video');
     lightning_media_video_update_8003();
-    lightning_media_video_update_8004();
+
+    $view_display = $this->container->get('entity_display.repository')
+      ->getViewDisplay('media', 'video', 'thumbnail');
+    $this->assertFalse($view_display->isNew());
+    $this->assertSame('media.video.thumbnail', $view_display->id());
+    $this->assertSame('video', $view_display->getTargetBundle());
+    $hidden_components = $view_display->get('hidden');
+    $this->assertArrayNotHasKey('field_media_oembed_video', $hidden_components);
+    $this->assertTrue($hidden_components['field_media_test']);
   }
 
 }

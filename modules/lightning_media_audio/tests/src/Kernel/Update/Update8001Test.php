@@ -32,7 +32,9 @@ class Update8001Test extends KernelTestBase {
    * Tests the update function.
    */
   public function testUpdate() {
-    $this->createMediaType('test', ['id' => 'audio']);
+    $this->createMediaType('test', [
+      'id' => 'audio_file',
+    ]);
 
     EntityFormMode::create([
       'targetEntityType' => 'media',
@@ -41,6 +43,15 @@ class Update8001Test extends KernelTestBase {
 
     module_load_install('lightning_media_audio');
     lightning_media_audio_update_8001();
+
+    $form_display = $this->container->get('entity_display.repository')
+      ->getFormDisplay('media', 'audio_file', 'media_library');
+    $this->assertFalse($form_display->isNew());
+    $this->assertSame('media.audio_file.media_library', $form_display->id());
+    $this->assertSame('audio_file', $form_display->getTargetBundle());
+    $hidden_components = $form_display->get('hidden');
+    $this->assertArrayNotHasKey('field_media_audio_file', $hidden_components);
+    $this->assertTrue($hidden_components['field_media_test']);
   }
 
 }
