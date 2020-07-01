@@ -374,11 +374,20 @@ function lightning_media_requirements($phase) {
   $requirements = [];
 
   if ($phase === 'runtime' && Drupal::moduleHandler()->moduleExists('entity_embed')) {
-    $requirements['lightning_media_deprecate_entity_embed'] = [
-      'severity' => REQUIREMENT_WARNING,
-      'title' => t('Deprecated dependency: Entity Embed'),
-      'description' => t('Lightning Media 5.0 will <strong>not</strong> include the Entity Embed module. Please add it to your project directly: <code>composer require drupal/entity_embed:1.0</code>.'),
-    ];
+    if (Drupal::moduleHandler()->moduleExists('entity_embed')) {
+      $requirements['lightning_media_deprecate_entity_embed'] = [
+        'severity' => REQUIREMENT_WARNING,
+        'title' => t('Deprecated dependency: Entity Embed'),
+        'description' => t('Lightning Media 5.0 will <strong>not</strong> include the Entity Embed module. Please add it to your project directly: <code>composer require drupal/entity_embed:^1.0</code>.'),
+      ];
+    }
+    if (Drupal::moduleHandler()->moduleExists('views_infinite_scroll')) {
+      $requirements['lightning_media_deprecate_views_infinite_scroll'] = [
+        'severity' => REQUIREMENT_WARNING,
+        'title' => t('Deprecated dependency: Views Infinite Scroll'),
+        'description' => t('Lightning Media 5.0 will <strong>not</strong> include the Views Infinite Scroll module. Please add it to your project directly: <code>composer require drupal/views_infinite_scroll:^1.6</code>.'),
+      ];
+    }
   }
   return $requirements;
 }

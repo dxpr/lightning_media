@@ -12,7 +12,6 @@ dependencies:
   - lightning_core:lightning_core
   - drupal:media_library
   - drupal:user
-  - views_infinite_scroll:views_infinite_scroll
 components:
   - lightning_media_audio
   - lightning_media_bulk_upload
