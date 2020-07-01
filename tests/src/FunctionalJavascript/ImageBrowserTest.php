@@ -86,6 +86,7 @@ class ImageBrowserTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.field--name-field-hero-image')
       ->pressButton('Select Image(s)');
     $this->waitForEntityBrowser('image_browser');
+    $assert_session->waitForLink('Upload')->click();
 
     // This helps stabilize the next couple of calls; without it, the
     // upload is more likely to randomly fail. It's not clear why this

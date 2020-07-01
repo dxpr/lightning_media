@@ -129,12 +129,6 @@ class ImageBrowserCardinalityTest extends WebDriverTestBase {
     ]);
     $this->drupalLogin($account);
 
-    $GLOBALS['install_state'] = [];
-    /** @var \Drupal\views\ViewEntityInterface $view */
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('media');
-    lightning_media_image_view_insert($view);
-    unset($GLOBALS['install_state']);
-
     module_load_install('lightning_media_image');
     lightning_media_image_install();
   }

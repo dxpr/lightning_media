@@ -86,6 +86,7 @@ function lightning_media_image_update_8002() {
   }
 
   Config::forModule('lightning_media_image')
+    ->optional()
     ->getEntity('entity_browser', 'image_browser')
     ->save();
 }
@@ -94,8 +95,6 @@ function lightning_media_image_update_8002() {
  * Removed in Lightning 8.x-2.21.
  *
  * Formerly created the image browser display of the media view.
- *
- * @see lightning_media_image_view_insert()
  */
 function lightning_media_image_update_8003() {
 }

@@ -107,6 +107,25 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
 
     $this->drupalGet('/node/add/' . $node_type->id());
     $assert_session->statusCodeEquals(200);
+    $this->visitImageBrowser();
+    $this->getSession()->getPage()->pressButton('Upload');
+
+    $file_field = $assert_session->elementExists('css', '.js-form-managed-file');
+    $file_field->attachFileToField('File', __DIR__ . "/../../files/$file");
+    $file_field->pressButton('Upload');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementExists('css', '[role="alert"]');
+    $assert_session->pageTextContains($expected_error);
+    // The error message should not be double-escaped.
+    $assert_session->responseNotContains('&lt;em class="placeholder"&gt;');
+    $assert_session->elementExists('css', 'input.form-file.error');
+  }
+
+  /**
+   * Visits the image browser at its dedicated URL.
+   */
+  private function visitImageBrowser() {
+    $assert_session = $this->assertSession();
 
     $settings = $assert_session->elementExists('css', '[data-drupal-selector="drupal-settings-json"]')
       ->getText();
@@ -124,16 +143,6 @@ class ImageBrowserUploadValidationTest extends BrowserTestBase {
     ]);
     $this->drupalGet($url);
     $assert_session->statusCodeEquals(200);
-
-    $file_field = $this->assertSession()->elementExists('css', '.js-form-managed-file');
-    $file_field->attachFileToField('File', __DIR__ . "/../../files/$file");
-    $file_field->pressButton('Upload');
-    $assert_session->statusCodeEquals(200);
-    $assert_session->elementExists('css', '[role="alert"]');
-    $assert_session->pageTextContains($expected_error);
-    // The error message should not be double-escaped.
-    $assert_session->responseNotContains('&lt;em class="placeholder"&gt;');
-    $assert_session->elementExists('css', 'input.form-file.error');
   }
 
 }
