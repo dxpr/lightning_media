@@ -14,7 +14,7 @@
         "drupal/entity_browser": "^2.3",
         "drupal/entity_embed": "^1.0",
         "drupal/image_widget_crop": "^2.1",
-        "drupal/inline_entity_form": "^1.0",
+        "drupal/inline_entity_form": "^1.0-rc7",
         "drupal/lightning_core": "5.*",
         "drupal/media_entity_instagram": "^2.0",
         "drupal/media_entity_twitter": "^2.1",
