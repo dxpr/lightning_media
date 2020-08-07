@@ -1,3 +1,7 @@
+## 4.2.0
+* Fixed errors that could occur when installing Lightning Media Slideshow without any media types. (Issue #3156597)
+* Updated Inline Entity Form to 1.0-rc7.
+
 ## 4.1.0
 * Fixed bugs introduced in Lightning Media 4.0 that could occur when updating from very old versions of Lightning.
 * Deprecated the dependency on Views Infinite Scroll. It will *NOT* be included in Lightning Media 5.0, so if you need to continue using it in your project, you will need to add it to your composer.json. For example: `composer require drupal/views_infinite_scroll:^1.6`.
