@@ -21,7 +21,7 @@
         "drupal/slick_entityreference": "^2.0",
         "drupal/video_embed_field": "^2.0",
         "drupal/views_infinite_scroll": "^1.6",
-        "oomphinc/composer-installers-extender": "^1.1",
+        "oomphinc/composer-installers-extender": "^1.1 || ^2",
         "vardot/blazy": "^1.8"
     },
     "require-dev": {
