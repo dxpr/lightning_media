@@ -9,13 +9,6 @@ RELEASE_BRANCH=release/$1
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 if [[ $BRANCH =~ ^8\.x\-[0-9]+\.x$ ]]; then
-  CHANGE_LOG=logs/$1.md
-
-  if [[ ! -f $CHANGE_LOG ]]; then
-    echo "$CHANGE_LOG must exist before creating a release branch."
-    exit 1
-  fi
-
   git pull
   git fetch origin --tags
   git checkout -b $RELEASE_BRANCH

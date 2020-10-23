@@ -8,8 +8,6 @@ DRUPAL_VERSION=8.x-${1%.0}
 PROJECT=${PWD##*/}
 RELEASE_BRANCH=release/$1
 
-MARKDOWN=`command -v markdown`
-
 # Since this script does things that are pretty permanent, give the user 5
 # seconds to cancel without consequences.
 echo "Tagging $DRUPAL_VERSION from $RELEASE_BRANCH in 5 seconds..."
@@ -35,15 +33,6 @@ if [[ $BRANCH =~ ^8\.x\-[0-9]+\.x$ ]]; then
   git tag $DRUPAL_VERSION
   git push --quiet drupal-org $DRUPAL_VERSION
   echo "Tagged $DRUPAL_VERSION and pushed to drupal.org."
-
-  if [[ $MARKDOWN ]]; then
-    markdown logs/$1.md | pbcopy
-    echo "The change log has been copied to the clipboard as HTML."
-  else
-    pbcopy < logs/$1.md
-    echo "The change log has been copied to the clipboard as Markdown. You will need to manually convert it to HTML when creating the release."
-    echo "If you want to skip this step next time, install markdown-to-html from https://github.com/cwjohan/markdown-to-html."
-  fi
 
   echo "Go ahead and create the release at https://drupal.org/project/$PROJECT"
   exit 0
