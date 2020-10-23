@@ -1,3 +1,7 @@
+## 4.3.0
+* Updated Media Entity Instagram to 3.0.
+* Added Composer 2 support.
+
 ## 4.2.0
 * Fixed errors that could occur when installing Lightning Media Slideshow without any media types. (Issue #3156597)
 * Updated Inline Entity Form to 1.0-rc7.
