@@ -1,41 +1,42 @@
 <?php
 
-namespace Drupal\Tests\lightning_media_instagram\Kernel;
+namespace Drupal\Tests\lightning_media_instagram\Functional;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
+use Drupal\Tests\BrowserTestBase;
 
 /**
+ * Tests the translatability of the field_media_in_library field.
+ *
  * @group lightning_media
  * @group lightning_media_instagram
  */
-class LibraryInclusionTranslationTest extends KernelTestBase {
+class LibraryInclusionTranslationTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'user'];
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-    $this->installEntitySchema('user');
+  protected static $modules = [
+    'content_translation',
+    'lightning_media_instagram',
+  ];
 
-    $this->container->get('module_installer')->install([
-      'content_translation',
-      'lightning_media_instagram',
-    ]);
-    ConfigurableLanguage::createFromLangcode('hu')->save();
-  }
-
+  /**
+   * Tests that the 'field_media_in_library' field is not translatable.
+   */
   public function test() {
+    ConfigurableLanguage::createFromLangcode('hu')->save();
+
     $media = Media::create([
       'bundle' => 'instagram',
       'name' => $this->randomString(),
-      'embed_code' => $this->randomString(),
+      'embed_code' => 'https://www.instagram.com/p/CGkIkLngLDS',
       'field_media_in_library' => TRUE,
     ]);
     $media->addTranslation('hu', [
