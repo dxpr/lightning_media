@@ -1,3 +1,7 @@
+## 4.4.0
+* Fixed a bug that could occur when adding Instagram posts in the media browser
+  by URL.
+
 ## 4.3.0
 * Updated Media Entity Instagram to 3.0.
 * Added Composer 2 support.
