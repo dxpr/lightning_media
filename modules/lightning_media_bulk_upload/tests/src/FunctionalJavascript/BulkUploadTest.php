@@ -87,6 +87,16 @@ class BulkUploadTest extends WebDriverTestBase {
       $page->pressButton('Save');
     }
 
+    // Ensure all the files were actually saved, and have the current user as
+    // their owner.
+    $saved_files = $this->container->get('entity_type.manager')
+      ->getStorage('file')
+      ->loadByProperties([
+        'filename' => $files,
+        'uid' => $account->id(),
+      ]);
+    $this->assertSame(count($saved_files), count($files));
+
     $this->drupalGet('/admin/content/media');
     // @todo Make this linkExists. For whatever reason, that assertion fails and
     // I don't really feel like debugging it.
