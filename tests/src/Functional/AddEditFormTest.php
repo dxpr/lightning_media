@@ -62,11 +62,13 @@ class AddEditFormTest extends BrowserTestBase {
 
       $media = Media::create([
         'bundle' => $media_type,
-        // The media type might not use the embed_code source field, but in case
-        // it does, feed it a random value here. Because we're just testing the
-        // edit form, and not anything specific to the media type itself, this
-        // is a reasonable shortcut.
+        // The media type might not use the embed_code or
+        // field_media_oembed_video source field, but in case it does, feed it
+        // a random value here. Because we're just testing the edit form, and
+        // not anything specific to the media type itself, this is a reasonable
+        // shortcut.
         'embed_code' => $this->randomString(),
+        'field_media_oembed_video' => $this->randomString(),
       ]);
       $media->save();
       $this->drupalGet($media->toUrl('edit-form'));
