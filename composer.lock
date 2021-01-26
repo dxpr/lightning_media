@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29da543ae3dad038073f3f5b1e8a7552",
+    "content-hash": "441858032dc6fe37e8e825ff649a7a24",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1866,17 +1866,17 @@
         },
         {
             "name": "drupal/media_entity_twitter",
-            "version": "2.4.0",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/media_entity_twitter.git",
-                "reference": "8.x-2.4"
+                "reference": "8.x-2.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/media_entity_twitter-8.x-2.4.zip",
-                "reference": "8.x-2.4",
-                "shasum": "11bca09cc6dd678dc7585d16d66167a09c6e42fb"
+                "url": "https://ftp.drupal.org/files/projects/media_entity_twitter-8.x-2.6.zip",
+                "reference": "8.x-2.6",
+                "shasum": "777062eb55314da47ee3878db6d10d022e91bed6"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9",
@@ -1885,8 +1885,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.4",
-                    "datestamp": "1585646747",
+                    "version": "8.x-2.6",
+                    "datestamp": "1610375564",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
