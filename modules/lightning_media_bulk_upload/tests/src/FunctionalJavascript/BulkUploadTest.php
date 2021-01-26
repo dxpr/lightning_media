@@ -78,7 +78,7 @@ class BulkUploadTest extends WebDriverTestBase {
       $this->getSession()->executeScript('Dropzone.instances[0].hiddenFileInput.name = "file"');
       $page->attachFileToField('file', $file);
 
-      // @todo: React when the upload actually completes.
+      // @todo React when the upload actually completes.
       sleep(3);
     }
     $page->pressButton('Continue');
