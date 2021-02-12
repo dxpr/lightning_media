@@ -75,24 +75,23 @@ function lightning_media_field_widget_entity_browser_entity_reference_form_alter
     unset($element['current']['#prefix']);
   }
 
-  /** @var \Drupal\Core\Field\FieldItemListInterface $items */
-  $items = $context['items'];
+  if (!empty($element['current']['items'])) {
+    // Wrap the current selections in a nice <details> element.
+    $cardinality = (int) $context['items']
+      ->getFieldDefinition()
+      ->getFieldStorageDefinition()
+      ->getCardinality();
 
-  // Wrap the current selections in a nice <details> element.
-  $cardinality = $items
-    ->getFieldDefinition()
-    ->getFieldStorageDefinition()
-    ->getCardinality();
-
-  $element['current']['#theme_wrappers'] = [
-    'details' => [
-      '#attributes' => [
-        'open' => TRUE,
+    $element['current']['#theme_wrappers'] = [
+      'details' => [
+        '#attributes' => [
+          'open' => TRUE,
+        ],
+        '#title' => new Plural($cardinality, 'Current selection', 'Current selections'),
+        '#summary_attributes' => [],
       ],
-      '#title' => new Plural($cardinality, 'Current selection', 'Current selections'),
-      '#summary_attributes' => [],
-    ],
-  ];
+    ];
+  }
 }
 
 /**
