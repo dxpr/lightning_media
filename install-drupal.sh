@@ -18,10 +18,3 @@ drush pm-enable lightning_media lightning_media_audio lightning_media_bulk_uploa
 
 # Make settings writable.
 chmod +w $SITE_DIR $SETTINGS
-
-# Copy development settings into the site directory and require them.
-cp settings.local.php $SITE_DIR
-echo "require __DIR__ . '/settings.local.php';" >> $SETTINGS
-
-# Copy PHPUnit configuration into core directory.
-cp -f phpunit.xml ./docroot/core
