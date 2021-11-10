@@ -1,5 +1,5 @@
 name: 'Lightning Media'
-core_version_requirement: '^8.8 || ^9'
+core_version_requirement: '^9'
 type: module
 description: "Slick media handling for Lightning. So cool you'll make the A/C jealous."
 package: Lightning

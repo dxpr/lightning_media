@@ -1,5 +1,5 @@
 name: 'Media Instagram'
-core_version_requirement: '^8.8 || ^9'
+core_version_requirement: '^9'
 type: module
 description: 'Instagram support for Lightning Media.'
 package: Lightning
