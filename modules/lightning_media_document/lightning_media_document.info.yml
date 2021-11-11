@@ -1,5 +1,5 @@
 name: 'Media Document'
-core_version_requirement: '^9'
+core_version_requirement: '^8.8 || ^9'
 type: module
 description: 'Locally hosted document support for Lightning Media.'
 package: Lightning
