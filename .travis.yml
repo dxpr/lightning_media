@@ -1,7 +1,10 @@
 ---
 language: php
 
-php: "7.3"
+os: linux
+dist: focal
+
+php: "7.4"
 
 addons:
   chrome: stable
@@ -20,7 +23,7 @@ env:
     # release, dev-develop to track Dev/HEAD, or any other Composer version
     # string.
     # @see https://getcomposer.org/doc/articles/versions.md
-    - ORCA_VERSION=dev-develop
+    - ORCA_VERSION=^3
     - ORCA_PACKAGES_CONFIG_ALTER=../lightning_media/tests/packages_alter.yml
     - ORCA_TELEMETRY_ENABLE=TRUE
 
@@ -76,6 +79,10 @@ matrix:
     - env: ORCA_JOB=ISOLATED_TEST_ON_NEXT_MAJOR_LATEST_MINOR_DEV
     - env: ORCA_JOB=INTEGRATED_TEST_ON_NEXT_MAJOR_LATEST_MINOR_DEV
     - env: ORCA_JOB=ISOLATED_UPGRADE_TEST_TO_NEXT_MAJOR_DEV
+    # NEXT_MINOR jobs temporarily allowed to fail
+    # @see https://www.drupal.org/project/acquia_cms/issues/3248967
+    - env: ORCA_JOB=INTEGRATED_TEST_ON_NEXT_MINOR
+    - env: ORCA_JOB=ISOLATED_TEST_ON_NEXT_MINOR
 
 before_install:
   - composer create-project --no-dev acquia/orca ../orca "$ORCA_VERSION"
