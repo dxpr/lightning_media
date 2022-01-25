@@ -16,6 +16,11 @@ class UpdatePathTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../fixtures/drupal-8.8.0-update-from-1.0.0-rc2.php.gz',

@@ -191,7 +191,14 @@ class MediaHelper {
       return $file;
     }
     else {
-      $file = file_move($file, $destination, $replace);
+      if (\Drupal::hasService('file.repository')) {
+        // phpcs:ignore
+        $file = \Drupal::service('file.repository')->move($file, $destination, $replace);
+      }
+      else {
+        // @phpstan-ignore-next-line
+        $file = file_move($file, $destination, $replace);
+      }
 
       if ($file) {
         $field->setValue($file);
