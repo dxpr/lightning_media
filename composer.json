@@ -4,7 +4,6 @@
     "description": "Slick media handling for Lightning. So cool you'll make the A/C jealous.",
     "license": "GPL-2.0-or-later",
     "require": {
-        "bower-asset/cropper": "^2.3",
         "bower-asset/slick-carousel": "^1.8",
         "drupal/core": "^8.8.8 || ^9.0.1 || ^10",
         "drupal/crop": "^2.0.0-rc1",
