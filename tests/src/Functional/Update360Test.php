@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\lightning_media\Functional;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\embed\Entity\EmbedButton;
 use Drupal\entity_browser\Entity\EntityBrowser;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Style\StyleInterface;
  */
 class Update360Test extends UpdatePathTestBase {
 
+  use ProphecyTrait;
   /**
    * {@inheritdoc}
    */
@@ -36,7 +38,7 @@ class Update360Test extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a content type so we can test that content roles are correctly

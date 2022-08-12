@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\lightning_media_document\Kernel;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Style\StyleInterface;
  */
 class Update400Test extends KernelTestBase {
 
+  use ProphecyTrait;
   use MediaTypeCreationTrait;
 
   /**

@@ -31,7 +31,7 @@ class MediaTypeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     Config::forModule('lightning_media')

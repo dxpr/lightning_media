@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\lightning_media_video\Kernel;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -18,6 +19,7 @@ use Drupal\media\OEmbed\UrlResolverInterface;
  */
 class LibraryInclusionTranslationTest extends KernelTestBase {
 
+  use ProphecyTrait;
   /**
    * {@inheritdoc}
    */
@@ -26,7 +28,7 @@ class LibraryInclusionTranslationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
 

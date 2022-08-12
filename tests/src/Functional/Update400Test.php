@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\lightning_media\Functional;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\editor\Entity\Editor;
 use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\field\Entity\FieldConfig;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Style\StyleInterface;
  */
 class Update400Test extends BrowserTestBase {
 
+  use ProphecyTrait;
   /**
    * {@inheritdoc}
    */

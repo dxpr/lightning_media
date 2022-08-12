@@ -36,7 +36,7 @@ class PathautoPatternTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->config('media.settings')->set('standalone_url', TRUE)->save();
     drupal_flush_all_caches();

@@ -30,7 +30,7 @@ class MediaImageFieldTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // The media.settings:standalone_url setting was added in Drupal 8.7. To

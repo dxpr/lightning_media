@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\lightning_media_audio\Kernel\Update;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -20,6 +21,7 @@ use Symfony\Component\Console\Style\StyleInterface;
  */
 class Update350Test extends KernelTestBase {
 
+  use ProphecyTrait;
   use MediaTypeCreationTrait;
 
   /**
