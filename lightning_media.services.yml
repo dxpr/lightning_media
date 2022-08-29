@@ -7,5 +7,4 @@ services:
   lightning_media.route_subscriber:
     class: '\Drupal\lightning_media\Routing\RouteSubscriber'
     tags:
-      -
-        name: event_subscriber
+      - { name: event_subscriber }

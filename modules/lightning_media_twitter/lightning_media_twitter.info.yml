@@ -1,5 +1,5 @@
 name: 'Media Twitter'
-core_version_requirement: '^8.8 || ^9 || ^10'
+core_version_requirement: '^9.3 || ^10'
 type: module
 package: Lightning
 description: 'Twitter support for Lightning Media.'

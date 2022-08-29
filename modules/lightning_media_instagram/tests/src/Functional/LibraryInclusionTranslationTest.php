@@ -11,6 +11,8 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group lightning_media
  * @group lightning_media_instagram
+ *
+ * @requires module media_entity_instagram
  */
 class LibraryInclusionTranslationTest extends BrowserTestBase {
 

@@ -9,6 +9,8 @@ use Drupal\media\Entity\Media;
 /**
  * @group lightning_media
  * @group lightning_media_twitter
+ *
+ * @requires module media_entity_twitter
  */
 class LibraryInclusionTranslationTest extends KernelTestBase {
 

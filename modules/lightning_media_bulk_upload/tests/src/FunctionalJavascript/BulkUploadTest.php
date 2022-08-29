@@ -9,6 +9,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @group lightning_media
  * @group lightning_media_bulk_upload
+ *
+ * @requires module dropzonejs
  */
 class BulkUploadTest extends WebDriverTestBase {
 

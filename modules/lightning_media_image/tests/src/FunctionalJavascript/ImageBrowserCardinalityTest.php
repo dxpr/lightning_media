@@ -18,6 +18,8 @@ use Drupal\Tests\lightning_media\Traits\EntityBrowserTrait;
  *
  * @group lightning_media
  * @group lightning_media_image
+ *
+ * @requires module image_widget_crop
  */
 class ImageBrowserCardinalityTest extends WebDriverTestBase {
 

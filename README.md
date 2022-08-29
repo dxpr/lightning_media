@@ -43,9 +43,8 @@ module.
 
 #### Media Video (`lightning_media_video`)
 Provides a Video media type for displaying remote videos (e.g., YouTube or
-Vimeo) in your Drupal site using the
-[Video Embed Field](https://drupal.org/project/video_embed_field) module and the
-Video file media type for managing locally hosted videos.
+Vimeo) in your Drupal site and the Video file media type for managing locally
+hosted videos.
 
 ### Installation
 This component can only be installed using Composer. To add it to your Drupal

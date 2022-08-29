@@ -7,6 +7,8 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests Lightning Media's integration with Entity Browser.
+ *
+ * @group lightning_media
  */
 class EntityBrowserIntegrationTest extends KernelTestBase {
 

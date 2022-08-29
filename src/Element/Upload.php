@@ -105,12 +105,7 @@ class Upload extends FileElement {
       $event_dispatcher->dispatch($event);
 
       $name = $event->getFilename();
-      // Support both Drupal 8.7's FileSystemInterface API, and its earlier
-      // antecedents. We need to call file_create_filename() in an obscure way
-      // to prevent deprecation testing failures.
-      $name = version_compare(\Drupal::VERSION, '8.7.0', '>=')
-        ? $file_system->createFilename($name, $destination)
-        : call_user_func('file_create_filename', $name, $destination);
+      $name = $file_system->createFilename($name, $destination);
       $name = $upload->move($destination, $name)->getFilename();
 
       $uri = $element['#upload_location'];

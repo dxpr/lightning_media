@@ -10,6 +10,8 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
  * Tests that all media items have a /media/BUNDLE/ID Pathauto pattern.
  *
  * @group lightning_media
+ *
+ * @requires module pathauto
  */
 class PathautoPatternTest extends BrowserTestBase {
 

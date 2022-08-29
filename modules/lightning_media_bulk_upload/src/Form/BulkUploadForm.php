@@ -80,13 +80,7 @@ class BulkUploadForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Continue'),
     ];
-
-    // Support both Drupal 8.7's API and its antecedents. We need to call
-    // file_upload_max_size() as a string in order to prevent deprecation
-    // testing failures.
-    $max_size = version_compare(\Drupal::VERSION, '8.7.0', '>=')
-      ? Environment::getUploadMaxSize()
-      : call_user_func('file_upload_max_size');
+    $max_size = Environment::getUploadMaxSize();
 
     $variables = [
       '@max_size' => static::bytesToString($max_size),

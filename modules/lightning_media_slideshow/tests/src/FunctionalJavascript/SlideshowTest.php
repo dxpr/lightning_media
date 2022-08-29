@@ -12,6 +12,8 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
  *
  * @group lightning_media_slideshow
  * @group lightning_media
+ *
+ * @requires module slick_entityreference
  */
 class SlideshowTest extends WebDriverTestBase {
 

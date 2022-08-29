@@ -9,6 +9,8 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group lightning_media
  * @group lightning_media_image
+ *
+ * @requires module image_widget_crop
  */
 class InstallTest extends BrowserTestBase {
 
