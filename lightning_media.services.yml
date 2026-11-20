@@ -12,3 +12,12 @@ services:
   Drupal\lightning_media\Hook\LightningMediaHooks:
     class: Drupal\lightning_media\Hook\LightningMediaHooks
     autowire: true
+    arguments:
+      - '@entity_display.repository'
+      - '@entity_field.manager'
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@current_route_match'
+      - '@request_stack'
+      - '@module_handler'
+      - '@config.installer'

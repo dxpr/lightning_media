@@ -8,12 +8,7 @@
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\lightning_media_image\Hook\LightningMediaImageHooks;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\image\Entity\ImageStyle;
-use Drupal\lightning_core\ConfigHelper as Config;
-use Drupal\lightning_core\OverrideHelper as Override;
-use Drupal\lightning_media_image\Plugin\media\Source\Image;
 
 /**
  * Implements hook_field_widget_info_alter().

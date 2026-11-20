@@ -2,6 +2,9 @@
 
 namespace Drupal\lightning_media_twitter\Hook;
 
+use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Render\RendererInterface;
+
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\lightning_core\OverrideHelper as Override;
 use Drupal\lightning_media\Form\AddByUrlForm;
@@ -11,6 +14,28 @@ use Drupal\lightning_media_twitter\Plugin\media\Source\Twitter;
  * Hook implementations for lightning_media_twitter.
  */
 final class LightningMediaTwitterHooks {
+
+  /**
+   * The moduleList.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * Constructs the hook service.
+   */
+  public function __construct(ModuleExtensionList $moduleList, RendererInterface $renderer) {
+    $this->moduleList = $moduleList;
+    $this->renderer = $renderer;
+  }
 
   /**
    * Implements hook_media_source_info_alter().
@@ -36,7 +61,7 @@ final class LightningMediaTwitterHooks {
   #[Hook('theme_registry_alter')]
   public function themeRegistryAlter(array &$theme_registry) {
     /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-    $module_list = \Drupal::service('extension.list.module');
+    $module_list = $this->moduleList;
 
     $hook = &$theme_registry['media_entity_twitter_tweet'];
     if ($hook['path'] === $module_list->getPath('media_entity_twitter') . '/templates') {
@@ -57,13 +82,13 @@ final class LightningMediaTwitterHooks {
     // CKEditor.
     $placeholder = [
       '#theme' => 'image',
-      '#uri' => \Drupal::service('extension.list.module')->getPath('media_entity_twitter') . '/images/icons/twitter.png',
+      '#uri' => $this->moduleList->getPath('media_entity_twitter') . '/images/icons/twitter.png',
       '#width' => 180,
       '#height' => 180,
       // This is a placeholder, so no need for an alt text.
       '#alt' => NULL,
     ];
-    $variables['placeholder'] = method_exists(\Drupal::service('renderer'), 'renderInIsolation') ? \Drupal::service('renderer')->renderInIsolation($placeholder) : \Drupal::service('renderer')->renderPlain($placeholder);
+    $variables['placeholder'] = method_exists($this->renderer, 'renderInIsolation') ? $this->renderer->renderInIsolation($placeholder) : $this->renderer->renderPlain($placeholder);
   }
 
 }

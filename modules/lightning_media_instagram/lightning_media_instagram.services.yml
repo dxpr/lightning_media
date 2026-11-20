@@ -3,3 +3,5 @@ services:
   Drupal\lightning_media_instagram\Hook\LightningMediaInstagramHooks:
     class: Drupal\lightning_media_instagram\Hook\LightningMediaInstagramHooks
     autowire: true
+    arguments:
+      - '@kernel'

@@ -2,20 +2,24 @@
 
 namespace Drupal\lightning_media\Hook;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Config\ConfigInstallerInterface;
+
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\ckeditor\Ajax\AddStyleSheetCommand;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup as Plural;
-use Drupal\file\FileInterface;
-use Drupal\image\Entity\ImageStyle;
-use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\image\Plugin\Field\FieldWidget\ImageWidget;
-use Drupal\image\Plugin\ImageEffect\ResizeImageEffect;
 use Drupal\lightning_core\BundleEntityStorage;
 use Drupal\lightning_core\OverrideHelper as Override;
-use Drupal\lightning_media\Exception\IndeterminateBundleException;
 use Drupal\lightning_media\Form\MediaForm;
 use Drupal\lightning_media\ImageWidgetHelper;
 use Drupal\lightning_media\MediaHelper;
@@ -28,6 +32,76 @@ use Drupal\views\ViewExecutable;
  * Hook implementations for lightning_media.
  */
 final class LightningMediaHooks {
+
+  /**
+   * The displayRepository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $displayRepository;
+
+  /**
+   * The entityFieldManager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entityTypeManager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The configFactory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The routeMatch.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
+   * The requestStack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The moduleHandler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The configInstaller.
+   *
+   * @var \Drupal\Core\Config\ConfigInstallerInterface
+   */
+  protected $configInstaller;
+
+  /**
+   * Constructs the hook service.
+   */
+  public function __construct(EntityDisplayRepositoryInterface $displayRepository, EntityFieldManagerInterface $entityFieldManager, EntityTypeManagerInterface $entityTypeManager, ConfigFactoryInterface $configFactory, RouteMatchInterface $routeMatch, RequestStack $requestStack, ModuleHandlerInterface $moduleHandler, ConfigInstallerInterface $configInstaller) {
+    $this->displayRepository = $displayRepository;
+    $this->entityFieldManager = $entityFieldManager;
+    $this->entityTypeManager = $entityTypeManager;
+    $this->configFactory = $configFactory;
+    $this->routeMatch = $routeMatch;
+    $this->requestStack = $requestStack;
+    $this->moduleHandler = $moduleHandler;
+    $this->configInstaller = $configInstaller;
+  }
 
   /**
    * Implements hook_form_media_type_form_alter().
@@ -108,7 +182,7 @@ final class LightningMediaHooks {
   #[Hook('modules_installed')]
   public function modulesInstalled(array $modules) {
     // Don't do anything during config sync.
-    if (\Drupal::isConfigSyncing()) {
+    if ($this->configInstaller->isSyncing()) {
       return;
     }
 
@@ -133,7 +207,7 @@ final class LightningMediaHooks {
   public function entityExtraFieldInfo() {
     $extra_fields = [];
 
-    if (\Drupal::moduleHandler()->moduleExists('media')) {
+    if ($this->moduleHandler->moduleExists('media')) {
       /** @var \Drupal\media\MediaTypeInterface $media_type */
       foreach (MediaType::loadMultiple() as $id => $media_type) {
         $plugin_definition = $media_type->getSource()->getPluginDefinition();
@@ -197,7 +271,7 @@ final class LightningMediaHooks {
   public function entityTypeAlter(array &$entity_types) {
     // Use a configuration flag to determine whether or not to show the revision
     // UI.
-    $entity_types['media']->set('show_revision_ui', (bool) \Drupal::config('lightning_media.settings')->get('revision_ui'));
+    $entity_types['media']->set('show_revision_ui', (bool) $this->configFactory->get('lightning_media.settings')->get('revision_ui'));
 
     // Use our specialized entity form for adding and editing media assets in
     // order to support dynamic preview generation.
@@ -214,11 +288,11 @@ final class LightningMediaHooks {
   #[Hook('media_type_insert')]
   public function mediaTypeInsert(MediaTypeInterface $media_type) {
     // Don't do anything during config sync.
-    if (\Drupal::isConfigSyncing()) {
+    if ($this->configInstaller->isSyncing()) {
       return;
     }
 
-    \Drupal::entityTypeManager()
+    $this->entityTypeManager
       ->getStorage('field_config')
       ->create([
         'field_name' => 'field_media_in_library',
@@ -235,7 +309,7 @@ final class LightningMediaHooks {
       ])
       ->save();
 
-    \Drupal::service('entity_display.repository')
+    $this->displayRepository
       ->getFormDisplay('media', $media_type->id())
       ->setComponent('field_media_in_library', [
         'type' => 'boolean_checkbox',
@@ -251,7 +325,7 @@ final class LightningMediaHooks {
    */
   #[Hook('form_entity_embed_dialog_alter')]
   public function formEntityEmbedDialogAlter(array &$form, FormStateInterface $form_state) {
-    list ($editor, $embed_button) = $form_state->getBuildInfo()['args'];
+    [$editor, $embed_button] = $form_state->getBuildInfo()['args'];
 
     /** @var \Drupal\embed\EmbedButtonInterface $embed_button */
     if ($embed_button->id() == 'media_browser') {
@@ -271,7 +345,7 @@ final class LightningMediaHooks {
       $settings['ajax'] = [];
     }
 
-    $route_name = \Drupal::routeMatch()->getRouteName();
+    $route_name = $this->routeMatch->getRouteName();
     if (strpos($route_name, 'entity_browser') === 0 && isset($settings['ajaxPageState']['libraries'])) {
       $libraries = explode(',', $settings['ajaxPageState']['libraries']);
       // If we pretend EB's iframe library has not been previously loaded, it will
@@ -287,8 +361,8 @@ final class LightningMediaHooks {
    */
   #[Hook('ajax_render_alter')]
   public function ajaxRenderAlter(array &$data) {
-    $route = \Drupal::routeMatch()->getRouteName();
-    $query = \Drupal::request()->query;
+    $route = $this->routeMatch->getRouteName();
+    $query = $this->requestStack->getCurrentRequest()->query;
 
     if ($route == 'entity_embed.dialog') {
       foreach ($data as &$command) {
@@ -342,7 +416,7 @@ final class LightningMediaHooks {
   public function viewsPreView(ViewExecutable $view, $display_id) {
     // If the field_media_in_library field doesn't exist, there is no point in
     // continuing here.
-    $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
+    $field_map = $this->entityFieldManager->getFieldMap();
     if (empty($field_map['media']['field_media_in_library'])) {
       return;
     }

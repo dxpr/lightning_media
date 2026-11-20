@@ -264,7 +264,6 @@ class MediaHelper {
       : NULL;
   }
 
-
   /**
    * Validates an upload with Drupal's file constraints.
    */

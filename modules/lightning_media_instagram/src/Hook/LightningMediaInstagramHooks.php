@@ -2,6 +2,8 @@
 
 namespace Drupal\lightning_media_instagram\Hook;
 
+use Drupal\Core\DrupalKernelInterface;
+
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Update\UpdateKernel;
 use Drupal\lightning_core\OverrideHelper as Override;
@@ -12,6 +14,20 @@ use Drupal\lightning_media_instagram\Plugin\media\Source\Instagram;
  * Hook implementations for lightning_media_instagram.
  */
 final class LightningMediaInstagramHooks {
+
+  /**
+   * The kernel.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
+   */
+  protected $kernel;
+
+  /**
+   * Constructs the hook service.
+   */
+  public function __construct(DrupalKernelInterface $kernel) {
+    $this->kernel = $kernel;
+  }
 
   /**
    * Implements hook_media_source_info_alter().
@@ -38,7 +54,7 @@ final class LightningMediaInstagramHooks {
     // smooth that over, we temporarily alias the source plugin ID so that the
     // update can be finished successfully.
     // @see media_entity_instagram_post_update_change_source_name()
-    if (\Drupal::service('kernel') instanceof UpdateKernel) {
+    if ($this->kernel instanceof UpdateKernel) {
       $sources['instagram'] = $source;
     }
   }

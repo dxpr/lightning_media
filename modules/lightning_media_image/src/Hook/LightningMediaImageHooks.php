@@ -2,6 +2,8 @@
 
 namespace Drupal\lightning_media_image\Hook;
 
+use Drupal\Core\Config\ConfigInstallerInterface;
+
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -15,6 +17,20 @@ use Drupal\lightning_media_image\Plugin\media\Source\Image;
  * Hook implementations for lightning_media_image.
  */
 final class LightningMediaImageHooks {
+
+  /**
+   * The configInstaller.
+   *
+   * @var \Drupal\Core\Config\ConfigInstallerInterface
+   */
+  protected $configInstaller;
+
+  /**
+   * Constructs the hook service.
+   */
+  public function __construct(ConfigInstallerInterface $configInstaller) {
+    $this->configInstaller = $configInstaller;
+  }
 
   /**
    * Implements hook_field_widget_info_alter().
@@ -34,7 +50,7 @@ final class LightningMediaImageHooks {
   #[Hook('crop_type_insert')]
   public function cropTypeInsert($crop_type) {
     // Don't do anything during a config sync.
-    if (\Drupal::isConfigSyncing()) {
+    if ($this->configInstaller->isSyncing()) {
       return;
     }
     else {
@@ -62,7 +78,7 @@ final class LightningMediaImageHooks {
   #[Hook('modules_installed')]
   public function modulesInstalled(array $modules) {
     // Don't do anything during config sync.
-    if (\Drupal::isConfigSyncing()) {
+    if ($this->configInstaller->isSyncing()) {
       return;
     }
 
@@ -114,7 +130,7 @@ final class LightningMediaImageHooks {
   #[Hook('entity_form_display_presave')]
   public function entityFormDisplayPresave(EntityFormDisplayInterface $display) {
     // Don't do anything during config sync.
-    if (\Drupal::isConfigSyncing()) {
+    if ($this->configInstaller->isSyncing()) {
       return;
     }
 

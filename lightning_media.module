@@ -7,24 +7,15 @@
 
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\lightning_media\Hook\LightningMediaHooks;
-use Drupal\ckeditor\Ajax\AddStyleSheetCommand;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup as Plural;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
-use Drupal\image\Plugin\Field\FieldWidget\ImageWidget;
 use Drupal\image\Plugin\ImageEffect\ResizeImageEffect;
-use Drupal\lightning_core\BundleEntityStorage;
-use Drupal\lightning_core\OverrideHelper as Override;
 use Drupal\lightning_media\Exception\IndeterminateBundleException;
-use Drupal\lightning_media\Form\MediaForm;
-use Drupal\lightning_media\ImageWidgetHelper;
 use Drupal\lightning_media\MediaHelper;
-use Drupal\media\Entity\MediaType;
-use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\views\ViewExecutable;
 
