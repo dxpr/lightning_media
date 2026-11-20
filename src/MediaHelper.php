@@ -2,6 +2,7 @@
 
 namespace Drupal\lightning_media;
 
+use Drupal\Core\File\FileExists;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
@@ -169,7 +170,7 @@ class MediaHelper {
    * @return \Drupal\file\FileInterface|false
    *   The final file entity (unsaved), or FALSE if an error occurred.
    */
-  public static function useFile(MediaInterface $entity, FileInterface $file, $replace = FileSystemInterface::EXISTS_RENAME) {
+  public static function useFile(MediaInterface $entity, FileInterface $file, $replace = FileExists::Rename) {
     $field = static::getSourceField($entity);
     $field->setValue($file);
 
@@ -261,6 +262,37 @@ class MediaHelper {
     return $field
       ? $entity->get($field->getName())
       : NULL;
+  }
+
+  /**
+   * Validates an upload with Drupal's file constraints.
+   */
+  public static function validateUpload(FileInterface $file, array $validators): array {
+    if (!\Drupal::hasService('file.validator')) {
+      return file_validate($file, $validators);
+    }
+
+    $constraint_options = [
+      'file_validate_extensions' => ['FileExtension', ['extensions']],
+      'file_validate_size' => ['FileSizeLimit', ['fileLimit', 'userLimit']],
+      'file_validate_name_length' => ['FileNameLength', []],
+      'file_validate_is_image' => ['FileIsImage', []],
+      'file_validate_image_resolution' => ['FileImageDimensions', ['maxDimensions', 'minDimensions']],
+    ];
+    $constraints = [];
+    foreach ($validators as $name => $options) {
+      if (isset($constraint_options[$name])) {
+        [$name, $keys] = $constraint_options[$name];
+        $options = array_combine(array_slice($keys, 0, count($options)), array_values($options));
+      }
+      $constraints[$name] = $options;
+    }
+
+    $errors = [];
+    foreach (\Drupal::service('file.validator')->validate($file, $constraints) as $violation) {
+      $errors[] = $violation->getMessage();
+    }
+    return $errors;
   }
 
 }

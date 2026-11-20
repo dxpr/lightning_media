@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
@@ -11,6 +13,8 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group lightning_media
  */
+#[Group('lightning_media')]
+#[RunTestsInSeparateProcesses]
 class EmbeddedMediaLabelTest extends BrowserTestBase {
 
   /**

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media_audio\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -13,6 +15,9 @@ use Drupal\media\Entity\Media;
  * @group lightning_media
  * @group lightning_media_audio
  */
+#[Group('lightning_media')]
+#[Group('lightning_media_audio')]
+#[RunTestsInSeparateProcesses]
 class LibraryInclusionTranslationTest extends KernelTestBase {
 
   /**

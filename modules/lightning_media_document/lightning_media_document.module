@@ -5,13 +5,13 @@
  * Support for file media assets in Lightning.
  */
 
-use Drupal\lightning_core\OverrideHelper as Override;
-use Drupal\lightning_media_document\Plugin\media\Source\File;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\lightning_media_document\Hook\LightningMediaDocumentHooks;
 
 /**
  * Implements hook_media_source_info_alter().
  */
+#[LegacyHook]
 function lightning_media_document_media_source_info_alter(array &$sources) {
-  $sources['file']['input_match']['field_types'] = ['file'];
-  Override::pluginClass($sources['file'], File::class);
+  \Drupal::service(LightningMediaDocumentHooks::class)->mediaSourceInfoAlter($sources);
 }

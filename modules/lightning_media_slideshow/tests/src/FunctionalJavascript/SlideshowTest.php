@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media_slideshow\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\lightning_media\FunctionalJavascript\WebDriverWebAssert;
@@ -15,6 +17,9 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
  *
  * @requires module slick_entityreference
  */
+#[Group('lightning_media_slideshow')]
+#[Group('lightning_media')]
+#[RunTestsInSeparateProcesses]
 class SlideshowTest extends WebDriverTestBase {
 
   use MediaTypeCreationTrait;

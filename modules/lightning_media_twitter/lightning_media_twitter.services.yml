@@ -1,0 +1,8 @@
+services:
+
+  Drupal\lightning_media_twitter\Hook\LightningMediaTwitterHooks:
+    class: Drupal\lightning_media_twitter\Hook\LightningMediaTwitterHooks
+    autowire: true
+    arguments:
+      - '@extension.list.module'
+      - '@renderer'

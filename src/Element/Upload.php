@@ -2,6 +2,7 @@
 
 namespace Drupal\lightning_media\Element;
 
+use Drupal\lightning_media\MediaHelper;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\File as FileElement;
@@ -43,7 +44,7 @@ class Upload extends FileElement {
     if ($element['#value']) {
       $file = File::load($element['#value']);
 
-      $errors = file_validate($file, $element['#upload_validators']);
+      $errors = MediaHelper::validateUpload($file, $element['#upload_validators']);
       if ($errors) {
         foreach ($errors as $error) {
           $form_state->setError($element, $error);

@@ -1,5 +1,5 @@
 name: 'Media Image'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11 || ^12'
 type: module
 package: Lightning
 description: 'Image support for Lightning Media.'

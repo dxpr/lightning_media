@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
@@ -15,6 +17,8 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @coversDefaultClass \Drupal\lightning_media\MediaHelper
  */
+#[Group('lightning_media')]
+#[RunTestsInSeparateProcesses]
 class MediaHelperTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;
