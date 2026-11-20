@@ -5,6 +5,8 @@
  * Core media asset support for Lightning.
  */
 
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\lightning_media\Hook\LightningMediaHooks;
 use Drupal\ckeditor\Ajax\AddStyleSheetCommand;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\WidgetInterface;
@@ -29,127 +31,73 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
+#[LegacyHook]
 function lightning_media_form_media_type_form_alter(array &$form, FormStateInterface $form_state) {
-  $form['source_dependent'] += [
-    'source_configuration' => [],
-  ];
+  \Drupal::service(LightningMediaHooks::class)->formMediaTypeFormAlter($form, $form_state);
 }
 
 /**
  * Implements hook_field_widget_third_party_settings_form().
  */
+#[LegacyHook]
 function lightning_media_field_widget_third_party_settings_form(WidgetInterface $widget) {
-  $element = [];
-
-  if ($widget instanceof ImageWidget) {
-    $element = ImageWidgetHelper::getSettingsForm($widget);
-  }
-  return $element;
+  return \Drupal::service(LightningMediaHooks::class)->fieldWidgetThirdPartySettingsForm($widget);
 }
 
 /**
  * Implements hook_field_widget_settings_summary_alter().
  */
+#[LegacyHook]
 function lightning_media_field_widget_settings_summary_alter(array &$summary, array $context) {
-  if ($context['widget'] instanceof ImageWidget) {
-    ImageWidgetHelper::summarize($context['widget'], $summary);
-  }
+  \Drupal::service(LightningMediaHooks::class)->fieldWidgetSettingsSummaryAlter($summary, $context);
 }
 
 /**
  * Implements hook_field_widget_form_alter().
  */
+#[LegacyHook]
 function lightning_media_field_widget_form_alter(array &$element, FormStateInterface $form_state, array $context) {
-  if ($context['widget'] instanceof ImageWidget) {
-    ImageWidgetHelper::alter($element, $context['widget']);
-  }
+  \Drupal::service(LightningMediaHooks::class)->fieldWidgetFormAlter($element, $form_state, $context);
 }
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  */
+#[LegacyHook]
 function lightning_media_field_widget_entity_browser_entity_reference_form_alter(array &$element, FormStateInterface $form_state, array $context) {
-  // Move the remaining number of selections to the details summary.
-  if (isset($element['current']['#prefix'])) {
-    $element['#description'] .= $element['current']['#prefix'];
-    unset($element['current']['#prefix']);
-  }
-
-  if (!empty($element['current']['items'])) {
-    // Wrap the current selections in a nice <details> element.
-    $cardinality = (int) $context['items']
-      ->getFieldDefinition()
-      ->getFieldStorageDefinition()
-      ->getCardinality();
-
-    $element['current']['#theme_wrappers'] = [
-      'details' => [
-        '#attributes' => [
-          'open' => TRUE,
-        ],
-        '#title' => new Plural($cardinality, 'Current selection', 'Current selections'),
-        '#summary_attributes' => [],
-      ],
-    ];
-  }
+  \Drupal::service(LightningMediaHooks::class)->fieldWidgetEntityBrowserEntityReferenceFormAlter($element, $form_state, $context);
 }
 
 /**
  * Implements hook_modules_installed().
  */
+#[LegacyHook]
 function lightning_media_modules_installed(array $modules) {
-  // Don't do anything during config sync.
-  if (Drupal::isConfigSyncing()) {
-    return;
-  }
-
-  if (in_array('lightning_roles', $modules, TRUE)) {
-    Drupal::service('lightning.content_roles')
-      ->grantPermissions('creator', ['use text format rich_text']);
-  }
+  \Drupal::service(LightningMediaHooks::class)->modulesInstalled($modules);
 }
 
 /**
  * Implements hook_element_info_alter().
  */
+#[LegacyHook]
 function lightning_media_element_info_alter(array &$info) {
-  $info['entity_browser']['#after_build'][] = 'lightning_media_inject_entity_browser_count';
+  \Drupal::service(LightningMediaHooks::class)->elementInfoAlter($info);
 }
 
 /**
  * Implements hook_entity_extra_field_info().
  */
+#[LegacyHook]
 function lightning_media_entity_extra_field_info() {
-  $extra_fields = [];
-
-  if (\Drupal::moduleHandler()->moduleExists('media')) {
-    /** @var \Drupal\media\MediaTypeInterface $media_type */
-    foreach (MediaType::loadMultiple() as $id => $media_type) {
-      $plugin_definition = $media_type->getSource()->getPluginDefinition();
-
-      if (isset($plugin_definition['preview'])) {
-        $extra_fields['media'][$id]['form']['preview'] = [
-          'label' => t('Preview'),
-          'description' => t('A live preview of the @media_type.', [
-            '@media_type' => $media_type->label(),
-          ]),
-          'weight' => 0,
-        ];
-      }
-    }
-  }
-  return $extra_fields;
+  return \Drupal::service(LightningMediaHooks::class)->entityExtraFieldInfo();
 }
 
 /**
  * Implements hook_inline_entity_form_entity_form_alter().
  */
+#[LegacyHook]
 function lightning_media_inline_entity_form_entity_form_alter(array &$entity_form) {
-  $entity = $entity_form['#entity'];
-
-  if ($entity instanceof MediaInterface && MediaHelper::isPreviewable($entity)) {
-    $entity_form['preview'] = MediaHelper::getSourceField($entity)->view('default');
-  }
+  \Drupal::service(LightningMediaHooks::class)->inlineEntityFormEntityFormAlter($entity_form);
 }
 
 /**
@@ -184,7 +132,7 @@ function lightning_media_validate_upload(FileInterface $file, array $bundles = [
   // This function is only called by the custom FileUpload widget, which runs
   // file_validate_extensions before this function. So there's no need to
   // validate the extensions again.
-  unset($validators['file_validate_extensions']);
+  unset($validators['file_validate_extensions'], $validators['FileExtension']);
 
   // If this is an image field, add image validation. Against all sanity,
   // this is normally done by ImageWidget, not ImageItem, which is why we
@@ -201,7 +149,7 @@ function lightning_media_validate_upload(FileInterface $file, array $bundles = [
       ];
     }
   }
-  return file_validate($file, $validators);
+  return MediaHelper::validateUpload($file, $validators);
 }
 
 /**
@@ -286,149 +234,65 @@ function lightning_media_preprocess_image_style(array &$variables) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
+#[LegacyHook]
 function lightning_media_form_entity_browser_media_browser_form_alter(array &$form) {
-  $form['#attached']['library'][] = 'lightning_media/browser.styling';
+  \Drupal::service(LightningMediaHooks::class)->formEntityBrowserMediaBrowserFormAlter($form);
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
+#[LegacyHook]
 function lightning_media_form_entity_browser_ckeditor_media_browser_form_alter(array &$form) {
-  lightning_media_form_entity_browser_media_browser_form_alter($form);
+  \Drupal::service(LightningMediaHooks::class)->formEntityBrowserCkeditorMediaBrowserFormAlter($form);
 }
 
 /**
  * Implements hook_entity_base_field_info_alter().
  */
+#[LegacyHook]
 function lightning_media_entity_base_field_info_alter(array &$fields, EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'media' && array_key_exists('revision_log_message', $fields)) {
-    $fields['revision_log_message']->setDisplayConfigurable('form', TRUE);
-  }
+  \Drupal::service(LightningMediaHooks::class)->entityBaseFieldInfoAlter($fields, $entity_type);
 }
 
 /**
  * Implements hook_entity_type_alter().
  */
+#[LegacyHook]
 function lightning_media_entity_type_alter(array &$entity_types) {
-  // Use a configuration flag to determine whether or not to show the revision
-  // UI.
-  $entity_types['media']->set('show_revision_ui', (bool) Drupal::config('lightning_media.settings')->get('revision_ui'));
-
-  // Use our specialized entity form for adding and editing media assets in
-  // order to support dynamic preview generation.
-  Override::entityForm($entity_types['media'], MediaForm::class);
-  Override::entityForm($entity_types['media'], MediaForm::class, 'edit');
-
-  // Use our extended storage handler for media bundles.
-  Override::entityHandler($entity_types['media_type'], 'storage', BundleEntityStorage::class);
+  \Drupal::service(LightningMediaHooks::class)->entityTypeAlter($entity_types);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
+#[LegacyHook]
 function lightning_media_media_type_insert(MediaTypeInterface $media_type) {
-  // Don't do anything during config sync.
-  if (\Drupal::isConfigSyncing()) {
-    return;
-  }
-
-  \Drupal::entityTypeManager()
-    ->getStorage('field_config')
-    ->create([
-      'field_name' => 'field_media_in_library',
-      'entity_type' => 'media',
-      'bundle' => $media_type->id(),
-      'label' => t('Show in media library'),
-      'settings' => [
-        'on_label' => t('Shown in media library'),
-        'off_label' => t('Hidden in media library'),
-      ],
-      'default_value' => [
-        ['value' => TRUE],
-      ],
-    ])
-    ->save();
-
-  Drupal::service('entity_display.repository')
-    ->getFormDisplay('media', $media_type->id())
-    ->setComponent('field_media_in_library', [
-      'type' => 'boolean_checkbox',
-      'settings' => [
-        'display_label' => TRUE,
-      ],
-    ])
-    ->save();
+  \Drupal::service(LightningMediaHooks::class)->mediaTypeInsert($media_type);
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
+#[LegacyHook]
 function lightning_media_form_entity_embed_dialog_alter(array &$form, FormStateInterface $form_state) {
-  list ($editor, $embed_button) = $form_state->getBuildInfo()['args'];
-
-  /** @var \Drupal\embed\EmbedButtonInterface $embed_button */
-  if ($embed_button->id() == 'media_browser') {
-    $element = &$form['attributes']['data-entity-embed-settings']['view_mode'];
-    if (isset($element['#options']['embedded'])) {
-      $element['#default_value'] = 'embedded';
-    }
-  }
+  \Drupal::service(LightningMediaHooks::class)->formEntityEmbedDialogAlter($form, $form_state);
 }
 
 /**
  * Implements hook_js_settings_alter().
  */
+#[LegacyHook]
 function lightning_media_js_settings_alter(array &$settings) {
-  if (empty($settings['ajax'])) {
-    $settings['ajax'] = [];
-  }
-
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  if (strpos($route_name, 'entity_browser') === 0 && isset($settings['ajaxPageState']['libraries'])) {
-    $libraries = explode(',', $settings['ajaxPageState']['libraries']);
-    // If we pretend EB's iframe library has not been previously loaded, it will
-    // ALWAYS be fetched from the server, preventing (in a crappy, kludgey way)
-    // the bug in #2768849.
-    $libraries = array_diff($libraries, ['entity_browser/iframe']);
-    $settings['ajaxPageState']['libraries'] = implode(',', $libraries);
-  }
+  \Drupal::service(LightningMediaHooks::class)->jsSettingsAlter($settings);
 }
 
 /**
  * Implements hook_ajax_render_alter().
  */
+#[LegacyHook]
 function lightning_media_ajax_render_alter(array &$data) {
-  $route = \Drupal::routeMatch()->getRouteName();
-  $query = \Drupal::request()->query;
-
-  if ($route == 'entity_embed.dialog') {
-    foreach ($data as &$command) {
-      if ($command['command'] == 'settings' && isset($command['settings']['ajaxPageState']['libraries'])) {
-        $libraries = explode(',', $command['settings']['ajaxPageState']['libraries']);
-        $libraries = array_diff($libraries, ['entity_browser/iframe']);
-        $command['settings']['ajaxPageState']['libraries'] = implode(',', $libraries);
-      }
-    }
-  }
-  elseif ($route == 'embed.preview' && $query->has('editor')) {
-    $style_sheets = [];
-
-    foreach ($data as $command) {
-      // Any CSS being added should be replicated in the editor.
-      if ($command['command'] == 'add_css') {
-        $matched = [];
-        // Assume (perhaps naively) that all the style sheets are embedded as
-        // <link /> tags.
-        preg_match_all('/href="([^"]+)"/', $command['data'], $matched);
-        $style_sheets = array_merge($style_sheets, $matched[1]);
-      }
-    }
-
-    if ($style_sheets) {
-      $command = new AddStyleSheetCommand($query->get('editor'), $style_sheets);
-      $data[] = $command->render();
-    }
-  }
+  \Drupal::service(LightningMediaHooks::class)->ajaxRenderAlter($data);
 }
 
 /**
@@ -453,76 +317,15 @@ function lightning_media_preprocess_views_view_grid(array &$variables) {
 /**
  * Implements hook_library_info_alter().
  */
+#[LegacyHook]
 function lightning_media_library_info_alter(array &$libraries, $extension) {
-  if ($extension === 'entity_browser') {
-    // Clicking the "Remove" or "Edit" buttons in the media browser doesn't
-    // trigger the event that makes Quick Edit display the "Save" button.
-    // Loading the drupal.file library before entity browser attaches the
-    // file button event handlers to the media browser buttons.
-    // @see Drupal.behaviors.fileButtons
-    $libraries['entity_reference']['dependencies'][] = 'file/drupal.file';
-  }
+  \Drupal::service(LightningMediaHooks::class)->libraryInfoAlter($libraries, $extension);
 }
 
 /**
  * Implements hook_views_pre_view().
  */
+#[LegacyHook]
 function lightning_media_views_pre_view(ViewExecutable $view, $display_id) {
-  // If the field_media_in_library field doesn't exist, there is no point in
-  // continuing here.
-  $field_map = Drupal::service('entity_field.manager')->getFieldMap();
-  if (empty($field_map['media']['field_media_in_library'])) {
-    return;
-  }
-
-  if ($view->id() === 'media_library' && strpos($display_id, 'widget') === 0) {
-    $filters = $view->display_handler->getOption('filters');
-    // Filter out media items where field_media_in_library is FALSE. If the view
-    // already has stored configuration for this field, it will be respected.
-    $filters += [
-      'field_media_in_library_value' => [
-        'id' => 'field_media_in_library_value',
-        'table' => 'media__field_media_in_library',
-        'field' => 'field_media_in_library_value',
-        'relationship' => 'none',
-        'group_type' => 'group',
-        'admin_label' => '',
-        'operator' => '=',
-        'value' => '1',
-        'group' => 1,
-        'exposed' => FALSE,
-        'expose' => [
-          'operator_id' => '',
-          'label' => '',
-          'description' => '',
-          'use_operator' => FALSE,
-          'operator' => '',
-          'operator_limit_selection' => FALSE,
-          'operator_list' => [],
-          'identifier' => '',
-          'required' => FALSE,
-          'remember' => FALSE,
-          'multiple' => FALSE,
-          'remember_roles' => [
-            'authenticated' => 'authenticated',
-          ],
-        ],
-        'is_grouped' => FALSE,
-        'group_info' => [
-          'label' => '',
-          'description' => '',
-          'identifier' => '',
-          'optional' => TRUE,
-          'widget' => 'select',
-          'multiple' => FALSE,
-          'remember' => FALSE,
-          'default_group' => 'All',
-          'default_group_multiple' => [],
-          'group_items' => [],
-        ],
-        'plugin_id' => 'boolean',
-      ],
-    ];
-    $view->display_handler->setOption('filters', $filters);
-  }
+  \Drupal::service(LightningMediaHooks::class)->viewsPreView($view, $display_id);
 }

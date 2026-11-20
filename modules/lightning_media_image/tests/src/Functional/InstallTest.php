@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media_image\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -12,6 +14,9 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @requires module image_widget_crop
  */
+#[Group('lightning_media')]
+#[Group('lightning_media_image')]
+#[RunTestsInSeparateProcesses]
 class InstallTest extends BrowserTestBase {
 
   /**

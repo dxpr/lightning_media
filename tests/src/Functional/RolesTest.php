@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\media\Entity\Media;
@@ -14,6 +16,8 @@ use Drupal\user\Entity\Role;
  *
  * @group lightning_media
  */
+#[Group('lightning_media')]
+#[RunTestsInSeparateProcesses]
 class RolesTest extends BrowserTestBase {
 
   use MediaTypeCreationTrait;

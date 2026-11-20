@@ -1,0 +1,5 @@
+services:
+
+  Drupal\lightning_media_image\Hook\LightningMediaImageHooks:
+    class: Drupal\lightning_media_image\Hook\LightningMediaImageHooks
+    autowire: true

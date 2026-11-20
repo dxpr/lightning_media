@@ -66,7 +66,7 @@ class ImageWidgetHelper {
    * @return string[]
    *   The summarized settings.
    */
-  public static function summarize(ImageWidget $widget, array &$summary = NULL) {
+  public static function summarize(ImageWidget $widget, ?array &$summary = NULL) {
     $settings = static::getSettings($widget);
 
     if (is_null($summary)) {

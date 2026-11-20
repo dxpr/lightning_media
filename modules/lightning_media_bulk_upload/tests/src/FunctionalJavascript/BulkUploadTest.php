@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media_bulk_upload\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -12,6 +14,9 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @requires module dropzonejs
  */
+#[Group('lightning_media')]
+#[Group('lightning_media_bulk_upload')]
+#[RunTestsInSeparateProcesses]
 class BulkUploadTest extends WebDriverTestBase {
 
   /**

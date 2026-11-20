@@ -5,12 +5,15 @@
  * Support for videos as media entities in Lightning.
  */
 
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\lightning_media_video\Hook\LightningMediaVideoHooks;
 use Drupal\lightning_core\OverrideHelper as Override;
 use Drupal\lightning_media_video\Plugin\media\Source\VideoFile;
 
 /**
  * Implements hook_media_source_info_alter().
  */
+#[LegacyHook]
 function lightning_media_video_media_source_info_alter(array &$sources) {
-  Override::pluginClass($sources['video_file'], VideoFile::class);
+  \Drupal::service(LightningMediaVideoHooks::class)->mediaSourceInfoAlter($sources);
 }

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media_instagram\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\BrowserTestBase;
@@ -14,6 +16,9 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @requires module media_entity_instagram
  */
+#[Group('lightning_media')]
+#[Group('lightning_media_instagram')]
+#[RunTestsInSeparateProcesses]
 class LibraryInclusionTranslationTest extends BrowserTestBase {
 
   /**

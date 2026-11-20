@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media_twitter\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
@@ -12,6 +14,9 @@ use Drupal\media\Entity\Media;
  *
  * @requires module media_entity_twitter
  */
+#[Group('lightning_media')]
+#[Group('lightning_media_twitter')]
+#[RunTestsInSeparateProcesses]
 class LibraryInclusionTranslationTest extends KernelTestBase {
 
   /**
@@ -33,6 +38,9 @@ class LibraryInclusionTranslationTest extends KernelTestBase {
     ConfigurableLanguage::createFromLangcode('hu')->save();
   }
 
+  /**
+   *
+   */
   public function test() {
     $media = Media::create([
       'bundle' => 'tweet',

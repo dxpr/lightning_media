@@ -80,7 +80,7 @@ class FileUpload extends EntityFormProxy {
     // If the widget context didn't specify any file extension validation, add
     // it as the first validator, allowing it to accept only file extensions
     // associated with existing media bundles.
-    if (empty($validators['file_validate_extensions'])) {
+    if (empty($validators['file_validate_extensions']) && empty($validators['FileExtension'])) {
       return array_merge([
         'file_validate_extensions' => [
           implode(' ', $this->getAllowedFileExtensions()),
@@ -133,7 +133,7 @@ class FileUpload extends EntityFormProxy {
    *   The media item.
    *
    * @return array[]
-   *   Any errors returned by file_validate().
+   *   Any errors returned by MediaHelper::validateUpload().
    */
   protected function validateFile(MediaInterface $media) {
     $field = $media->getSource()
@@ -152,7 +152,7 @@ class FileUpload extends EntityFormProxy {
     // This function is only called by the custom FileUpload widget, which runs
     // file_validate_extensions before this function. So there's no need to
     // validate the extensions again.
-    unset($validators['file_validate_extensions']);
+    unset($validators['file_validate_extensions'], $validators['FileExtension']);
 
     // If this is an image field, add image validation. Against all sanity,
     // this is normally done by ImageWidget, not ImageItem, which is why we
@@ -169,7 +169,7 @@ class FileUpload extends EntityFormProxy {
         ];
       }
     }
-    return file_validate($item->entity, $validators);
+    return MediaHelper::validateUpload($item->entity, $validators);
   }
 
   /**

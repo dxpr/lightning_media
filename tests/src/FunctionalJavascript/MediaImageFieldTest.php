@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -11,6 +13,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @group lightning_media
  */
+#[Group('lightning_media')]
+#[RunTestsInSeparateProcesses]
 class MediaImageFieldTest extends WebDriverTestBase {
 
   /**

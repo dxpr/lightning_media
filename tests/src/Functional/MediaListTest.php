@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\lightning_media\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\BrowserTestBase;
 
@@ -10,6 +12,8 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group lightning_media
  */
+#[Group('lightning_media')]
+#[RunTestsInSeparateProcesses]
 class MediaListTest extends BrowserTestBase {
 
   /**

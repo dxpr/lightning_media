@@ -1,5 +1,5 @@
 name: 'Bulk Media Upload'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11 || ^12'
 type: module
 description: 'Provides a form to upload many media items at once.'
 package: Lightning

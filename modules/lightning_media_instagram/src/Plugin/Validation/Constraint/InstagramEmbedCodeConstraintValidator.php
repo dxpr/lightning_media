@@ -21,7 +21,7 @@ final class InstagramEmbedCodeConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     $data = '';
     if (is_string($value)) {
       $data = $value;
